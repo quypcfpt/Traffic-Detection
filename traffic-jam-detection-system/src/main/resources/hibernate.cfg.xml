@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD//EN"
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="connection.url">jdbc:sqlserver://localhost;database=traffic_db</property>
+    <property name="connection.driver_class">com.microsoft.sqlserver.jdbc.SQLServerDriver</property>
+      <mapping class="com.spring2019.trafficJamDetectionSystem.entity.Camera"/>
+      <mapping resource="com/spring2019/trafficJamDetectionSystem/entity/Camera.hbm.xml"/>
+      <mapping class="com.spring2019.trafficJamDetectionSystem.entity.Street"/>
+      <mapping resource="com/spring2019/trafficJamDetectionSystem/entity/Street.hbm.xml"/>
+      <mapping class="com.spring2019.trafficJamDetectionSystem.entity.Vehicle"/>
+      <mapping resource="com/spring2019/trafficJamDetectionSystem/entity/Vehicle.hbm.xml"/>
+    <mapping class="com.spring2019.trafficJamDetectionSystem.entity2.Camera"/>
+    <mapping class="com.spring2019.trafficJamDetectionSystem.entity2.Street"/>
+    <mapping class="com.spring2019.trafficJamDetectionSystem.entity2.Vehicle"/>
+    <!-- <property name="connection.username"/> -->
+    <!-- <property name="connection.password"/> -->
+
+    <!-- DB schema will be updated if needed -->
+    <!-- <property name="hbm2ddl.auto">update</property> -->
+  </session-factory>
+</hibernate-configuration>

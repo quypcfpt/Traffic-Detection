@@ -1,0 +1,78 @@
+package com.spring2019.trafficJamDetectionSystem.controllerImpl;
+
+import com.spring2019.trafficJamDetectionSystem.common.CoreConstant;
+import com.spring2019.trafficJamDetectionSystem.controller.StreetController;
+import com.spring2019.trafficJamDetectionSystem.entity.Street;
+import com.spring2019.trafficJamDetectionSystem.model.MultiCameraModel;
+import com.spring2019.trafficJamDetectionSystem.model.MultiStreetModel;
+import com.spring2019.trafficJamDetectionSystem.model.Response;
+import com.spring2019.trafficJamDetectionSystem.model.StreetModel;
+import com.spring2019.trafficJamDetectionSystem.service.StreetService;
+import com.spring2019.trafficJamDetectionSystem.transformer.StreetTransformer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@RestController
+@CrossOrigin
+public class StreetControllerImpl extends AbstractController implements StreetController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(StreetControllerImpl.class);
+
+    @Autowired
+    StreetService streetService;
+
+    @Autowired
+    StreetTransformer streetTransformer;
+
+    @Override
+    public String loadStreetByDistrict(String district, Integer page, Integer size, String sort, String sortBy) {
+        Sort sortable = null;
+        if (sort.equals("ASC")) {
+            sortable = Sort.by(sortBy).ascending();
+        }
+        if (sort.equals("DESC")) {
+            sortable = Sort.by(sortBy).descending();
+        }
+
+        Pageable pageable = PageRequest.of(page - 1, size, sortable);
+
+        Response<MultiStreetModel> response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
+
+        try {
+            MultiStreetModel data = new MultiStreetModel();
+
+            List<StreetModel> streetList = new ArrayList<>();
+            Page<Street> streets = streetService.getStreetByDistrict(district, pageable);
+
+
+            if (streets.getSize() == 0) {
+                LOGGER.info("Empty result!");
+            }
+
+            for (Street street : streets) {
+                streetList.add(streetTransformer.entityToModel(street));
+            }
+
+            data.setTotalPage(streets.getTotalPages());
+            data.setTotalRecord(streets.getTotalElements());
+            data.setStreetList(streetList);
+
+            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
+            LOGGER.info("End load streets in district " + district);
+        } catch (Exception e) {
+            response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
+            LOGGER.error(e.getMessage());
+        }
+        return gson.toJson(response);
+    }
+}

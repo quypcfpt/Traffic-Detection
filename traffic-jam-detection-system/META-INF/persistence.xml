@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+
+    <persistence-unit name="persistenceUnit">
+        <class>com.spring2019.trafficJamDetectionSystem.entity.Camera</class>
+        <class>com.spring2019.trafficJamDetectionSystem.entity.Street</class>
+        <class>com.spring2019.trafficJamDetectionSystem.entity.Vehicle</class>
+        <properties>
+            <property name="toplink.jdbc.url" value="jdbc:sqlserver://localhost;database=traffic_db"/>
+            <property name="toplink.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+            <property name="hibernate.connection.url" value="jdbc:sqlserver://localhost;database=traffic_db"/>
+            <property name="hibernate.connection.driver_class" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+            <property name="openjpa.ConnectionURL" value="jdbc:sqlserver://localhost;database=traffic_db"/>
+            <property name="openjpa.ConnectionDriverName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+            <property name="eclipselink.jdbc.url" value="jdbc:sqlserver://localhost;database=traffic_db"/>
+            <property name="eclipselink.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+        </properties>
+    </persistence-unit>
+</persistence>
