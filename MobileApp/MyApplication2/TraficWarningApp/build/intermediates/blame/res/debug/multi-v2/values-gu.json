@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\Quy\\AndroidStudioProjects\\MyApplication2\\TraficWarningApp\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-gu\\values-gu.xml",
+            "outputFile": "D:\\Capstone Project\\Traffic-Detection\\MobileApp\\MyApplication2\\TraficWarningApp\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-gu\\values-gu.xml",
             "map": [
                 {
                     "source": "C:\\Users\\Quy\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-28.0.0.aar\\20d1c263599d4a9226b60c192b48ceee\\res\\values-gu\\values-gu.xml",

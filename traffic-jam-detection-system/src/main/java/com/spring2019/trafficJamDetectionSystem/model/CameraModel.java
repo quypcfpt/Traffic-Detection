@@ -7,7 +7,7 @@ public class CameraModel {
     @Expose
     private int id;
     @Expose
-    private String name;
+    private String code;
     @Expose
     private Double latitude;
     @Expose
@@ -18,6 +18,10 @@ public class CameraModel {
     private Integer width;
     @Expose
     private StreetModel street;
+    @Expose
+    private String image;
+    @Expose
+    private Integer status;
 
     public int getId() {
         return id;
@@ -27,12 +31,12 @@ public class CameraModel {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getCode() {
+        return code;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCode(String name) {
+        this.code = name;
     }
 
     public Double getLatitude() {
@@ -73,5 +77,20 @@ public class CameraModel {
 
     public void setStreet(StreetModel street) {
         this.street = street;
+    }
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }
