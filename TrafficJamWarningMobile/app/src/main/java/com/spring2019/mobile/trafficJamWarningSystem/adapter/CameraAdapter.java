@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.spring2019.mobile.trafficJamWarningSystem.R;
 import com.spring2019.mobile.trafficJamWarningSystem.model.CameraModel;
@@ -46,11 +47,11 @@ class RecycleViewCameraHolder extends RecyclerView.ViewHolder implements View.On
 }
 public class CameraAdapter extends RecyclerView.Adapter<RecycleViewCameraHolder>{
     private List<CameraModel> dataSet;
-    Context mcontext;
+    Context mContext;
 
-    public CameraAdapter(List<CameraModel> dataSet, Context mcontext) {
+    public CameraAdapter(List<CameraModel> dataSet, Context mContext) {
         this.dataSet = dataSet;
-        this.mcontext = mcontext;
+        this.mContext = mContext;
     }
     @NonNull
     @Override
@@ -61,21 +62,23 @@ public class CameraAdapter extends RecyclerView.Adapter<RecycleViewCameraHolder>
 
     @Override
     public void onBindViewHolder(@NonNull RecycleViewCameraHolder myViewHolder, int position) {
-        CameraModel models = dataSet.get(position);
+        final CameraModel models = dataSet.get(position);
         myViewHolder.txtName.setText(models.getCode());
         myViewHolder.txtDistrict.setVisibility(View.GONE);
         myViewHolder.info.setImageResource(models.getStatus()==1?R.mipmap.green:R.mipmap.red);
-    }
+        myViewHolder.setItemClickListener(new ItemClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Toast.makeText(mContext, ""+models.getId(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
+    }
 
     @Override
     public int getItemCount() {
         return dataSet.size();
     }
-
-
-
-
 
 
 }

@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView=(RecyclerView) findViewById(R.id.recycleView);
         progressBar=(ProgressBar)findViewById(R.id.progress);
         mLayoutManager = new LinearLayoutManager(this);
-        onFirstLoad();
         recyclerView.setLayoutManager(mLayoutManager);
+        onFirstLoad();
         doLoadMore();
 
 
