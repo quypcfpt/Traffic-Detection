@@ -62,7 +62,7 @@ public class StreetControllerImpl extends AbstractController implements StreetCo
             for (Street street : streets) {
                 streetList.add(streetTransformer.entityToModel(street));
             }
-
+            data.setCurrentPage(page);
             data.setTotalPage(streets.getTotalPages());
             data.setTotalRecord(streets.getTotalElements());
             data.setStreetList(streetList);
@@ -70,6 +70,45 @@ public class StreetControllerImpl extends AbstractController implements StreetCo
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
             LOGGER.info("End load streets in district " + district);
         } catch (Exception e) {
+            response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
+            LOGGER.error(e.getMessage());
+        }
+        return gson.toJson(response);
+    }
+
+    @Override
+    public String loadAllStreet(Integer page, Integer size, String sort, String sortBy) {
+        Sort sortable = null;
+        if (sort.equals("ASC")) {
+            sortable = Sort.by(sortBy).ascending();
+        }
+        if (sort.equals("DESC")) {
+            sortable = Sort.by(sortBy).descending();
+        }
+        Pageable pageable = PageRequest.of(page - 1, size, sortable);
+
+        Response<MultiStreetModel> response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
+
+        try {
+            MultiStreetModel data = new MultiStreetModel();
+
+            List<StreetModel> streetList = new ArrayList<>();
+            Page<Street> streets = streetService.getAllStreet(pageable);
+            if (streets.getSize() == 0) {
+                LOGGER.info("Empty result!");
+            }
+
+            for (Street street : streets) {
+                streetList.add(streetTransformer.entityToModel(street));
+            }
+            data.setCurrentPage(page);
+            data.setTotalPage(streets.getTotalPages());
+            data.setTotalRecord(streets.getTotalElements());
+            data.setStreetList(streetList);
+
+            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
+            LOGGER.info("End load streets in district ");
+        }catch (Exception e){
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
             LOGGER.error(e.getMessage());
         }

@@ -7,13 +7,14 @@ import java.util.Objects;
 @Entity
 public class Camera implements Serializable {
     private int id;
-    private String name;
+    private String code;
     private Double latitude;
     private Double longtitude;
     private Integer camOrder;
     private Integer width;
     private Street streetByStreetId;
-
+    private Integer status;
+    private String image;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -26,13 +27,13 @@ public class Camera implements Serializable {
     }
 
     @Basic
-    @Column(name = "name", nullable = true, length = 255)
-    public String getName() {
-        return name;
+    @Column(name = "code", nullable = true, length = 255)
+    public String getCode() {
+        return code;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     @Basic
@@ -75,22 +76,43 @@ public class Camera implements Serializable {
         this.width = width;
     }
 
+    @Basic
+    @Column(name = "status", nullable = true, length = 255)
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+    @Basic
+    @Column(name = "image", nullable = true, length = 255)
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Camera camera = (Camera) o;
         return id == camera.id &&
-                Objects.equals(name, camera.name) &&
+                Objects.equals(code, camera.code) &&
                 Objects.equals(latitude, camera.latitude) &&
                 Objects.equals(longtitude, camera.longtitude) &&
                 Objects.equals(camOrder, camera.camOrder) &&
-                Objects.equals(width, camera.width);
+                Objects.equals(width, camera.width)&&
+                Objects.equals(status, camera.status)&&
+                Objects.equals(image, camera.image);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, latitude, longtitude, camOrder, width);
+        return Objects.hash(id, code, latitude, longtitude, camOrder, width,status,image);
     }
 
     @ManyToOne
