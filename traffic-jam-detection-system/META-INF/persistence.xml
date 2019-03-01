@@ -5,6 +5,10 @@
         <class>com.spring2019.trafficJamDetectionSystem.entity.Camera</class>
         <class>com.spring2019.trafficJamDetectionSystem.entity.Street</class>
         <class>com.spring2019.trafficJamDetectionSystem.entity.Vehicle</class>
+        <class>com.spring2019.trafficJamDetectionSystem.entity.Account</class>
+        <class>com.spring2019.trafficJamDetectionSystem.entity.Bookmark</class>
+        <class>com.spring2019.trafficJamDetectionSystem.entity.Image</class>
+        <class>com.spring2019.trafficJamDetectionSystem.entity.Role</class>
         <properties>
             <property name="toplink.jdbc.url" value="jdbc:sqlserver://localhost;database=traffic_db"/>
             <property name="toplink.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>

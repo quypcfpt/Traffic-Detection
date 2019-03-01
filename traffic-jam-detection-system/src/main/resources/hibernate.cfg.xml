@@ -15,7 +15,11 @@
     <mapping class="com.spring2019.trafficJamDetectionSystem.entity2.Camera"/>
     <mapping class="com.spring2019.trafficJamDetectionSystem.entity2.Street"/>
     <mapping class="com.spring2019.trafficJamDetectionSystem.entity2.Vehicle"/>
-    <!-- <property name="connection.username"/> -->
+      <mapping class="com.spring2019.trafficJamDetectionSystem.entity.Account"/>
+      <mapping class="com.spring2019.trafficJamDetectionSystem.entity.Bookmark"/>
+      <mapping class="com.spring2019.trafficJamDetectionSystem.entity.Image"/>
+      <mapping class="com.spring2019.trafficJamDetectionSystem.entity.Role"/>
+      <!-- <property name="connection.username"/> -->
     <!-- <property name="connection.password"/> -->
 
     <!-- DB schema will be updated if needed -->
