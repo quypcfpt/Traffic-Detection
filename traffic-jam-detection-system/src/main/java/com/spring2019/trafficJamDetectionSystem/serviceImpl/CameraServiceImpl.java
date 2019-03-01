@@ -19,18 +19,18 @@ public class CameraServiceImpl implements CameraService {
 
     @Override
     public Camera getCameraById(int id) {
-        Optional<Camera> camera = cameraRepository.findById(id);
+        Optional<Camera> camera = cameraRepository.getByIdAndIsActive(id,true);
         return camera.orElse(null);
     }
 
     @Override
     public Page<Camera> getAllCameras(Pageable pageable) {
-        return cameraRepository.findAll(pageable);
+        return cameraRepository.findAllByIsActive(true,pageable);
     }
 
     @Override
     public Page<Camera> getCamerasByStreet(Street street, Pageable pageable) {
-       return cameraRepository.findByStreetByStreetId(street,pageable);
+       return cameraRepository.findByStreetIdAndIsActive(street,true,pageable);
     }
 
     @Override

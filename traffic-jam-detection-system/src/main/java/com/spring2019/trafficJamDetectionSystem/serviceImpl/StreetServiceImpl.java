@@ -25,7 +25,7 @@ public class StreetServiceImpl implements StreetService {
 
     @Override
     public Page<Street> getStreetByDistrict(String district, Pageable pageable) {
-        return (Page<Street>) streetRepository.findByDistrict(district, pageable);
+        return (Page<Street>) streetRepository.findByDistrictAndIsActive(district,true, pageable);
     }
 
     @Override
