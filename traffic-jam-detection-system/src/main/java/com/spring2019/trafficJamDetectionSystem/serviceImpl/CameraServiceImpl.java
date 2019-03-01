@@ -35,6 +35,7 @@ public class CameraServiceImpl implements CameraService {
 
     @Override
     public void createCamera(Camera camera) {
+        camera.setIsActive(true);
         cameraRepository.save(camera);
     }
 
