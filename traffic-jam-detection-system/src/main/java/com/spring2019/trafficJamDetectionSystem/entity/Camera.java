@@ -1,22 +1,22 @@
 package com.spring2019.trafficJamDetectionSystem.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-public class Camera {
+public class Camera implements Serializable {
     private int id;
-    private String description;
-    private String position;
-    private String resource;
-    private Integer observedStatus;
+    private String code;
+    private Double latitude;
+    private Double longtitude;
     private Integer camOrder;
-    private Double width;
-    private Integer streetId;
-    private Boolean isActive;
-
+    private Integer width;
+    private Street streetByStreetId;
+    private Integer status;
+    private String image;
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;
@@ -27,43 +27,33 @@ public class Camera {
     }
 
     @Basic
-    @Column(name = "description", nullable = true, length = 255)
-    public String getDescription() {
-        return description;
+    @Column(name = "code", nullable = true, length = 255)
+    public String getCode() {
+        return code;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Basic
-    @Column(name = "position", nullable = true, length = 255)
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     @Basic
-    @Column(name = "resource", nullable = true, length = 255)
-    public String getResource() {
-        return resource;
+    @Column(name = "latitude", nullable = true, precision = 0)
+    public Double getLatitude() {
+        return latitude;
     }
 
-    public void setResource(String resource) {
-        this.resource = resource;
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
     }
 
     @Basic
-    @Column(name = "observed_status", nullable = true)
-    public Integer getObservedStatus() {
-        return observedStatus;
+    @Column(name = "longtitude", nullable = true, precision = 0)
+    public Double getLongtitude() {
+        return longtitude;
     }
 
-    public void setObservedStatus(Integer observedStatus) {
-        this.observedStatus = observedStatus;
+    public void setLongtitude(Double longtitude) {
+        this.longtitude = longtitude;
     }
 
     @Basic
@@ -77,33 +67,32 @@ public class Camera {
     }
 
     @Basic
-    @Column(name = "width", nullable = true, precision = 0)
-    public Double getWidth() {
+    @Column(name = "width", nullable = true)
+    public Integer getWidth() {
         return width;
     }
 
-    public void setWidth(Double width) {
+    public void setWidth(Integer width) {
         this.width = width;
     }
 
     @Basic
-    @Column(name = "street_id", nullable = true)
-    public Integer getStreetId() {
-        return streetId;
+    @Column(name = "status", nullable = true, length = 255)
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setStreetId(Integer streetId) {
-        this.streetId = streetId;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
-
     @Basic
-    @Column(name = "isActive", nullable = true)
-    public Boolean getIsActive() {
-        return isActive;
+    @Column(name = "image", nullable = true, length = 255)
+    public String getImage() {
+        return image;
     }
 
-    public void setIsActive(Boolean active) {
-        isActive = active;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     @Override
@@ -112,18 +101,27 @@ public class Camera {
         if (o == null || getClass() != o.getClass()) return false;
         Camera camera = (Camera) o;
         return id == camera.id &&
-                Objects.equals(description, camera.description) &&
-                Objects.equals(position, camera.position) &&
-                Objects.equals(resource, camera.resource) &&
-                Objects.equals(observedStatus, camera.observedStatus) &&
+                Objects.equals(code, camera.code) &&
+                Objects.equals(latitude, camera.latitude) &&
+                Objects.equals(longtitude, camera.longtitude) &&
                 Objects.equals(camOrder, camera.camOrder) &&
-                Objects.equals(width, camera.width) &&
-                Objects.equals(streetId, camera.streetId) &&
-                Objects.equals(isActive, camera.isActive);
+                Objects.equals(width, camera.width)&&
+                Objects.equals(status, camera.status)&&
+                Objects.equals(image, camera.image);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, description, position, resource, observedStatus, camOrder, width, streetId, isActive);
+        return Objects.hash(id, code, latitude, longtitude, camOrder, width,status,image);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "street_id", referencedColumnName = "id")
+    public Street getStreetByStreetId() {
+        return streetByStreetId;
+    }
+
+    public void setStreetByStreetId(Street streetByStreetId) {
+        this.streetByStreetId = streetByStreetId;
     }
 }

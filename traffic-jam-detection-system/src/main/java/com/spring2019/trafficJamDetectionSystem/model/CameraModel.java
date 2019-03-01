@@ -7,22 +7,21 @@ public class CameraModel {
     @Expose
     private int id;
     @Expose
-    private String description;
+    private String code;
     @Expose
-    private String position;
+    private Double latitude;
     @Expose
-    private Integer observerStatus;
+    private Double longtitude;
     @Expose
     private Integer order;
     @Expose
-    private Double width;
-    @Expose
-    private String resource;
+    private Integer width;
     @Expose
     private StreetModel street;
-
-    public CameraModel() {
-    }
+    @Expose
+    private String image;
+    @Expose
+    private Integer status;
 
     public int getId() {
         return id;
@@ -32,28 +31,28 @@ public class CameraModel {
         this.id = id;
     }
 
-    public String getDescription() {
-        return description;
+    public String getCode() {
+        return code;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setCode(String name) {
+        this.code = name;
     }
 
-    public String getPosition() {
-        return position;
+    public Double getLatitude() {
+        return latitude;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
     }
 
-    public Integer getObserverStatus() {
-        return observerStatus;
+    public Double getLongtitude() {
+        return longtitude;
     }
 
-    public void setObserverStatus(Integer observerStatus) {
-        this.observerStatus = observerStatus;
+    public void setLongtitude(Double longtitude) {
+        this.longtitude = longtitude;
     }
 
     public Integer getOrder() {
@@ -64,20 +63,12 @@ public class CameraModel {
         this.order = order;
     }
 
-    public Double getWidth() {
+    public Integer getWidth() {
         return width;
     }
 
-    public void setWidth(Double width) {
+    public void setWidth(Integer width) {
         this.width = width;
-    }
-
-    public String getResource() {
-        return resource;
-    }
-
-    public void setResource(String resource) {
-        this.resource = resource;
     }
 
     public StreetModel getStreet() {
@@ -86,5 +77,20 @@ public class CameraModel {
 
     public void setStreet(StreetModel street) {
         this.street = street;
+    }
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

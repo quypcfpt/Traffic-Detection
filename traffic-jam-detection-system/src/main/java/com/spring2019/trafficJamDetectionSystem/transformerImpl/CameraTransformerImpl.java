@@ -19,12 +19,15 @@ public class CameraTransformerImpl implements CameraTransformer {
         CameraModel model = new CameraModel();
 
         model.setId(entity.getId());
-        model.setDescription(entity.getDescription());
-        model.setPosition(entity.getPosition());
+        model.setCode(entity.getCode());
+        model.setLatitude(entity.getLatitude());
+        model.setLongtitude(entity.getLongtitude());
         model.setOrder(entity.getCamOrder());
         model.setWidth(entity.getWidth());
+        model.setImage(entity.getImage());
+        model.setStatus(entity.getStatus());
 
-        //  model.setStreet(streetTransformer.entityToModel(entity.getStreetByStreetId()));
+      //  model.setStreet(streetTransformer.entityToModel(entity.getStreetByStreetId()));
         return model;
     }
 
@@ -33,12 +36,13 @@ public class CameraTransformerImpl implements CameraTransformer {
         Camera entity=new Camera();
 
         entity.setId(model.getId());
-        entity.setDescription(model.getDescription());
-        entity.setPosition(model.getPosition());
-        entity.setObservedStatus(model.getObserverStatus());
+        entity.setCode(model.getCode());
+        entity.setLatitude(model.getLatitude());
+        entity.setLongtitude(model.getLongtitude());
         entity.setCamOrder(model.getOrder());
         entity.setWidth(entity.getWidth());
-
+        entity.setStatus(entity.getStatus());
+        entity.setImage(entity.getImage());
         Street street=new Street();
         street.setId(model.getStreet().getId());
 

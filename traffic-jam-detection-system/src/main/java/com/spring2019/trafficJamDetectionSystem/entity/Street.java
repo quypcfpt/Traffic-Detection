@@ -1,18 +1,20 @@
 package com.spring2019.trafficJamDetectionSystem.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
-public class Street {
+public class Street implements Serializable {
     private int id;
     private String name;
     private String district;
     private String city;
-    private Boolean isActive;
+    private Collection<Camera> camerasById;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;
@@ -52,16 +54,6 @@ public class Street {
         this.city = city;
     }
 
-    @Basic
-    @Column(name = "isActive", nullable = true)
-    public Boolean getActive() {
-        return isActive;
-    }
-
-    public void setActive(Boolean active) {
-        isActive = active;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -70,12 +62,20 @@ public class Street {
         return id == street.id &&
                 Objects.equals(name, street.name) &&
                 Objects.equals(district, street.district) &&
-                Objects.equals(city, street.city) &&
-                Objects.equals(isActive, street.isActive);
+                Objects.equals(city, street.city);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, district, city, isActive);
+        return Objects.hash(id, name, district, city);
+    }
+
+    @OneToMany(mappedBy = "streetByStreetId")
+    public Collection<Camera> getCamerasById() {
+        return camerasById;
+    }
+
+    public void setCamerasById(Collection<Camera> camerasById) {
+        this.camerasById = camerasById;
     }
 }
