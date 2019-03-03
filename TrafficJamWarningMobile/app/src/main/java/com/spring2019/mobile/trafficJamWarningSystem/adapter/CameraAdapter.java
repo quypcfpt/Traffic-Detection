@@ -65,7 +65,7 @@ public class CameraAdapter extends RecyclerView.Adapter<RecycleViewCameraHolder>
         final CameraModel models = dataSet.get(position);
         myViewHolder.txtName.setText(models.getDescription());
         myViewHolder.txtDistrict.setVisibility(View.GONE);
-        myViewHolder.info.setImageResource(models.getObserved_status()==1?R.mipmap.green:R.mipmap.red);
+        myViewHolder.info.setImageResource(models.getObserverStatus()==1?R.mipmap.green:R.mipmap.red);
         myViewHolder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int position) {
