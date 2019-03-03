@@ -12,7 +12,7 @@ public interface CameraService {
 
     public Page<Camera> getAllCameras(Pageable pageable);
 
-    public Page<Camera> getCamerasByStreet(Street street, Pageable pageable);
+    public Page<Camera> getCamerasByStreet(Integer street, Pageable pageable);
 
     public void createCamera(Camera camera);
 
