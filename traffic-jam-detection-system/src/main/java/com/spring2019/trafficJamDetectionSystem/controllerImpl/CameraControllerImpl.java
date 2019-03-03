@@ -118,7 +118,6 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
 
         try {
             MultiCameraModel data = new MultiCameraModel();
-
             List<CameraModel> cameraList = new ArrayList<>();
             Page<Camera> cameras = cameraService.getCamerasByStreet(streetId,pageable);
 
