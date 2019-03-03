@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApiClient {
 
     private static Retrofit retrofit = null;
-    private static String BASE_URL="http://192.168.1.3:8080";
+    private static String BASE_URL="http://capstonetrafficjamteam10.azurewebsites.net/";
 
     public static Retrofit getClient() {
 
