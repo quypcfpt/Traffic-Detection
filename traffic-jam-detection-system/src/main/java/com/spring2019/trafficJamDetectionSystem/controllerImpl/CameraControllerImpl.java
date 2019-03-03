@@ -119,10 +119,8 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
         try {
             MultiCameraModel data = new MultiCameraModel();
 
-            Street street=streetService.getStreetById(streetId);
-
             List<CameraModel> cameraList = new ArrayList<>();
-            Page<Camera> cameras = cameraService.getCamerasByStreet(street,pageable);
+            Page<Camera> cameras = cameraService.getCamerasByStreet(streetId,pageable);
 
             if (cameras.getSize()==0){
                 LOGGER.info("Empty result!");

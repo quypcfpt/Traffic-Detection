@@ -16,5 +16,5 @@ public interface CameraRepository extends JpaRepository<Camera,Integer> {
 
     Page<Camera> findAllByIsActive(Boolean isActive,Pageable pageable);
 
-    Page<Camera> findByStreetIdAndIsActive(Street street,Boolean isActive,Pageable pageable);
+    Page<Camera> findByStreetIdAndIsActive(Integer street,Boolean isActive,Pageable pageable);
 }
