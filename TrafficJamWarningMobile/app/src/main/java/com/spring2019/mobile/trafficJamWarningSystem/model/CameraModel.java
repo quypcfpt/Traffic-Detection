@@ -7,28 +7,23 @@ public class CameraModel {
     private int id;
 
     @Expose
-    private String code;
+    private String description;
 
     @Expose
-    private float latitude;
+    private String position;
 
     @Expose
-    private float longtitude;
+    private String resource;
+
+    @Expose
+    private int observed_status;
 
     @Expose
     private int camOrder;
 
     @Expose
-    private int width;
+    private float street_id;
 
-    @Expose
-    private int street_id;
-
-    @Expose
-    private String image;
-
-    @Expose
-    private int status;
 
     public CameraModel() {
     }
@@ -41,28 +36,36 @@ public class CameraModel {
         this.id = id;
     }
 
-    public String getCode() {
-        return code;
+    public String getDescription() {
+        return description;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public float getLatitude() {
-        return latitude;
+    public String getPosition() {
+        return position;
     }
 
-    public void setLatitude(float latitude) {
-        this.latitude = latitude;
+    public void setPosition(String position) {
+        this.position = position;
     }
 
-    public float getLongtitude() {
-        return longtitude;
+    public String getResource() {
+        return resource;
     }
 
-    public void setLongtitude(float longtitude) {
-        this.longtitude = longtitude;
+    public void setResource(String resource) {
+        this.resource = resource;
+    }
+
+    public int getObserved_status() {
+        return observed_status;
+    }
+
+    public void setObserved_status(int observed_status) {
+        this.observed_status = observed_status;
     }
 
     public int getCamOrder() {
@@ -73,35 +76,13 @@ public class CameraModel {
         this.camOrder = camOrder;
     }
 
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getStreet_id() {
+    public float getStreet_id() {
         return street_id;
     }
 
-    public void setStreet_id(int street_id) {
+    public void setStreet_id(float street_id) {
         this.street_id = street_id;
     }
 
-    public String getImage() {
-        return image;
-    }
 
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
 }

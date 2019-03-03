@@ -11,8 +11,6 @@ public class StreetModel {
     private String district;
     @Expose
     private String city;
-    @Expose
-    private boolean isActive;
 
     public StreetModel() {
     }
@@ -47,13 +45,5 @@ public class StreetModel {
 
     public void setCity(String city) {
         this.city = city;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
     }
 }
