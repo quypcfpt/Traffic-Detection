@@ -1,6 +1,7 @@
 package com.spring2019.mobile.trafficJamWarningSystem.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.spring2019.mobile.trafficJamWarningSystem.R;
+import com.spring2019.mobile.trafficJamWarningSystem.activity.ImageActivity;
 import com.spring2019.mobile.trafficJamWarningSystem.model.CameraModel;
 import com.spring2019.mobile.trafficJamWarningSystem.model.StreetModel;
 import com.spring2019.mobile.trafficJamWarningSystem.utils.ItemClickListener;
@@ -69,7 +71,12 @@ public class CameraAdapter extends RecyclerView.Adapter<RecycleViewCameraHolder>
         myViewHolder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int position) {
+                Context context = view.getContext();
                 Toast.makeText(mContext, ""+models.getId(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context,ImageActivity.class);
+                intent.putExtra("CAMERA_ID",models.getId()+"");
+                intent.putExtra("CAMERA_STATUS",models.getObserverStatus()+"");
+                context.startActivity(intent);
             }
         });
 
