@@ -13,6 +13,7 @@ public interface StreetService {
     Street getStreetById(int id);
 
     Page<Street> getStreetByDistrict(String district, Pageable pageable);
+
     Page<Street> getAllStreet(Pageable pageable);
 
 }
