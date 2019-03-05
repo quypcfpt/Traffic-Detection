@@ -16,7 +16,7 @@ public class CameraModel {
     private String resource;
 
     @Expose
-    private int observed_status;
+    private int observerStatus;
 
     @Expose
     private int camOrder;
@@ -60,12 +60,12 @@ public class CameraModel {
         this.resource = resource;
     }
 
-    public int getObserved_status() {
-        return observed_status;
+    public int getObserverStatus() {
+        return observerStatus;
     }
 
-    public void setObserved_status(int observed_status) {
-        this.observed_status = observed_status;
+    public void setObserverStatus(int observerStatus) {
+        this.observerStatus = observerStatus;
     }
 
     public int getCamOrder() {

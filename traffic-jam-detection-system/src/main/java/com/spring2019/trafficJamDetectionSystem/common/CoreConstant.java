@@ -5,6 +5,7 @@ public class CoreConstant {
     public static final String API_CAMERA = "/api/camera";
     public static final String API_STREET = "/api/street";
     public static final String API_DETECTION = "/api/detection";
+    public static final String API_IMAGE ="/api/images";
     //API Response code
     public static final int STATUS_CODE_SERVER_ERROR = -1;
     public static final int STATUS_CODE_FAIL = 0;
