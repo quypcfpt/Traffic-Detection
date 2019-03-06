@@ -18,7 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.TextView;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.R;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.adapter.SectionsPagerAdapter;
@@ -26,12 +26,15 @@ import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.adapt
 public class MainTabActivity extends AppCompatActivity {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
+    private final String TOPIC = "Traffic_Jam_Notification";
     private ViewPager mViewPager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC);
+
         setContentView(R.layout.activity_main_tab);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.container);

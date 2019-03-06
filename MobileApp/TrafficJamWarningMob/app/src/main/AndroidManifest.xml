@@ -23,6 +23,12 @@
         </activity>
         <activity android:name=".activity.ListCameraActivity" />
         <activity android:name=".activity.ImageActivity" />
+
+        <service android:name=".utils.FCMClass">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
