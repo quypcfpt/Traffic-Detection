@@ -9,20 +9,28 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+
 @RestController
 @CrossOrigin
 public class DetectionControllerImpl extends AbstractController implements DetectionController {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(DetectionControllerImpl.class);
+
+    public static HashMap<Integer, DetectionModel> detectResultData=new HashMap<>();
+
     @Override
     public String detectResult(String detectResultString) {
         Response response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
         try {
-            LOGGER.info("Start create camera: " + detectResultString);
+            LOGGER.info("Getting traffic info: " + detectResultString);
 
-            DetectionModel newDtection = gson.fromJson(detectResultString, DetectionModel.class);
+            DetectionModel detectionResult = gson.fromJson(detectResultString, DetectionModel.class);
+
+            detectResultData.put(detectionResult.getCameraId(), detectionResult);
 
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS);
-            LOGGER.info("End create camera");
+            LOGGER.info("End update traffic info");
         } catch (Exception e) {
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
             LOGGER.error(e.getMessage());
