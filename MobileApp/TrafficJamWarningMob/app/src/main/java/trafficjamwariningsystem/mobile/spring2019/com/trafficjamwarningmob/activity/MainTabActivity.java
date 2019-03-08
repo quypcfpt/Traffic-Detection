@@ -20,6 +20,8 @@ import android.view.ViewGroup;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import com.squareup.picasso.Picasso;
+
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.R;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.adapter.SectionsPagerAdapter;
 
@@ -42,6 +44,9 @@ public class MainTabActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mViewPager);
+        tabLayout.getTabAt(0).setIcon(R.mipmap.list);
+        tabLayout.getTabAt(1).setIcon(R.mipmap.direction);
+        tabLayout.getTabAt(2).setIcon(R.mipmap.account);
     }
 
     @Override

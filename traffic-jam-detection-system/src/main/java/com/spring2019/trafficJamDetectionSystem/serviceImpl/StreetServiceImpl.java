@@ -32,4 +32,11 @@ public class StreetServiceImpl implements StreetService {
     public Page<Street> getAllStreet(Pageable pageable) {
         return  streetRepository.findAll(pageable);
     }
+
+    @Override
+    public Page<Street> getStreetBySearch(String txtSearch, Pageable pageable) {
+        return streetRepository.findByNameContainingIgnoreCaseAndIsActive(txtSearch,true,pageable);
+    }
+
+
 }

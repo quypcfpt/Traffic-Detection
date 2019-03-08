@@ -46,6 +46,12 @@ public class DetectionModel {
         return time;
     }
 
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+    public String getTime() {
+        return time;
+    }
     public void setTime(String time) {
         this.time = time;
     }

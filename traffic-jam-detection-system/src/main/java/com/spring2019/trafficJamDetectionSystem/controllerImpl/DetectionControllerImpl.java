@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.HashMap;
 
 import java.util.HashMap;
 
@@ -29,6 +30,8 @@ public class DetectionControllerImpl extends AbstractController implements Detec
 
             detectResultData.put(detectionResult.getCameraId(), detectionResult);
 
+            DetectionModel detectionResult = gson.fromJson(detectResultString, DetectionModel.class);
+            detectResultData.put(detectionResult.getCameraId(), detectionResult);
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS);
             LOGGER.info("End update traffic info");
         } catch (Exception e) {

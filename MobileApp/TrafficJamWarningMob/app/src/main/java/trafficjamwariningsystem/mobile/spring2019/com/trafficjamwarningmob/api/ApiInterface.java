@@ -1,8 +1,12 @@
 package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api;
 import retrofit2.Call;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.AccountModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.CameraModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.ImageModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.MultiCameraModel;
@@ -19,6 +23,8 @@ public interface  ApiInterface {
 
     @GET("api/street")
     Call<Response<MultiStreetModel>> getAllStreets(@Query("sortBy") String sortBy, @Query("page") int page);
+    @GET("api/street/search/{search}")
+    Call<Response<MultiStreetModel>> getStreetsBySearchNameLike (@Path("search") String search ,@Query("sortBy") String sortBy, @Query("page") int page);
 
     //Camera
     @GET("api/camera/{id}")
@@ -36,4 +42,8 @@ public interface  ApiInterface {
     //Image
     @GET("api/camera/image/{id}")
     Call<Response<ImageModel>> loadImageByCameraId(@Path("id") Integer id);
+    //Account
+    @FormUrlEncoded
+    @POST("api/account/checkLogin")
+    Call<Response<AccountModel>> checkUserLogin(@Field("username")String userName, @Field("password")String password);
 }

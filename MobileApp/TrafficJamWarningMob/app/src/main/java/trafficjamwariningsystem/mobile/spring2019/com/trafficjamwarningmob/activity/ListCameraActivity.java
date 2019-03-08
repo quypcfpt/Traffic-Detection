@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -28,11 +30,13 @@ public class ListCameraActivity extends AppCompatActivity {
     ApiInterface apiInterface;
     private static CameraAdapter adapter;
     private RecyclerView recyclerView;
+    private EditText editText;
     private int currentPage ,totalPage;
     private boolean isScrolling = false;
     private LinearLayoutManager mLayoutManager;
     private static List<StreetModel> streetModelList;
-    int currentItems, scrollOutItems, totalItems;
+    private int currentItems, scrollOutItems, totalItems , id;
+
     private ProgressBar progressBar;
     @SuppressLint("WrongViewCast")
     @Override
@@ -47,8 +51,12 @@ public class ListCameraActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String message =intent.getStringExtra("STREET_NAME");
         String street_id = intent.getStringExtra("STREET_ID");
-        int id = Integer.parseInt(street_id);
-        Toast.makeText(this, ""+message, Toast.LENGTH_SHORT).show();
+        id = Integer.parseInt(street_id);
+        onLoadList();
+    }
+
+    private void onLoadList(){
+
         Call<Response<MultiCameraModel>> responseCall = apiInterface.loadCamerasByStreet(id);
         responseCall.enqueue(new Callback<Response<MultiCameraModel>>() {
             @Override
@@ -60,6 +68,8 @@ public class ListCameraActivity extends AppCompatActivity {
                 if (cameraModelList != null) {
                     adapter=new CameraAdapter(cameraModelList,getApplicationContext());
                     recyclerView.setAdapter(adapter);
+                }else{
+                    Toast.makeText(ListCameraActivity.this, "This Street doesn't have any camera. We will update soon.", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -69,4 +79,6 @@ public class ListCameraActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }
