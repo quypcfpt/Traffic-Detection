@@ -14,6 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import okhttp3.ResponseBody;
@@ -29,7 +32,7 @@ import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model
 
 public class AccountActivity extends Fragment implements View.OnClickListener {
 private ApiInterface apiInterface;
-private boolean isLogin ;
+private boolean isLogin,isCheckLogin ;
 private TextView txtSignUp;
 private EditText edtUsername,edtPassword;
 private Button btnSignIn;
@@ -69,7 +72,8 @@ private LinearLayout signInLayout,accountLayout;
             case R.id.btnSignIn:
                 String username=edtUsername.getText()+"";
                 String password=edtPassword.getText()+"";
-                Toast.makeText(v.getContext(), "Username :" + username +"  Password : " + password, Toast.LENGTH_SHORT).show();
+                checkLogin(username,password);
+                initialView(isCheckLogin);
                 break;
             case R.id.txtSignUp:
                 Intent intent = new Intent(v.getContext(),SignUpActivity.class);
@@ -78,20 +82,29 @@ private LinearLayout signInLayout,accountLayout;
         }
     }
 
-    private boolean checkLogin(String userName , String passowrd){
+    private void checkLogin(String userName , String passowrd){
+
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        Call<Response<AccountModel>> responseCall = apiInterface.checkUserLogin(userName,passowrd);
-        responseCall.enqueue(new Callback<Response<AccountModel>>() {
-            @Override
-            public void onResponse(Call<Response<AccountModel>> call, retrofit2.Response<Response<AccountModel>> response) {
-                String message = response.body().toString();
-            }
+        JSONObject acountModel = new JSONObject();
+        try {
+            acountModel.put("username",userName);
+            acountModel.put("password",passowrd);
+            Call<Response<String>> responseCall = apiInterface.checkUserLogin(acountModel.toString());
+            responseCall.enqueue(new Callback<Response<String>>() {
+                @Override
+                public void onResponse(Call<Response<String>> call, retrofit2.Response<Response<String>> response) {
+                    Response<String> message = response.body();
 
-            @Override
-            public void onFailure(Call<Response<AccountModel>> call, Throwable t) {
+                   isCheckLogin =Boolean.parseBoolean(message.getData());
+                }
 
-            }
-        });
-        return false;
+                @Override
+                public void onFailure(Call<Response<String>> call, Throwable t) {
+
+                }
+            });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

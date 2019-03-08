@@ -22,7 +22,6 @@ public class CameraTransformerImpl implements CameraTransformer {
         model.setDescription(entity.getDescription());
         model.setPosition(entity.getPosition());
         model.setOrder(entity.getCamOrder());
-        model.setWidth(entity.getWidth());
         model.setObserverStatus(entity.getObservedStatus());
         //  model.setStreet(streetTransformer.entityToModel(entity.getStreetByStreetId()));
         return model;
@@ -37,7 +36,6 @@ public class CameraTransformerImpl implements CameraTransformer {
         entity.setPosition(model.getPosition());
         entity.setObservedStatus(model.getObserverStatus());
         entity.setCamOrder(model.getOrder());
-        entity.setWidth(model.getWidth());
         entity.setObservedStatus(model.getObserverStatus());
         Street street=new Street();
         street.setId(model.getStreet().getId());

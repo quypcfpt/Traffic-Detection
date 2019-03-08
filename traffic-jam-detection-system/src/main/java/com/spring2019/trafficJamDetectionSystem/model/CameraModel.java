@@ -15,8 +15,6 @@ public class CameraModel {
     @Expose
     private Integer order;
     @Expose
-    private Double width;
-    @Expose
     private String resource;
     @Expose
     private StreetModel street;
@@ -64,13 +62,6 @@ public class CameraModel {
         this.order = order;
     }
 
-    public Double getWidth() {
-        return width;
-    }
-
-    public void setWidth(Double width) {
-        this.width = width;
-    }
 
     public String getResource() {
         return resource;

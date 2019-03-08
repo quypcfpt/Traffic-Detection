@@ -1,4 +1,6 @@
 package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api;
+import org.json.JSONObject;
+
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -43,7 +45,8 @@ public interface  ApiInterface {
     @GET("api/camera/image/{id}")
     Call<Response<ImageModel>> loadImageByCameraId(@Path("id") Integer id);
     //Account
-    @FormUrlEncoded
     @POST("api/account/checkLogin")
-    Call<Response<AccountModel>> checkUserLogin(@Field("username")String userName, @Field("password")String password);
+    Call<Response<String>> checkUserLogin(@Query("accountModel")String accountModel);
+    @POST("api/account/createNewAccount")
+    Call<Response<String>> createNewAccount(@Query("accountModel")String accountModel);
 }

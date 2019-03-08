@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 public interface AccountController {
     @PostMapping(CoreConstant.API_ACCOUNT+"/checkLogin")
-    public String checkLogin (@RequestParam String accountModel);
+    public String checkLogin (@RequestParam (name = "accountModel") String accountModel);
 
     @PostMapping(CoreConstant.API_ACCOUNT+"/createNewAccount")
-    public String createNewAccount (@RequestParam String accountModel);
+    public String createNewAccount (@RequestParam (name = "accountModel")  String accountModel);
 }
