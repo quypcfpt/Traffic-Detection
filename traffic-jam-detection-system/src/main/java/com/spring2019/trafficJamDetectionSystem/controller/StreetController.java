@@ -18,4 +18,10 @@ public interface StreetController {
                                        @RequestParam(name = "size", required = false, defaultValue = "12") Integer size,
                                        @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort,
                                        @RequestParam(name = "sortBy", required = false, defaultValue = "id") String sortBy);
+    @GetMapping(CoreConstant.API_STREET+"/search/{search}")
+    public String loadStreetBySearch(  @PathVariable("search") String search,
+                                       @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
+                                       @RequestParam(name = "size", required = false, defaultValue = "12") Integer size,
+                                       @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort,
+                                       @RequestParam(name = "sortBy", required = false, defaultValue = "id") String sortBy);
 }

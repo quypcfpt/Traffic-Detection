@@ -14,5 +14,5 @@ public interface StreetService {
 
     Page<Street> getStreetByDistrict(String district, Pageable pageable);
     Page<Street> getAllStreet(Pageable pageable);
-
+    Page<Street> getStreetBySearch(String txtSearch, Pageable pageable);
 }

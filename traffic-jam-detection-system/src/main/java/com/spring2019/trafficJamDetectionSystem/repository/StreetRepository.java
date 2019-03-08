@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface StreetRepository extends JpaRepository<Street,Integer> {
-    Page<Street> findByDistrictAndIsActive(String district,boolean isActive, Pageable pageable);
+    Page<Street> findByDistrictAndIsActive(String district,Boolean isActive, Pageable pageable);
+    Page<Street> findByNameContainingIgnoreCaseAndIsActive (String district,Boolean isActive ,Pageable pageable);
 }

@@ -7,7 +7,8 @@ import java.util.Objects;
 public class Bookmark {
     private int id;
     private Integer accountId;
-    private String routeJson;
+    private String origin;
+    private String destination;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,13 +32,22 @@ public class Bookmark {
     }
 
     @Basic
-    @Column(name = "route_json", nullable = true, length = 2147483647)
+    @Column(name = "origin", nullable = true, length = 2147483647)
     public String getRouteJson() {
-        return routeJson;
+        return origin;
     }
 
     public void setRouteJson(String routeJson) {
-        this.routeJson = routeJson;
+        this.origin = routeJson;
+    }
+    @Basic
+    @Column(name = "destination", nullable = true, length = 2147483647)
+    public String getDestination() {
+        return destination;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
     }
 
     @Override
@@ -47,11 +57,12 @@ public class Bookmark {
         Bookmark bookmark = (Bookmark) o;
         return id == bookmark.id &&
                 Objects.equals(accountId, bookmark.accountId) &&
-                Objects.equals(routeJson, bookmark.routeJson);
+                Objects.equals(origin, bookmark.origin)&&
+                Objects.equals(destination, bookmark.destination);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, accountId, routeJson);
+        return Objects.hash(id, accountId, origin,destination);
     }
 }

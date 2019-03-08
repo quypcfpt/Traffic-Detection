@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".activity.StreetListActivity">
+<LinearLayout
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="2"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_marginLeft="15dp"
+                android:layout_width="300dp"
+                android:id="@+id/txtSearch"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:layout_height="match_parent" />
+            <Button
+                android:layout_marginLeft="5dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:minHeight="?attr/actionBarSize"
+                android:background="#FFFFFF"
+                android:id="@+id/searchBtn"
+                />
+        </LinearLayout>
+    </RelativeLayout>
 
+</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:orientation="vertical">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycleView"
         android:layout_width="match_parent"
@@ -20,6 +55,6 @@
         android:indeterminate="false"
         android:visibility="gone"
         />
+    </LinearLayout>
 
-
-</RelativeLayout>
+</LinearLayout>

@@ -10,7 +10,6 @@ public class Street {
     private String district;
     private String city;
     private Boolean isActive;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -54,14 +53,13 @@ public class Street {
 
     @Basic
     @Column(name = "isActive", nullable = true)
-    public Boolean getActive() {
+    public Boolean getIsActive() {
         return isActive;
     }
 
-    public void setActive(Boolean active) {
+    public void setIsActive(Boolean active) {
         isActive = active;
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

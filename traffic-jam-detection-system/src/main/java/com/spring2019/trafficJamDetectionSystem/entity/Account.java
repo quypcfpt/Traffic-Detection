@@ -10,7 +10,7 @@ public class Account {
     private String password;
     private String name;
     private Integer roleId;
-    private Integer status;
+    private Boolean status;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,11 +65,11 @@ public class Account {
 
     @Basic
     @Column(name = "status", nullable = true)
-    public Integer getStatus() {
+    public Boolean getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Boolean status) {
         this.status = status;
     }
 

@@ -9,9 +9,8 @@ public class ApiClient {
 
     private static Retrofit retrofit = null;
 //    private static String BASE_URL="http://capstonetrafficjamteam10.azurewebsites.net/";
-    private static String BASE_URL="http://192.168.1.6:8080";
+    private static String BASE_URL="http://192.168.1.62:8080";
     public static Retrofit getClient() {
-
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
