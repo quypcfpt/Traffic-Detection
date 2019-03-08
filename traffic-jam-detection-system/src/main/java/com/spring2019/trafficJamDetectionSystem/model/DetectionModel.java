@@ -9,8 +9,16 @@ public class DetectionModel {
     private int CameraId;
 
     @Expose
-    private List<Detection> result;
+    private int statusId;
+    @Expose
+    private String imageUrl;
+    @Expose
+    private String time;
+//    @Expose
+//    private List<Detection> result;
 
+    public DetectionModel() {
+    }
     public int getCameraId() {
         return CameraId;
     }
@@ -19,33 +27,24 @@ public class DetectionModel {
         CameraId = cameraId;
     }
 
-    public List<Detection> getResult() {
-        return result;
+    public int getStatusId() {
+        return statusId;
+    }
+    public void setStatusId(int statusId) {
+        this.statusId = statusId;
     }
 
-    public void setResult(List<Detection> result) {
-        this.result = result;
+    public String getImageUrl() {
+        return imageUrl;
+    }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+    public String getTime() {
+        return time;
+    }
+    public void setTime(String time) {
+        this.time = time;
     }
 }
-class Detection{
-    @Expose
-    private int typeId;
-    @Expose
-    private int countVeh;
 
-    public int getTypeId() {
-        return typeId;
-    }
-
-    public void setTypeId(int typeId) {
-        this.typeId = typeId;
-    }
-
-    public int getCountVeh() {
-        return countVeh;
-    }
-
-    public void setCountVeh(int countVeh) {
-        this.countVeh = countVeh;
-    }
-}

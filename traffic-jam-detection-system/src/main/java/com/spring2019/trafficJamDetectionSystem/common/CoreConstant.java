@@ -18,4 +18,9 @@ public class CoreConstant {
     public static final String MESSAGE_FAIL = "Fail!";
     public static final String MESSAGE_SERVER_ERROR = "Server error!";
     public static final String MESSAGE_NO_RESULT = "No result!";
+
+    public static final int STATUS_CAMERA_CLEAR=0;
+    public static final int STATUS_CAMERA_JAM=1;
+
+    public static final String FIREBASE_TOPIC = "Traffic_Jam_Notification";
 }
