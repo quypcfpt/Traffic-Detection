@@ -13,5 +13,5 @@ public interface AdminController {
     public ModelAndView openLogin();
 
     @GetMapping("/test")
-    public ModelAndView openTest();
+    public ModelAndView openIndex();
 }

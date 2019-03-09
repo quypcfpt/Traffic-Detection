@@ -12,7 +12,7 @@ public class AdminControllerImpl extends AbstractController implements AdminCont
     }
 
     @Override
-    public ModelAndView openTest()  {
-        return new ModelAndView("blank");
+    public ModelAndView openIndex()  {
+        return new ModelAndView("index");
     }
 }
