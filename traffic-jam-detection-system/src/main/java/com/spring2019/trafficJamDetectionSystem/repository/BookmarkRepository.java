@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface BookmarkRepository extends JpaRepository<Bookmark,Integer> {
    List<Bookmark> findBookmarksByAccountId(Integer accountID);
+   void removeBookmarkById(Integer id);
 }

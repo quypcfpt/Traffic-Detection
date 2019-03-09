@@ -11,4 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 public interface BookmarkController {
     @GetMapping(CoreConstant.API_BOOKMARK + "/{id}")
     public String getBookMarkByAccountID(@PathVariable("id") Integer id);
+
+    @GetMapping(CoreConstant.API_BOOKMARK + "/delete/{id}")
+    public String deleteBookmarkById(@PathVariable("id") Integer id);
 }

@@ -17,4 +17,9 @@ public class BookmarkServiceImpl implements BookmarkService {
         List<Bookmark> bookmarkList= bookmarkRepository.findBookmarksByAccountId(accountID);
         return bookmarkList;
     }
+
+    @Override
+    public void removeBookMarkById(Integer id) {
+        bookmarkRepository.removeBookmarkById(id);
+    }
 }
