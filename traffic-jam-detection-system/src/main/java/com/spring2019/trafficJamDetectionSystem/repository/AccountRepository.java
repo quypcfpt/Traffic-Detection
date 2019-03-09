@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account,Integer> {
-    Optional<Account> findByUsernameAndPasswordAndStatus(String username,String password , Boolean isActive);
+    Account findByUsernameAndPasswordAndStatus(String username,String password , Boolean isActive);
     Optional<Account> findByUsernameAndStatus(String username ,Boolean isActive);
 }

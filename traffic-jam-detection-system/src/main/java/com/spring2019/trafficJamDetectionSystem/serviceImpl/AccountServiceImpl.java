@@ -15,9 +15,9 @@ public class AccountServiceImpl implements AccountService {
     AccountRepository accountRepository;
 
     @Override
-    public boolean getAccountByUsername(String username,String password) {
-        Optional<Account> account=accountRepository.findByUsernameAndPasswordAndStatus(username,password,true);
-        return account.isPresent();
+    public Account getAccountByUsername(String username,String password) {
+        Account account=accountRepository.findByUsernameAndPasswordAndStatus(username,password,true);
+        return account;
     }
 
     @Override

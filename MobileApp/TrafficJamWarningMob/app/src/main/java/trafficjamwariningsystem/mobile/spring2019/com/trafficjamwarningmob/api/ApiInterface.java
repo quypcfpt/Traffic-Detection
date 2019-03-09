@@ -1,4 +1,6 @@
 package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api;
+import org.json.JSONObject;
+
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -11,6 +13,7 @@ import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.ImageModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.MultiCameraModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.MultiStreetModel;
+import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.MultipleBookmarkModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.Response;
 
 public interface  ApiInterface {
@@ -42,8 +45,14 @@ public interface  ApiInterface {
     //Image
     @GET("api/camera/image/{id}")
     Call<Response<ImageModel>> loadImageByCameraId(@Path("id") Integer id);
+
     //Account
-    @FormUrlEncoded
     @POST("api/account/checkLogin")
-    Call<Response<AccountModel>> checkUserLogin(@Field("username")String userName, @Field("password")String password);
+    Call<Response<AccountModel>> checkUserLogin(@Query("accountModel")String accountModel);
+    @POST("api/account/createNewAccount")
+    Call<Response<String>> createNewAccount(@Query("accountModel")String accountModel);
+
+    //Bookmark
+    @GET("api/bookmark/{id}")
+    Call<Response<MultipleBookmarkModel>> getBookMakByAccountId(@Path("id") int accountId);
 }

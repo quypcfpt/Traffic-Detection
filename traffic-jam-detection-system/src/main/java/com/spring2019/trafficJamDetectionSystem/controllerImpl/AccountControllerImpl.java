@@ -31,8 +31,9 @@ public class AccountControllerImpl extends AbstractController implements Account
 
             AccountModel accoutModel = gson.fromJson(accountModel, AccountModel.class);
             Account accountEntity=accountTransformer.modelToEntity(accoutModel);
-            boolean checkLogin =accountService.getAccountByUsername(accountEntity.getUsername(),accountEntity.getPassword());
-            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS,checkLogin);
+            Account account = accountService.getAccountByUsername(accountEntity.getUsername(),accountEntity.getPassword());
+            AccountModel data = accountTransformer.entityToModel(account);
+            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS,data);
             LOGGER.info("End create camera");
         } catch (Exception e) {
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);

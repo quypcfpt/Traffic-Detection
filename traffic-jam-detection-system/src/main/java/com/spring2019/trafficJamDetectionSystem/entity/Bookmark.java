@@ -9,6 +9,8 @@ public class Bookmark {
     private Integer accountId;
     private String origin;
     private String destination;
+    private String ori_coordinate;
+    private String des_coordinate;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,11 +35,11 @@ public class Bookmark {
 
     @Basic
     @Column(name = "origin", nullable = true, length = 2147483647)
-    public String getRouteJson() {
+    public String getOrigin() {
         return origin;
     }
 
-    public void setRouteJson(String routeJson) {
+    public void setOrigin(String routeJson) {
         this.origin = routeJson;
     }
     @Basic
@@ -49,7 +51,24 @@ public class Bookmark {
     public void setDestination(String destination) {
         this.destination = destination;
     }
+    @Basic
+    @Column(name = "ori_coordinate", nullable = true, length = 2147483647)
+    public String getOri_coordinate() {
+        return ori_coordinate;
+    }
 
+    public void setOri_coordinate(String ori_coordinate) {
+        this.ori_coordinate = ori_coordinate;
+    }
+    @Basic
+    @Column(name = "des_coordinate", nullable = true, length = 2147483647)
+    public String getDes_coordinate() {
+        return des_coordinate;
+    }
+
+    public void setDes_coordinate(String des_coordinate) {
+        this.des_coordinate = des_coordinate;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -58,11 +77,13 @@ public class Bookmark {
         return id == bookmark.id &&
                 Objects.equals(accountId, bookmark.accountId) &&
                 Objects.equals(origin, bookmark.origin)&&
+                Objects.equals(ori_coordinate, bookmark.ori_coordinate)&&
+                Objects.equals(des_coordinate, bookmark.des_coordinate)&&
                 Objects.equals(destination, bookmark.destination);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, accountId, origin,destination);
+        return Objects.hash(id, accountId, origin,destination,ori_coordinate,des_coordinate);
     }
 }

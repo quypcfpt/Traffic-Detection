@@ -11,7 +11,6 @@ public class Camera {
     private String resource;
     private Integer observedStatus;
     private Integer camOrder;
-    private Double width;
     private Integer streetId;
     private Boolean isActive;
 
@@ -76,15 +75,6 @@ public class Camera {
         this.camOrder = camOrder;
     }
 
-    @Basic
-    @Column(name = "width", nullable = true, precision = 0)
-    public Double getWidth() {
-        return width;
-    }
-
-    public void setWidth(Double width) {
-        this.width = width;
-    }
 
     @Basic
     @Column(name = "street_id", nullable = true)
@@ -117,13 +107,12 @@ public class Camera {
                 Objects.equals(resource, camera.resource) &&
                 Objects.equals(observedStatus, camera.observedStatus) &&
                 Objects.equals(camOrder, camera.camOrder) &&
-                Objects.equals(width, camera.width) &&
                 Objects.equals(streetId, camera.streetId) &&
                 Objects.equals(isActive, camera.isActive);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, description, position, resource, observedStatus, camOrder, width, streetId, isActive);
+        return Objects.hash(id, description, position, resource, observedStatus, camOrder, streetId, isActive);
     }
 }
