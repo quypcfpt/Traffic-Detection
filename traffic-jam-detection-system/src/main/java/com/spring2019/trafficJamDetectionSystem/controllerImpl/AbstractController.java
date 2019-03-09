@@ -13,8 +13,7 @@ public class AbstractController {
     protected  final Gson gson;
 
     public AbstractController() {
-        this.gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
-    .setDateFormat("dd/MM/yyyy HH:mm").create();
+        this.gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     }
 
 }
