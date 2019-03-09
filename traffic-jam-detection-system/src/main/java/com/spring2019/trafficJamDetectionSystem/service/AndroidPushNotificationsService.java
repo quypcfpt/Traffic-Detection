@@ -8,10 +8,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 public interface AndroidPushNotificationsService {
-<<<<<<< HEAD
 
-=======
->>>>>>> master
     @Async
     public CompletableFuture<String> sendNotification(HttpEntity<String> entity);
 }

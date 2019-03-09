@@ -18,9 +18,6 @@ public class AndroidPushNotificationsServiceImpl implements AndroidPushNotificat
 
     @Async
     public CompletableFuture<String> sendNotification(HttpEntity<String> entity) {
-
-    @Override
-    public CompletableFuture<String> sendNotification(HttpEntity<String> entity) {
         RestTemplate restTemplate = new RestTemplate();
 
         ArrayList<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
@@ -33,3 +30,4 @@ public class AndroidPushNotificationsServiceImpl implements AndroidPushNotificat
         return CompletableFuture.completedFuture(firebaseResponse);
     }
 }
+

@@ -30,8 +30,6 @@ public class DetectionControllerImpl extends AbstractController implements Detec
 
             detectResultData.put(detectionResult.getCameraId(), detectionResult);
 
-            DetectionModel detectionResult = gson.fromJson(detectResultString, DetectionModel.class);
-            detectResultData.put(detectionResult.getCameraId(), detectionResult);
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS);
             LOGGER.info("End update traffic info");
         } catch (Exception e) {
