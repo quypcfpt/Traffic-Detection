@@ -1,7 +1,7 @@
 $('#show-camera-btn').click(function () {
-    var url = "http://localhost:8080/api/camera"
+    var host = "http://" + location.hostname + ":" + location.port;
+    var url = host + "/api/camera"
         + "?page=0"
-
 
     $.ajax({
         url: url,
@@ -25,6 +25,46 @@ $('#show-camera-btn').click(function () {
     })
 });
 
+$('#add-camera-btn').click(function () {
+
+    if ($('#txtStreet')[0].length==0) {
+        var host = "http://" + location.hostname + ":" + location.port;
+        var url = host + "/api/street"
+            + "?page=0";
+
+        $.ajax({
+            url: url,
+            datatype: 'json',
+            type: 'GET',
+            success: function (res) {
+                var result = JSON.parse(res);
+
+                var streetList = result.data.streetList;
+
+                if (streetList != null) {
+                    for (i = 0; i < streetList.length; i++) {
+                        $('#txtStreet').append("<option value='" + streetList[i].id + "'>"
+                            + streetList[i].name + "-" + streetList[i].district
+                            + "</option>");
+                    }
+                }
+            }, error: function (e) {
+                alert("Error: " + e.message);
+            }
+        })
+    }
+});
+
+$('#save-btn').click(function () {
+
+    var cameraModel = {
+        description: $('#txtDescription').val(),
+        street: $('#txtStreet').val(),
+        order: $('#txtOrder').val()
+    }
+})
+
+
 function loadDataTable(cameraList) {
     var table = $('#dataTable').DataTable({
         destroy: true,
@@ -42,10 +82,10 @@ function loadDataTable(cameraList) {
                 render: function (data, type, row) {
                     var ret;
                     var isActive = (row || {}).isActive;
-                    if (isActive == 1) {
-                        ret = '<input type="checkbox" data-toggle="toggle" data-on="Active" data-off="Deactive" checked>';
+                    if (isActive == true) {
+                        ret = '<input type="checkbox" checked data-toggle="toggle" data-on="Active" data-off="Deactive" data-onstyle="success" data-offstyle="danger">';
                     } else {
-                        ret = '<input type="checkbox" data-toggle="toggle" data-on="Active" data-off="Deactive">';
+                        ret = '<input type="checkbox" data-toggle="toggle" data-on="Active" data-off="Deactive" data-onstyle="success" data-offstyle="danger">';
                     }
                     return ret;
                 }
@@ -55,7 +95,7 @@ function loadDataTable(cameraList) {
                 render: function (data, type, row) {
                     var ret;
                     var isActive = (row || {}).isActive;
-                   ret=' <button class="btn btn-warning">Edit Info</button>'
+                    ret = ' <button class="btn btn-warning">Edit Info</button>'
                     return ret;
                 }
             }],

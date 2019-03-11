@@ -90,7 +90,7 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
                 data.setTotalPage(cameras.getTotalPages());
                 data.setTotalRecord(cameras.getTotalElements());
             } else {
-                List<Camera> cameras = cameraService.loadAll();
+                List<Camera> cameras = cameraService.getAllCameras();
 
                 for (Camera camera : cameras) {
                     cameraList.add(cameraTransformer.entityToModel(camera));

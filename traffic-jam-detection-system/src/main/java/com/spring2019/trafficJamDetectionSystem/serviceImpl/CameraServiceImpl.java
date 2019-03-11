@@ -30,7 +30,7 @@ public class CameraServiceImpl implements CameraService {
     }
 
     @Override
-    public List<Camera> loadAll() {
+    public List<Camera> getAllCameras() {
         return cameraRepository.findAll();
     }
 

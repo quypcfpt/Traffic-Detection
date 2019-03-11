@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,6 +31,11 @@ public class StreetServiceImpl implements StreetService {
     @Override
     public Page<Street> getAllStreet(Pageable pageable) {
         return  streetRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<Street> getAllStreet() {
+        return streetRepository.findAll();
     }
 
     @Override

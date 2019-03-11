@@ -14,7 +14,7 @@ public interface CameraService {
 
     public Page<Camera> getAllCameras(Pageable pageable);
 
-    public List<Camera> loadAll();
+    public List<Camera> getAllCameras();
 
     public Page<Camera> getCamerasByStreet(Integer streetId, Pageable pageable);
 
