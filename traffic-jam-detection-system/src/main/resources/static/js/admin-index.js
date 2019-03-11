@@ -1,5 +1,7 @@
+var host = "http://" + location.hostname + ":" + location.port;
+
 $('#show-camera-btn').click(function () {
-    var host = "http://" + location.hostname + ":" + location.port;
+
     var url = host + "/api/camera"
         + "?page=0"
 
@@ -12,8 +14,6 @@ $('#show-camera-btn').click(function () {
             $("#dataTable").find("tr:gt(0)").remove();
 
             var cameraList = result.data.cameraList;
-            cameraListPage = result.data.currentPage;
-            cameraListTotalPage = result.data.totalPage;
 
             if (cameraList != null) {
                 loadDataTable(cameraList)
@@ -27,8 +27,7 @@ $('#show-camera-btn').click(function () {
 
 $('#add-camera-btn').click(function () {
 
-    if ($('#txtStreet')[0].length==0) {
-        var host = "http://" + location.hostname + ":" + location.port;
+    if ($('#txtStreet')[0].length == 0) {
         var url = host + "/api/street"
             + "?page=0";
 
@@ -57,13 +56,36 @@ $('#add-camera-btn').click(function () {
 
 $('#save-btn').click(function () {
 
+    var street = {
+        id: $('#txtStreet').val(),
+    }
+
     var cameraModel = {
         description: $('#txtDescription').val(),
-        street: $('#txtStreet').val(),
+        street: street,
+        position: $('#txtLongitude').val() + ", " + $('#txtLatitude').val(),
         order: $('#txtOrder').val()
     }
-})
 
+    var cameraModelString = JSON.stringify(cameraModel);
+    var formData = new FormData();
+    formData.append("cameraModelString", cameraModelString);
+
+    $.ajax({
+        type: "POST",
+        url: host + "/api/camera",
+        dataType: "json",
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (res) {
+            alert(res.message);
+        },
+        error: function (res) {
+            alert(res.message);
+        }
+    });
+});
 
 function loadDataTable(cameraList) {
     var table = $('#dataTable').DataTable({
@@ -77,15 +99,16 @@ function loadDataTable(cameraList) {
             {data: "description"},
             {data: "position"},
             {data: "street.name"},
+            {data: "order"},
             {
                 data: null,
                 render: function (data, type, row) {
                     var ret;
                     var isActive = (row || {}).isActive;
                     if (isActive == true) {
-                        ret = '<input type="checkbox" checked data-toggle="toggle" data-on="Active" data-off="Deactive" data-onstyle="success" data-offstyle="danger">';
+                        ret = '<span class="label text-secondary">Active</span>';
                     } else {
-                        ret = '<input type="checkbox" data-toggle="toggle" data-on="Active" data-off="Deactive" data-onstyle="success" data-offstyle="danger">';
+                        ret = '<span class="label text-danger">Deactive</span>';
                     }
                     return ret;
                 }
@@ -95,11 +118,62 @@ function loadDataTable(cameraList) {
                 render: function (data, type, row) {
                     var ret;
                     var isActive = (row || {}).isActive;
-                    ret = ' <button class="btn btn-warning">Edit Info</button>'
+                    var id = (row || {}).id;
+                    ret = ' <button class="btn btn-warning" data-toggle="modal" data-target="#edit-modal">Edit Info</button>'
                     return ret;
                 }
-            }],
-
-        responsive: true
+            },
+            {data: "street.id", visible: false, "searchable": false}],
+        responsive: true,
     })
-}
+};
+
+$('#dataTable').on('click', '.btn', function () {
+    var curRow = $(this).closest('tr');
+    var data = $('#dataTable').DataTable().row(curRow).data();
+
+    var id = data["id"];
+    var description =data["description"];
+    var position = data["position"];
+    var spit = position.split(", ");
+    var order = data["order"];
+
+    var streetId = data["street.id"];
+
+    $('#edtId').val(id);
+    $('#edtDescription').val(description);
+    $('#edtLongitude').val(spit[0]);
+    $('#edtLatitude').val(spit[1]);
+    $('#edtOrder').val(order);
+
+    alert(streetId);
+
+    if ($('#edtStreet')[0].length == 0) {
+        var url = host + "/api/street"
+            + "?page=0";
+
+        $.ajax({
+            url: url,
+            datatype: 'json',
+            type: 'GET',
+            success: function (res) {
+                var result = JSON.parse(res);
+
+                var streetList = result.data.streetList;
+
+                if (streetList != null) {
+                    for (i = 0; i < streetList.length; i++) {
+                        $('#edtStreet').append("<option value='" + streetList[i].id + "'>"
+                            + streetList[i].name + "-" + streetList[i].district
+                            + "</option>");
+                    }
+                    $('#edtStreet').val(streetId);
+                }
+            }, error: function (e) {
+                alert("Error: " + e.message);
+            }
+        })
+    }
+    $('#edtStreet').val(streetId);
+
+})

@@ -38,8 +38,10 @@ public class CameraTransformerImpl implements CameraTransformer {
         entity.setObservedStatus(model.getObserverStatus());
         entity.setCamOrder(model.getOrder());
         entity.setObservedStatus(model.getObserverStatus());
+
         Street street=new Street();
         street.setId(model.getStreet().getId());
+        entity.setStreetByStreetId(street);
 
 
         return entity;
