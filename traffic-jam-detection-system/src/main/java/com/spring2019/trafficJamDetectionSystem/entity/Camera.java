@@ -11,8 +11,8 @@ public class Camera {
     private String resource;
     private Integer observedStatus;
     private Integer camOrder;
-    private Integer streetId;
     private Boolean isActive;
+    private Street streetByStreetId;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -75,17 +75,6 @@ public class Camera {
         this.camOrder = camOrder;
     }
 
-
-    @Basic
-    @Column(name = "street_id", nullable = true)
-    public Integer getStreetId() {
-        return streetId;
-    }
-
-    public void setStreetId(Integer streetId) {
-        this.streetId = streetId;
-    }
-
     @Basic
     @Column(name = "isActive", nullable = true)
     public Boolean getIsActive() {
@@ -107,12 +96,21 @@ public class Camera {
                 Objects.equals(resource, camera.resource) &&
                 Objects.equals(observedStatus, camera.observedStatus) &&
                 Objects.equals(camOrder, camera.camOrder) &&
-                Objects.equals(streetId, camera.streetId) &&
                 Objects.equals(isActive, camera.isActive);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, description, position, resource, observedStatus, camOrder, streetId, isActive);
+        return Objects.hash(id, description, position, resource, observedStatus, camOrder, isActive);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "street_id", referencedColumnName = "id")
+    public Street getStreetByStreetId() {
+        return streetByStreetId;
+    }
+
+    public void setStreetByStreetId(Street streetByStreetId) {
+        this.streetByStreetId = streetByStreetId;
     }
 }

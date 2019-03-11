@@ -3,7 +3,6 @@ package com.spring2019.trafficJamDetectionSystem.controllerImpl;
 import com.spring2019.trafficJamDetectionSystem.common.CoreConstant;
 import com.spring2019.trafficJamDetectionSystem.controller.StreetController;
 import com.spring2019.trafficJamDetectionSystem.entity.Street;
-import com.spring2019.trafficJamDetectionSystem.model.MultiCameraModel;
 import com.spring2019.trafficJamDetectionSystem.model.MultiStreetModel;
 import com.spring2019.trafficJamDetectionSystem.model.Response;
 import com.spring2019.trafficJamDetectionSystem.model.StreetModel;

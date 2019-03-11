@@ -4,7 +4,6 @@ import com.spring2019.trafficJamDetectionSystem.common.CoreConstant;
 import com.spring2019.trafficJamDetectionSystem.controller.BookmarkController;
 import com.spring2019.trafficJamDetectionSystem.entity.Bookmark;
 import com.spring2019.trafficJamDetectionSystem.model.BookmarkModel;
-import com.spring2019.trafficJamDetectionSystem.model.CameraModel;
 import com.spring2019.trafficJamDetectionSystem.model.MultipleBookmarkModel;
 import com.spring2019.trafficJamDetectionSystem.model.Response;
 import com.spring2019.trafficJamDetectionSystem.service.BookmarkService;

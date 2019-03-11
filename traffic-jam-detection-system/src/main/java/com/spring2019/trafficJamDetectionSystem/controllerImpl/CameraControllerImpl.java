@@ -3,7 +3,6 @@ package com.spring2019.trafficJamDetectionSystem.controllerImpl;
 import com.spring2019.trafficJamDetectionSystem.common.CoreConstant;
 import com.spring2019.trafficJamDetectionSystem.controller.CameraController;
 import com.spring2019.trafficJamDetectionSystem.entity.Camera;
-import com.spring2019.trafficJamDetectionSystem.entity.Street;
 import com.spring2019.trafficJamDetectionSystem.model.CameraModel;
 import com.spring2019.trafficJamDetectionSystem.model.MultiCameraModel;
 import com.spring2019.trafficJamDetectionSystem.model.Response;
@@ -18,7 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -47,7 +45,7 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
             LOGGER.info("Start camera" + id);
 
             Camera camera = cameraService.getCameraById(id);
-            CameraModel data=cameraTransformer.entityToModel(camera);
+            CameraModel data = cameraTransformer.entityToModel(camera);
 
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
 
@@ -60,7 +58,7 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
     }
 
     @Override
-    public String loadAllCameras( Integer page, Integer size, String sort, String sortBy) {
+    public String loadAllCameras(Integer page, Integer size, String sort, String sortBy) {
         Sort sortable = null;
         if (sort.equals("ASC")) {
             sortable = Sort.by(sortBy).ascending();
@@ -69,8 +67,10 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
             sortable = Sort.by(sortBy).descending();
         }
 
-        Pageable pageable = PageRequest.of(page - 1, size, sortable);
-
+        Pageable pageable=null;
+        if (page > 0) {
+            pageable = PageRequest.of(page - 1, size, sortable);
+        }
         Response<MultiCameraModel> response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
 
         LOGGER.info("Start load all cameras");
@@ -79,15 +79,23 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
             MultiCameraModel data = new MultiCameraModel();
 
             List<CameraModel> cameraList = new ArrayList<>();
-            Page<Camera> cameras = cameraService.getAllCameras(pageable);
 
-            for (Camera camera : cameras) {
-                cameraList.add(cameraTransformer.entityToModel(camera));
+            if (page > 0) {
+                Page<Camera> cameras = cameraService.getAllCameras(pageable);
+
+                for (Camera camera : cameras) {
+                    cameraList.add(cameraTransformer.entityToModel(camera));
+                }
+                data.setCurrentPage(page);
+                data.setTotalPage(cameras.getTotalPages());
+                data.setTotalRecord(cameras.getTotalElements());
+            } else {
+                List<Camera> cameras = cameraService.loadAll();
+
+                for (Camera camera : cameras) {
+                    cameraList.add(cameraTransformer.entityToModel(camera));
+                }
             }
-            data.setCurrentPage(page);
-            data.setTotalPage(cameras.getTotalPages());
-            data.setTotalRecord(cameras.getTotalElements());
-
             data.setCameraList(cameraList);
 
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
@@ -114,14 +122,14 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
 
         Response<MultiCameraModel> response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
 
-        LOGGER.error("Start load cameras by street with ID: "+streetId);
+        LOGGER.error("Start load cameras by street with ID: " + streetId);
 
         try {
             MultiCameraModel data = new MultiCameraModel();
             List<CameraModel> cameraList = new ArrayList<>();
-            Page<Camera> cameras = cameraService.getCamerasByStreet(streetId,pageable);
+            Page<Camera> cameras = cameraService.getCamerasByStreet(streetId, pageable);
 
-            if (cameras.getSize()==0){
+            if (cameras.getSize() == 0) {
                 LOGGER.info("Empty result!");
             }
 
@@ -134,7 +142,7 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
             data.setCameraList(cameraList);
 
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
-            LOGGER.info("End load street with ID: "+streetId);
+            LOGGER.info("End load street with ID: " + streetId);
         } catch (Exception e) {
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
             LOGGER.error(e.getMessage());
@@ -149,7 +157,7 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
             LOGGER.info("Start create camera: " + cameraModelString);
 
             CameraModel newCamera = gson.fromJson(cameraModelString, CameraModel.class);
-            Camera camera=cameraTransformer.modelToEntity(newCamera);
+            Camera camera = cameraTransformer.modelToEntity(newCamera);
             cameraService.createCamera(camera);
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS);
             LOGGER.info("End create camera");

@@ -18,6 +18,8 @@ public class CameraModel {
     private String resource;
     @Expose
     private StreetModel street;
+    @Expose
+    private boolean isActive;
 
     public CameraModel() {
     }
@@ -62,7 +64,6 @@ public class CameraModel {
         this.order = order;
     }
 
-
     public String getResource() {
         return resource;
     }
@@ -77,5 +78,13 @@ public class CameraModel {
 
     public void setStreet(StreetModel street) {
         this.street = street;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

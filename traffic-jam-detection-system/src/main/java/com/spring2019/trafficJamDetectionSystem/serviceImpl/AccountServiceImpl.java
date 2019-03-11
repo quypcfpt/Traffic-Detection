@@ -1,7 +1,6 @@
 package com.spring2019.trafficJamDetectionSystem.serviceImpl;
 
 import com.spring2019.trafficJamDetectionSystem.entity.Account;
-import com.spring2019.trafficJamDetectionSystem.model.AccountModel;
 import com.spring2019.trafficJamDetectionSystem.repository.AccountRepository;
 import com.spring2019.trafficJamDetectionSystem.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
