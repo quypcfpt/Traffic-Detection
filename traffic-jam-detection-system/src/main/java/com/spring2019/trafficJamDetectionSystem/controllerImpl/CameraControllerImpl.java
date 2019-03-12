@@ -169,7 +169,18 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
     }
 
     @Override
-    public String updateCamera(String CameraModelString) {
-        return null;
+    public String updateCamera(String cameraModelString) {
+        Response response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
+        try {
+            CameraModel cameraModel = gson.fromJson(cameraModelString, CameraModel.class);
+            Camera cameraEntity = cameraTransformer.modelToEntity(cameraModel);
+            cameraService.updateCamera(cameraEntity);
+            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, true);
+            LOGGER.info("Camera updated: " + cameraModelString);
+        }catch (Exception e){
+            response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
+            LOGGER.error(e.getMessage());
+        }
+        return gson.toJson(response);
     }
 }

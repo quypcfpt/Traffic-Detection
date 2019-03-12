@@ -87,6 +87,41 @@ $('#save-btn').click(function () {
     });
 });
 
+$('#edit-btn').click(function () {
+
+    var street = {
+        id: $('#edtStreet').val(),
+    }
+
+    var cameraModel = {
+        id: $('#edtId').val(),
+        description: $('#edtDescription').val(),
+        street: street,
+        position: $('#edtLongitude').val() + ", " + $('#edtLatitude').val(),
+        order: $('#edtOrder').val(),
+        isActive: $('#edtActive').prop('checked')
+    }
+
+    var cameraModelString = JSON.stringify(cameraModel);
+    var formData = new FormData();
+    formData.append("cameraModelString", cameraModelString);
+
+    $.ajax({
+        type: "PUT",
+        url: host + "/api/camera",
+        dataType: "json",
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (res) {
+            alert(res.message);
+        },
+        error: function (res) {
+            alert(res.message);
+        }
+    });
+});
+
 function loadDataTable(cameraList) {
     var table = $('#dataTable').DataTable({
         destroy: true,
@@ -106,7 +141,7 @@ function loadDataTable(cameraList) {
                     var ret;
                     var isActive = (row || {}).isActive;
                     if (isActive == true) {
-                        ret = '<span class="label text-secondary">Active</span>';
+                        ret = '<span class="label text-success">Active</span>';
                     } else {
                         ret = '<span class="label text-danger">Deactive</span>';
                     }
@@ -139,6 +174,13 @@ $('#dataTable').on('click', '.btn', function () {
 
     var street = data["street"];
     var streetId=street.id;
+
+    var active=data["isActive"];
+    if (active==true){
+        $('#edtActive').prop("checked", true).change();
+    }else{
+        $('#edtActive').prop("checked", false).change();
+    }
 
     $('#edtId').val(id);
     $('#edtDescription').val(description);
