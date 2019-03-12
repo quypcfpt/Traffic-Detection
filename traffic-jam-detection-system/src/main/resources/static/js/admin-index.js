@@ -33,7 +33,7 @@ $('#add-camera-btn').click(function () {
 
         $.ajax({
             url: url,
-            datatype: 'json',
+            datatype: 'JSON',
             type: 'GET',
             success: function (res) {
                 var result = JSON.parse(res);
@@ -122,8 +122,7 @@ function loadDataTable(cameraList) {
                     ret = ' <button class="btn btn-warning" data-toggle="modal" data-target="#edit-modal">Edit Info</button>'
                     return ret;
                 }
-            },
-            {data: "street.id", visible: false, "searchable": false}],
+            }],
         responsive: true,
     })
 };
@@ -138,7 +137,8 @@ $('#dataTable').on('click', '.btn', function () {
     var spit = position.split(", ");
     var order = data["order"];
 
-    var streetId = data["street.id"];
+    var street = data["street"];
+    var streetId=street.id;
 
     $('#edtId').val(id);
     $('#edtDescription').val(description);
@@ -146,7 +146,6 @@ $('#dataTable').on('click', '.btn', function () {
     $('#edtLatitude').val(spit[1]);
     $('#edtOrder').val(order);
 
-    alert(streetId);
 
     if ($('#edtStreet')[0].length == 0) {
         var url = host + "/api/street"
