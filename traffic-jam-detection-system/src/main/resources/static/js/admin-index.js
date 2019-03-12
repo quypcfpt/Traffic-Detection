@@ -1,7 +1,10 @@
 var host = "http://" + location.hostname + ":" + location.port;
 
-$('#show-camera-btn').click(function () {
+$(function () {
+    showCameraTable();
+})
 
+function showCameraTable () {
     var url = host + "/api/camera"
         + "?page=0"
 
@@ -23,7 +26,7 @@ $('#show-camera-btn').click(function () {
             alert("Error: " + e.message);
         }
     })
-});
+};
 
 $('#add-camera-btn').click(function () {
 
