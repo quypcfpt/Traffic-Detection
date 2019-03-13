@@ -4,7 +4,7 @@
     "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
   <session-factory>
-    <property name="connection.url">jdbc:sqlserver://localhost;database=traffic_db</property>
+    <property name="connection.url">jdbc:sqlserver://localhost:1433;database=casptonetrafficjamdb</property>
     <property name="connection.driver_class">com.microsoft.sqlserver.jdbc.SQLServerDriver</property>
       <mapping class="com.spring2019.trafficJamDetectionSystem.entity.Camera"/>
       <mapping resource="com/spring2019/trafficJamDetectionSystem/entity/Camera.hbm.xml"/>

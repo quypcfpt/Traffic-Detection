@@ -7,12 +7,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
 @Service
 public interface StreetService {
 
     Street getStreetById(int id);
 
     Page<Street> getStreetByDistrict(String district, Pageable pageable);
+
+    List<Street> getAllStreet();
     Page<Street> getAllStreet(Pageable pageable);
+
+
     Page<Street> getStreetBySearch(String txtSearch, Pageable pageable);
 }

@@ -53,8 +53,8 @@ public class Scheduler {
                 DetectionModel newResult = DetectionControllerImpl.detectResultData.get(cameraId);
 
                 if (oldResult.getStatusId() != newResult.getStatusId()) {
-                    int streetId = cameraService.getCameraById(cameraId).getStreetId();
-                    Street street = streetService.getStreetById(streetId);
+                    Street street = cameraService.getCameraById(cameraId).getStreetByStreetId();
+
 
                     String msg = "";
                     switch (newResult.getStatusId()) {

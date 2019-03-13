@@ -2,20 +2,14 @@ package com.spring2019.trafficJamDetectionSystem.controllerImpl;
 
 import com.spring2019.trafficJamDetectionSystem.common.CoreConstant;
 import com.spring2019.trafficJamDetectionSystem.controller.RoleController;
-import com.spring2019.trafficJamDetectionSystem.entity.Account;
 import com.spring2019.trafficJamDetectionSystem.entity.Role;
-import com.spring2019.trafficJamDetectionSystem.model.AccountModel;
-import com.spring2019.trafficJamDetectionSystem.model.MultiStreetModel;
 import com.spring2019.trafficJamDetectionSystem.model.Response;
 import com.spring2019.trafficJamDetectionSystem.model.RoleModel;
 import com.spring2019.trafficJamDetectionSystem.service.RoleService;
-import com.spring2019.trafficJamDetectionSystem.serviceImpl.RoleServiceImpl;
 import com.spring2019.trafficJamDetectionSystem.transformer.RoleTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 

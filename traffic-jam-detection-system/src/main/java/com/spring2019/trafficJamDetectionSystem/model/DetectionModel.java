@@ -2,7 +2,6 @@ package com.spring2019.trafficJamDetectionSystem.model;
 
 import com.google.gson.annotations.Expose;
 
-import java.util.List;
 
 public class DetectionModel {
     @Expose
@@ -14,8 +13,7 @@ public class DetectionModel {
     private String imageUrl;
     @Expose
     private String time;
-//    @Expose
-//    private List<Detection> result;
+
 
     public DetectionModel() {
     }

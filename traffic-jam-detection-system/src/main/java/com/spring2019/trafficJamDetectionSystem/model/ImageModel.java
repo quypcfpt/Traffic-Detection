@@ -2,7 +2,6 @@ package com.spring2019.trafficJamDetectionSystem.model;
 
 import com.google.gson.annotations.Expose;
 
-import java.sql.Timestamp;
 
 public class ImageModel {
     @Expose

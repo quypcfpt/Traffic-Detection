@@ -23,7 +23,8 @@ public class CameraTransformerImpl implements CameraTransformer {
         model.setPosition(entity.getPosition());
         model.setOrder(entity.getCamOrder());
         model.setObserverStatus(entity.getObservedStatus());
-        //  model.setStreet(streetTransformer.entityToModel(entity.getStreetByStreetId()));
+        model.setStreet(streetTransformer.entityToModel(entity.getStreetByStreetId()));
+        model.setActive(entity.getIsActive());
         return model;
     }
 
@@ -34,13 +35,19 @@ public class CameraTransformerImpl implements CameraTransformer {
         entity.setId(model.getId());
         entity.setDescription(model.getDescription());
         entity.setPosition(model.getPosition());
-        entity.setObservedStatus(model.getObserverStatus());
+
+        if (model.getObserverStatus() != null) {
+            entity.setObservedStatus(model.getObserverStatus());
+        }
+
+        if (model.getResource() != null) {
+            entity.setResource(model.getResource());
+        }
         entity.setCamOrder(model.getOrder());
-        entity.setObservedStatus(model.getObserverStatus());
-        Street street=new Street();
+        Street street = new Street();
         street.setId(model.getStreet().getId());
-
-
+        entity.setStreetByStreetId(street);
+        entity.setIsActive(model.isActive());
         return entity;
     }
 }

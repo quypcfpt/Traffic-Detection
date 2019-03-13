@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,9 +30,18 @@ public class CameraServiceImpl implements CameraService {
     }
 
     @Override
-    public Page<Camera> getCamerasByStreet(Integer street, Pageable pageable) {
-        return cameraRepository.findByStreetIdAndIsActive(street,true,pageable);
+    public List<Camera> getAllCameras() {
+        return cameraRepository.findAll();
     }
+
+    @Override
+    public Page<Camera> getCamerasByStreet(Integer streetId, Pageable pageable) {
+        Street street=new Street();
+        street.setId(streetId);
+
+        return cameraRepository.findByStreetByStreetIdAndIsActive(street,true,pageable);
+    }
+
     @Override
     public void createCamera(Camera camera) {
         camera.setIsActive(true);

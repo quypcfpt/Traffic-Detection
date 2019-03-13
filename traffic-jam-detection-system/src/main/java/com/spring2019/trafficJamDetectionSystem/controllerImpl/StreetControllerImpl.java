@@ -3,7 +3,6 @@ package com.spring2019.trafficJamDetectionSystem.controllerImpl;
 import com.spring2019.trafficJamDetectionSystem.common.CoreConstant;
 import com.spring2019.trafficJamDetectionSystem.controller.StreetController;
 import com.spring2019.trafficJamDetectionSystem.entity.Street;
-import com.spring2019.trafficJamDetectionSystem.model.MultiCameraModel;
 import com.spring2019.trafficJamDetectionSystem.model.MultiStreetModel;
 import com.spring2019.trafficJamDetectionSystem.model.Response;
 import com.spring2019.trafficJamDetectionSystem.model.StreetModel;
@@ -85,29 +84,37 @@ public class StreetControllerImpl extends AbstractController implements StreetCo
         if (sort.equals("DESC")) {
             sortable = Sort.by(sortBy).descending();
         }
-        Pageable pageable = PageRequest.of(page - 1, size, sortable);
-
+        Pageable pageable = null;
+        if (page > 0) {
+            pageable = PageRequest.of(page - 1, size, sortable);
+        }
         Response<MultiStreetModel> response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
 
         try {
             MultiStreetModel data = new MultiStreetModel();
 
             List<StreetModel> streetList = new ArrayList<>();
-            Page<Street> streets = streetService.getAllStreet(pageable);
-            if (streets.getSize() == 0) {
-                LOGGER.info("Empty result!");
-            }
+            if (page > 0) {
+                Page<Street> streets = streetService.getAllStreet(pageable);
+                if (streets.getSize() == 0) {
+                    LOGGER.info("Empty result!");
+                }
 
-            for (Street street : streets) {
-                streetList.add(streetTransformer.entityToModel(street));
+                for (Street street : streets) {
+                    streetList.add(streetTransformer.entityToModel(street));
+                }
+                data.setCurrentPage(page);
+                data.setTotalPage(streets.getTotalPages());
+                data.setTotalRecord(streets.getTotalElements());
+            }else{
+                List<Street> streets=streetService.getAllStreet();
+                for (Street street : streets) {
+                    streetList.add(streetTransformer.entityToModel(street));
+                }
             }
-            data.setCurrentPage(page);
-            data.setTotalPage(streets.getTotalPages());
-            data.setTotalRecord(streets.getTotalElements());
             data.setStreetList(streetList);
-
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
-            LOGGER.info("End load streets in district ");
+            LOGGER.info("End load streets  ");
         }catch (Exception e){
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
             LOGGER.error(e.getMessage());

@@ -1,6 +1,7 @@
 package com.spring2019.trafficJamDetectionSystem.entity;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -10,6 +11,8 @@ public class Street {
     private String district;
     private String city;
     private Boolean isActive;
+    private Collection<Camera> camerasById;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -60,6 +63,7 @@ public class Street {
     public void setIsActive(Boolean active) {
         isActive = active;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -75,5 +79,14 @@ public class Street {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, district, city, isActive);
+    }
+
+    @OneToMany(mappedBy = "streetByStreetId")
+    public Collection<Camera> getCamerasById() {
+        return camerasById;
+    }
+
+    public void setCamerasById(Collection<Camera> camerasById) {
+        this.camerasById = camerasById;
     }
 }
