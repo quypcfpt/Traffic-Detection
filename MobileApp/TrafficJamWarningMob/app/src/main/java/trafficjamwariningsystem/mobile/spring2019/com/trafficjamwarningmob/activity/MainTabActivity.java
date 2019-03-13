@@ -43,6 +43,7 @@ public class MainTabActivity extends AppCompatActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        tabLayout.setBackgroundColor(getColor(R.color.colorPrimary));
         tabLayout.setupWithViewPager(mViewPager);
         tabLayout.getTabAt(0).setIcon(R.mipmap.list);
         tabLayout.getTabAt(1).setIcon(R.mipmap.direction);

@@ -14,4 +14,7 @@ public interface AdminController {
 
     @GetMapping("/test")
     public ModelAndView openIndex();
+=======
+    public ModelAndView openTest();
+>>>>>>> master
 }

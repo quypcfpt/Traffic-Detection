@@ -50,12 +50,11 @@ public class BookmarkControllerImpl extends AbstractController implements Bookma
 
     @Override
     public String deleteBookmarkById(Integer id) {
-        Response<Boolean> response = new Response<Boolean>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
+        Response<Integer> response = new Response<Integer>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
         try {
             LOGGER.info("Start Delete Bookmark" + id);
-            List<BookmarkModel> models = new ArrayList<BookmarkModel>();
-            bookmarkService.removeBookMarkById(id);
-            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS);
+            Integer isDelete = bookmarkService.removeBookMarkById(id);
+            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS,isDelete);
             LOGGER.info("End Delete Bookmark" + id);
         } catch (Exception e) {
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);

@@ -14,13 +14,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorLabel">
+            android:background="@color/colorPrimaryLight">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textSize="30dp"
                 android:textAlignment="center"
-                android:textColor="#ffffff"
+                android:textColor="@color/colorText"
                 android:text="Welcome" />
 
         </LinearLayout>
@@ -37,6 +37,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
                 android:gravity="center"
+                android:textColor="@color/colorText"
                 android:textSize="20dp"
                 android:text="Register"/>
             <LinearLayout
@@ -87,8 +88,8 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorLabel"
-                    android:textColor="#FFFFFF"
+                    android:background="@color/colorPrimary"
+                    android:textColor="@color/colorText"
                     android:id="@+id/btnSignIn"
                     android:text="Sign Up"
                     android:onClick="clickToSignUp"/>

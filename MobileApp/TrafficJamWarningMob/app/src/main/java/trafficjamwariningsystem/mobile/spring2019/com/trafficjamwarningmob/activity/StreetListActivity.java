@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,7 +47,8 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
     int currentItems, scrollOutItems, totalItems;
     private ProgressBar progressBar;
     private String txtSearch;
-
+    private RelativeLayout view;
+    private TextView txtError;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,6 +62,8 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
         editText=(EditText)v.findViewById(R.id.txtSearch);
         btnSearch=(Button)v.findViewById(R.id.searchBtn);
         btnSearch.setBackgroundResource(R.mipmap.search);
+        view = (RelativeLayout)v.findViewById(R.id.listview);
+        txtError=(TextView)v.findViewById(R.id.txtError);
         editText.clearFocus();
         onFirstLoad();
         doLoadMore();
@@ -80,8 +84,13 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
                 long totalRecord = multiStreetModel.getTotalRecord();
                 streetModelList = multiStreetModel.getStreetList();
                 if (streetModelList != null) {
+                    view.setVisibility(View.VISIBLE);
+                    txtError.setVisibility(View.GONE);
                     adapter = new StreetAdapter(streetModelList, getContext());
                     recyclerView.setAdapter(adapter);
+                }else{
+                    txtError.setVisibility(View.VISIBLE);
+                    view.setVisibility(View.GONE);
                 }
             }
             @Override
@@ -94,8 +103,8 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
         txtSearch=editText.getText()+"";
         if(txtSearch.equals("")) {
             if (currentPage+1 <= totalPage) {
-                currentPage +=  1;
                 progressBar.setVisibility(View.VISIBLE);
+                currentPage +=  1;
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -111,11 +120,19 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
                                 streetModelList.add(item);
                                 }
                                 if (streetModelList != null) {
+                                    view.setVisibility(View.VISIBLE);
+                                    txtError.setVisibility(View.GONE);
                                     adapter = new StreetAdapter(streetModelList, getContext());
                                     mLayoutManager = new LinearLayoutManager(getContext());
                                     recyclerView.setLayoutManager(mLayoutManager);
                                     recyclerView.setAdapter(adapter);
                                     progressBar.setVisibility(View.GONE);
+                                }else{
+                                    view.setVisibility(View.VISIBLE);
+                                    txtError.setVisibility(View.GONE);
+                                    Toast.makeText(getContext(), "Nothing to load more", Toast.LENGTH_SHORT).show();
+                                    progressBar.setVisibility(View.GONE);
+
                                 }
                             }
                             @Override
@@ -124,41 +141,47 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
                             }
                       });
                     }
-                    }, 500);
+                    }, 3000);
             } else {
                 Toast.makeText(getContext(), "Nothing to load more", Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.GONE);
             }
         }else {
-            if(currenPageSearch <= totalPageSearch){
+            if(currenPageSearch+1 <= totalPageSearch){
                 currenPageSearch+=1;
-                apiInterface = ApiClient.getClient().create(ApiInterface.class);
-                Call<Response<MultiStreetModel>> responseCall = apiInterface.getStreetsBySearchNameLike(txtSearch,"district",currenPageSearch);
-                responseCall.enqueue(new Callback<Response<MultiStreetModel>>() {
+                progressBar.setVisibility(View.VISIBLE);
+                new Handler().postDelayed(new Runnable() {
                     @Override
-                    public void onResponse(Call<Response<MultiStreetModel>> call, retrofit2.Response<Response<MultiStreetModel>> response) {
-                        Response<MultiStreetModel> res = response.body();
-                        MultiStreetModel multiStreetModel = res.getData();
-                        currenPageSearch = multiStreetModel.getCurrentPage();
-                        for (StreetModel item : multiStreetModel.getStreetList()) {
-                            streetModelListSearch.add(item);
-                        }
-                        if (streetModelListSearch != null) {
-                            adapter = new StreetAdapter(streetModelListSearch, getContext());
-                            recyclerView.setAdapter(adapter);
-                            mLayoutManager = new LinearLayoutManager(getContext());
-                            recyclerView.setLayoutManager(mLayoutManager);
-                            recyclerView.setAdapter(adapter);
-                            progressBar.setVisibility(View.GONE);
-                        }
+                    public void run() {
+                        apiInterface = ApiClient.getClient().create(ApiInterface.class);
+                        Call<Response<MultiStreetModel>> responseCall = apiInterface.getStreetsBySearchNameLike(txtSearch,"district",currenPageSearch);
+                        responseCall.enqueue(new Callback<Response<MultiStreetModel>>() {
+                            @Override
+                            public void onResponse(Call<Response<MultiStreetModel>> call, retrofit2.Response<Response<MultiStreetModel>> response) {
+                                Response<MultiStreetModel> res = response.body();
+                                MultiStreetModel multiStreetModel = res.getData();
+                                currenPageSearch = multiStreetModel.getCurrentPage();
+                                for (StreetModel item : multiStreetModel.getStreetList()) {
+                                    streetModelList.add(item);
+                                }
+                                if (streetModelList != null) {
+                                    view.setVisibility(View.VISIBLE);
+                                    txtError.setVisibility(View.GONE);
+                                    adapter = new StreetAdapter(streetModelList, getContext());
+                                    recyclerView.setAdapter(adapter);
+                                    mLayoutManager = new LinearLayoutManager(getContext());
+                                    recyclerView.setLayoutManager(mLayoutManager);
+                                    recyclerView.setAdapter(adapter);
+                                    progressBar.setVisibility(View.GONE);
+                                }
+                            }
+                            @Override
+                            public void onFailure(Call<Response<MultiStreetModel>> call, Throwable t) {
+                                Log.d("Failure" , t.getMessage());
+                            }
+                        });
                     }
-
-
-                    @Override
-                    public void onFailure(Call<Response<MultiStreetModel>> call, Throwable t) {
-                        Log.d("Failure" , t.getMessage());
-                    }
-                });
+                },3000);
             }else{
                 Toast.makeText(getContext(), "Nothing to load more", Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.GONE);
@@ -210,10 +233,14 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
                     currenPageSearch = multiStreetModel.getCurrentPage();
                     totalPageSearch = multiStreetModel.getTotalPage();
                     long totalRecord = multiStreetModel.getTotalRecord();
-                    streetModelListSearch = multiStreetModel.getStreetList();
-                    if (streetModelListSearch != null) {
-                        adapter = new StreetAdapter(streetModelListSearch, getContext());
+                    streetModelList = multiStreetModel.getStreetList();
+                    if (streetModelList != null &&!streetModelList.isEmpty()) {
+                        adapter = new StreetAdapter(streetModelList, getContext());
                         recyclerView.setAdapter(adapter);
+                    }else{
+                        txtError.setText(txtSearch+" cannot found .");
+                        txtError.setVisibility(View.VISIBLE);
+                        view.setVisibility(View.GONE);
                     }
                 }
 

@@ -2,6 +2,7 @@ package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api;
 import org.json.JSONObject;
 
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -55,4 +56,7 @@ public interface  ApiInterface {
     //Bookmark
     @GET("api/bookmark/{id}")
     Call<Response<MultipleBookmarkModel>> getBookMakByAccountId(@Path("id") int accountId);
+
+    @DELETE("api/bookmark/{id}")
+    Call<Response<String>> deleteBookmarkWithId(@Path("id") int accountId);
 }

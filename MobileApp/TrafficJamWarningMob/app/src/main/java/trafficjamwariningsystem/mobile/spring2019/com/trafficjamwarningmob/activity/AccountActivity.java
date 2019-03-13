@@ -4,14 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -20,7 +23,12 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -39,16 +47,18 @@ import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model
 
 public class AccountActivity extends Fragment implements View.OnClickListener {
 private ApiInterface apiInterface;
-private boolean isLogin,isCheckLogin ;
-private TextView txtSignUp, accountUsername , accountPassword,accountName;
+private boolean isLogin,isCheckLogin,isLogout ;
+private TextView txtSignUp, accountUsername , accountPassword,accountName , emptyView;
 private EditText edtUsername,edtPassword;
 private Button btnSignIn;
 private LinearLayout signInLayout,accountLayout;
 private AccountModel account;
 private static BookmarkAdapter adapter;
 private RecyclerView recyclerView;
-    private ProgressBar progressBar;
-    private LinearLayoutManager mLayoutManager;
+FileOutputStream outputStream;
+private ProgressBar progressBar,progressBar1;
+private LinearLayoutManager mLayoutManager;
+private ImageButton logOutbtn;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -62,28 +72,35 @@ private RecyclerView recyclerView;
         accountUsername=(TextView) v.findViewById(R.id.viewUserName);
         accountPassword=(TextView) v.findViewById(R.id.viewPassword);
         accountName = (TextView)v.findViewById(R.id.viewAccountName);
-        recyclerView = (RecyclerView) v.findViewById(R.id.recycleView);
+        emptyView=(TextView)v.findViewById(R.id.emptyView);
+        recyclerView = (RecyclerView) v.findViewById(R.id.recycleViewBookmark);
+        logOutbtn=(ImageButton)v.findViewById(R.id.btnLogout);
         progressBar = (ProgressBar) v.findViewById(R.id.progress);
-        mLayoutManager = new LinearLayoutManager(getContext());
+        progressBar1= (ProgressBar) v.findViewById(R.id.progress1);
+        mLayoutManager = new LinearLayoutManager(v.getContext());
         recyclerView.setLayoutManager(mLayoutManager);
-        isLogin=false;
-        account = new AccountModel();
-        initialView(isLogin);
+        isLogin=false;isLogout=false;
+        String fileName = "accountInfo";
+        File file = getContext().getFileStreamPath(fileName);
+        initialView(false);
+        return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         txtSignUp.setOnClickListener(this);
         btnSignIn.setOnClickListener(this);
-
-        return v;
+        logOutbtn.setOnClickListener(this);
     }
 
     private void initialView(boolean isLogin){
         if(isLogin){
             signInLayout.setVisibility(View.GONE);
             accountLayout.setVisibility(View.VISIBLE);
-            loadAccountInfo();
         }else{
             signInLayout.setVisibility(View.VISIBLE);
             accountLayout.setVisibility(View.GONE);
-
         }
     }
 
@@ -92,68 +109,101 @@ private RecyclerView recyclerView;
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnSignIn:
-                String username=edtUsername.getText()+"";
-                String password=edtPassword.getText()+"";
-                checkLogin(username,password);
-                initialView(isCheckLogin);
+                progressBar.setVisibility(View.VISIBLE);
+                final String username=edtUsername.getText()+"";
+                final String password=edtPassword.getText()+"";
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        checkLogin(username,password);
+                        progressBar.setVisibility(View.GONE);
+                    }
+                },1000);
+
+
                 break;
             case R.id.txtSignUp:
                 Intent intent = new Intent(v.getContext(),SignUpActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.btnLogout:
+                    signInLayout.setVisibility(View.VISIBLE);
+                    accountLayout.setVisibility(View.GONE);
+                    isLogin=false;
+                    break;
         }
     }
 
     private void checkLogin(String userName , String passowrd){
-
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
         JSONObject acountModel = new JSONObject();
         try {
             acountModel.put("username",userName);
             acountModel.put("password",passowrd);
+            Log.d("Check " , "userName  : "+ userName + "- Password "+passowrd);
             Call<Response<AccountModel>> responseCall = apiInterface.checkUserLogin(acountModel.toString());
             responseCall.enqueue(new Callback<Response<AccountModel>>() {
                 @Override
                 public void onResponse(Call<Response<AccountModel>> call, retrofit2.Response<Response<AccountModel>> response) {
                     Response<AccountModel> message = response.body();
+                    account = new AccountModel();
                     AccountModel data = message.getData();
                     if(data !=null){
                         account.setId(data.getId());
                         account.setUsername(data.getUsername());
                         account.setPassword(data.getPassword());
                         account.setName(data.getName());
-                        isCheckLogin =true;
+                        Log.d("Check2 " , "ID : "+account.getId()+"- Name "+account.getName());
+                        saveAccountInfoInternal(account);
+                        isLogin =true;
+                        loadAccountInfo(account);
+                        initialView(isLogin);
                     }else{
-                        isCheckLogin = false;
+                        isLogin = false;
+                        initialView(isLogin);
+                        Toast.makeText(getContext(), "Username and Password is invalid", Toast.LENGTH_SHORT).show();
                     }
                 }
                 @Override
                 public void onFailure(Call<Response<AccountModel>> call, Throwable t) {
-
+                    Log.e("ERROR",t.getMessage());
                 }
             });
+            Log.d("Check Is Login : ",isLogin+"");
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    private void loadAccountInfo(){
+    private void loadAccountInfo(AccountModel account){
         if(account !=null) {
+
+            progressBar1.setVisibility(View.VISIBLE);
             accountName.setText(account.getName());
             accountUsername.setText(account.getUsername());
             accountPassword.setText(account.getPassword());
             int accountID = account.getId();
             apiInterface = ApiClient.getClient().create(ApiInterface.class);
             Call<Response<MultipleBookmarkModel>> responseCall = apiInterface.getBookMakByAccountId(accountID);
+
             responseCall.enqueue(new Callback<Response<MultipleBookmarkModel>>() {
                 @Override
                 public void onResponse(Call<Response<MultipleBookmarkModel>> call, retrofit2.Response<Response<MultipleBookmarkModel>> response) {
+                    recyclerView.setVisibility(View.GONE);
+                    emptyView.setVisibility(View.GONE);
                     Response<MultipleBookmarkModel> message = response.body();
                     MultipleBookmarkModel data = message.getData();
-                    List<BookmarkModel> models = data.getBookmarkModelList();
+                    final List<BookmarkModel> models = data.getBookmarkModelList();
                     if(!models.isEmpty()){
                         adapter = new BookmarkAdapter(models, getContext());
                         recyclerView.setAdapter(adapter);
+                        emptyView.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        progressBar1.setVisibility(View.GONE);
+                    }else{
+                        recyclerView.setVisibility(View.GONE);
+                        emptyView.setVisibility(View.VISIBLE);
+                        progressBar1.setVisibility(View.GONE);
                     }
                 }
                 @Override
@@ -161,6 +211,28 @@ private RecyclerView recyclerView;
 
                 }
             });
+            progressBar1.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
         }
+    }
+
+    public void saveAccountInfoInternal (AccountModel account){
+        String fileName ="accountInfo";
+        fileExist(fileName);
+            try {
+                outputStream= getContext().openFileOutput(fileName,Context.MODE_PRIVATE);
+                outputStream.write((account.getId()+"-").getBytes());
+                outputStream.write((account.getUsername()+"-").getBytes());
+                outputStream.write(account.getPassword().getBytes());
+                outputStream.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }catch (IOException ex) {
+                ex.printStackTrace();
+            }
+    }
+    public void fileExist(String fname){
+        File file = getContext().getFileStreamPath(fname);
+        file.delete();
     }
 }
