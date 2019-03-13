@@ -74,6 +74,7 @@ public class CameraAdapter extends RecyclerView.Adapter<RecycleViewCameraHolder>
                 Intent intent = new Intent(context,ImageActivity.class);
                 intent.putExtra("CAMERA_ID",models.getId()+"");
                 intent.putExtra("CAMERA_STATUS",models.getObserverStatus()+"");
+                intent.putExtra("CAMERA_NAME",models.getDescription()+"");
                 context.startActivity(intent);
             }
         });
