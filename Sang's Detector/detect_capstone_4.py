@@ -11,13 +11,19 @@ from utils import label_map_util
 from utils import visualization_utils as vis_util
 import pandas as pd
 from random import randint,randrange
-
+from openpyxl import load_workbook
 MODEL_NAME = 'faster_rcnn_inception_v2_data5_200k_result'
 CWD_PATH = os.getcwd()
 PATH_TO_CKPT = MODEL_NAME + '/frozen_inference_graph.pb'
 PATH_TO_LABELS = os.path.join('data', 'labelmap2.pbtxt')
-NUM_CLASSES = 5
 
+NUM_CLASSES = 5
+dataX=[]
+dataY=[]
+dataZ=[]
+file="./DataSample.xlsx"
+df = pd.read_excel(file, header=None)
+writer = pd.ExcelWriter(file, engine='openpyxl')
 client = Client("AwCnfiZESWaA14iEjm189z")
 sys.path.append("..")
 
@@ -40,7 +46,7 @@ detection_scores = detection_graph.get_tensor_by_name('detection_scores:0')
 detection_classes = detection_graph.get_tensor_by_name('detection_classes:0')
 num_detections = detection_graph.get_tensor_by_name('num_detections:0')
 
-video_path = [CWD_PATH + "/video/MVI_3984_3p.mp4"]
+video_path = [CWD_PATH + "/test.MOV"]
 size_excel_path = open_workbook('FixSize.xls')
 size_values = []
 
@@ -378,6 +384,10 @@ class DetectMutilThread (threading.Thread):
                                 delta.append(y)
                                 z = float(e.road) - ((float(e.motor)*motorCountLine3) + (float(e.car)*carCountLine3) + (float(e.car)*truckCountLine3) + (float(e.car)*busCountLine3))
                                 delta.append(z)
+## Luu vào mang data , data2 , data3 de save vao Excel                                 
+                                dataX.append(x)
+                                dataY.append(y)
+                                dataZ.append(z)
                                 print("X,Y,Z is appended into delta: " + str(x) + " " + str(y) + " " + str(z) + " of " + self.name + " in frame_" + str(count))
                                 print("Current Delta: " + str(delta) + " of " + self.name + " in frame_" + str(count))
                                 
@@ -446,12 +456,31 @@ class DetectMutilThread (threading.Thread):
      
         video.release()
         cv2.destroyWindow(window_name)
+        save_Excel()
         print(window_name + " Exiting ")
-        
-def main():       
+def save_Excel():
+    df2 = pd.DataFrame({'Data': dataX})
+    df1 = pd.DataFrame({'Data': dataY})
+    df3 = pd.DataFrame({'Data': dataZ})
+    book=load_workbook(file)
+    print('**********************************************************')
+    print(dataX)
+    writer.book = book
+    writer.sheets = dict((ws.title, ws) for ws in book.worksheets)
+    df2.to_excel(writer, sheet_name='Sheet1', header=None, index=False,
+             startcol=1,startrow=2)
+    df1.to_excel(writer, sheet_name='Sheet1', header=None, index=False,
+             startcol=2,startrow=2)
+    df3.to_excel(writer, sheet_name='Sheet1', header=None, index=False,
+             startcol=3,startrow=2)
+    writer.save()
+
+
+def main():
     for item in video_path:
         thread = DetectMutilThread(os.path.basename(item), item)
         thread.start()  
         
 if __name__ == '__main__':
     main()
+  
