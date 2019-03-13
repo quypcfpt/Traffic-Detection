@@ -10,4 +10,7 @@ public interface BookmarkService {
     public List<Bookmark> getBookMarkByAccountId(Integer accountID);
 
     public Integer removeBookMarkById(Integer id);
+
+    public List<Bookmark> getAllBookmarks();
+    public void createBookmark(Bookmark newBookmark);
 }

@@ -39,6 +39,17 @@ public class StreetServiceImpl implements StreetService {
     }
 
     @Override
+    public void createStreet(Street street) {
+        street.setIsActive(true);
+        streetRepository.save(street);
+    }
+
+    @Override
+    public void updateStreet(Street street) {
+        streetRepository.save(street);
+    }
+
+    @Override
     public Page<Street> getStreetBySearch(String txtSearch, Pageable pageable) {
         return streetRepository.findByNameContainingIgnoreCaseAndIsActive(txtSearch,true,pageable);
     }

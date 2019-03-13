@@ -153,20 +153,18 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
         Response response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
         try {
             LOGGER.info("Start create camera: " + cameraModelString);
-
-            CameraModel newCamera = gson.fromJson(cameraModelString, CameraModel.class);
-            Camera camera=cameraTransformer.modelToEntity(newCamera);
-            cameraService.createCamera(camera);
-            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS);
+            CameraModel cameraModel = gson.fromJson(cameraModelString, CameraModel.class);
+            Camera cameraEntity = cameraTransformer.modelToEntity(cameraModel);
+            cameraService.createCamera(cameraEntity);
+            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, true);
             LOGGER.info("End create camera");
-        } catch (Exception e) {
+        }catch (Exception e){
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
             LOGGER.error(e.getMessage());
         }
         return gson.toJson(response);
     }
 
-    @Override
     public String updateCamera(String cameraModelString) {
         Response response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
         try {

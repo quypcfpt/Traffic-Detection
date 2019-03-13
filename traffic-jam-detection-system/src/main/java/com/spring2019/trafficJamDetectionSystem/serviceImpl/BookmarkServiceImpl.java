@@ -23,4 +23,14 @@ public class BookmarkServiceImpl implements BookmarkService {
         Integer isDelete=bookmarkRepository.deleteBookmarkById(id);
         return isDelete;
     }
+
+    @Override
+    public List<Bookmark> getAllBookmarks() {
+        return bookmarkRepository.findAll();
+    }
+
+    @Override
+    public void createBookmark(Bookmark newBookmark) {
+        bookmarkRepository.save(newBookmark);
+    }
 }

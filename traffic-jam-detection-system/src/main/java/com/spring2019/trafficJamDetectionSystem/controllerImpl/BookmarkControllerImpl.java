@@ -27,6 +27,58 @@ public class BookmarkControllerImpl extends AbstractController implements Bookma
     BookmarkTransformer bookmarkTransformer;
 
     @Override
+    public String getAllBookmarks() {
+        Response<MultipleBookmarkModel> response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
+        try {
+            LOGGER.info("Getting all bookmarks...");
+            List<Bookmark> bookmarkList = bookmarkService.getAllBookmarks();
+            MultipleBookmarkModel data = new MultipleBookmarkModel();
+            List<BookmarkModel> bookmarkModelList = new ArrayList<>();
+            for (Bookmark x : bookmarkList) {
+                bookmarkModelList.add(bookmarkTransformer.entityToModel(x));
+            }
+            List<BookmarkModel> testArr = bookmarkModelList;
+            if(testArr.isEmpty()){
+                data.setBookmarkModelList(new ArrayList<BookmarkModel>());
+            }else
+                data.setBookmarkModelList(testArr);
+            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
+            LOGGER.info("All bookmarks are loaded!");
+        }catch (Exception e){
+            response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
+            LOGGER.error(e.getMessage());
+
+        }
+        return gson.toJson(response);
+    }
+
+    @Override
+    public String createBookmark(BookmarkModel newBookmarkModel) {
+        Response response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
+        try {
+            LOGGER.info("Creating new bookmark...");
+            List<Bookmark> list = bookmarkService.getBookMarkByAccountId(6);
+            for (Bookmark x : list) {
+                if(x.getOri_coordinate().equals(newBookmarkModel.getOri_coordinate()) && x.getDes_coordinate().equals(newBookmarkModel.getDes_coordinate())){
+                    response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, false);
+                    LOGGER.info("Bookmark existed!");
+                    return gson.toJson(response);
+                }
+            }
+            Bookmark newBookmarkEntity = bookmarkTransformer.modelToEntity(newBookmarkModel);
+            bookmarkService.createBookmark(newBookmarkEntity);
+            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, true);
+            LOGGER.info("A new bookmark is created!");
+        }catch (Exception e){
+            response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
+            LOGGER.error(e.getMessage());
+
+        }
+        return gson.toJson(response);
+
+    }
+
+    @Override
     public String getBookMarkByAccountID(Integer accountID) {
         Response<MultipleBookmarkModel> response = new Response<MultipleBookmarkModel>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
         try {
@@ -48,18 +100,19 @@ public class BookmarkControllerImpl extends AbstractController implements Bookma
         return gson.toJson(response);
     }
 
-    @Override
     public String deleteBookmarkById(Integer id) {
-        Response<Integer> response = new Response<Integer>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
+        Response<Boolean> response = new Response<Boolean>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
         try {
             LOGGER.info("Start Delete Bookmark" + id);
-            Integer isDelete = bookmarkService.removeBookMarkById(id);
-            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS,isDelete);
+            List<BookmarkModel> models = new ArrayList<BookmarkModel>();
+            bookmarkService.removeBookMarkById(id);
+            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS);
             LOGGER.info("End Delete Bookmark" + id);
         } catch (Exception e) {
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
             LOGGER.error(e.getMessage());
         }
         return gson.toJson(response);
+
     }
 }

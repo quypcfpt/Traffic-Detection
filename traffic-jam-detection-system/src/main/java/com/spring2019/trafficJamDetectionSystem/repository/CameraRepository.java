@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,4 +18,6 @@ public interface CameraRepository extends JpaRepository<Camera,Integer> {
     Page<Camera> findAllByIsActive(Boolean isActive,Pageable pageable);
 
     Page<Camera> findByStreetByStreetIdAndIsActive(Street street, Boolean isActive, Pageable pageable);
+
+    List<Camera> findByStreetByStreetIdAndIsActive(Integer street, Boolean isActive);
 }
