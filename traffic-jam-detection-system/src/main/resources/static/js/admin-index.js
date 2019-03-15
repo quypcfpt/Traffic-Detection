@@ -66,7 +66,7 @@ $('#save-btn').click(function () {
     var cameraModel = {
         description: $('#txtDescription').val(),
         street: street,
-        position: $('#txtLongitude').val() + ", " + $('#txtLatitude').val(),
+        position: $('#txtLongitude').val() + "," + $('#txtLatitude').val(),
         order: $('#txtOrder').val()
     }
 
@@ -82,10 +82,10 @@ $('#save-btn').click(function () {
         contentType: false,
         processData: false,
         success: function (res) {
-            alert(res.message);
+            $('#create-modal').modal('toggle');
+            showCameraTable();
         },
         error: function (res) {
-            alert(res.message);
         }
     });
 });
@@ -117,10 +117,10 @@ $('#edit-btn').click(function () {
         contentType: false,
         processData: false,
         success: function (res) {
-            alert(res.message);
+            $('#edit-modal').modal('toggle');
+            showCameraTable();
         },
         error: function (res) {
-            alert(res.message);
         }
     });
 });

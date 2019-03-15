@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,13 +35,13 @@ public class AccountControllerImpl extends AbstractController implements Account
     public String checkLogin(String accountModel) {
         Response response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
         try {
-            LOGGER.info("Start create camera: " + accountModel);
+            LOGGER.info("Start Check login: " + accountModel);
             AccountModel accoutModel = gson.fromJson(accountModel, AccountModel.class);
             Account accountEntity=accountTransformer.modelToEntity(accoutModel);
             Account account = accountService.getAccountByUsername(accountEntity.getUsername(),accountEntity.getPassword());
             AccountModel data = accountTransformer.entityToModel(account);
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS,data);
-            LOGGER.info("End create camera");
+            LOGGER.info("End Check login: " + accountModel);
         } catch (Exception e) {
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
             LOGGER.error(e.getMessage());
@@ -77,28 +78,38 @@ public class AccountControllerImpl extends AbstractController implements Account
         if (sort.equals("DESC")) {
             sortable = Sort.by(sortBy).descending();
         }
-        Pageable pageable = PageRequest.of(page - 1, size, sortable);
+        Pageable pageable = null;
+        if(page > 0){
+            pageable = PageRequest.of(page - 1, size, sortable);
+        }
 
         Response<MultiAccountModel> response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
         LOGGER.info("Start load all accounts");
         try {
             MultiAccountModel data = new MultiAccountModel();
             List<AccountModel> accountList = new ArrayList<>();
-            Page<Account> accounts = accountService.getAllAccounts(pageable);
-            if (accounts.getSize() == 0) {
-                LOGGER.info("Empty result!");
-            }
+            if (page > 0) {
+                Page<Account> accounts = accountService.getAllAccount(pageable);
+                if (accounts.getSize() == 0) {
+                    LOGGER.info("Empty result!");
+                }
 
-            for (Account account : accounts) {
-                accountList.add(accountTransformer.entityToModel(account));
-            }
-            data.setCurrentPage(page);
-            data.setTotalPage(accounts.getTotalPages());
-            data.setTotalRecord(accounts.getTotalElements());
-            data.setAccountList(accountList);
+                for (Account account : accounts) {
+                    accountList.add(accountTransformer.entityToModel(account));
+                }
+                data.setCurrentPage(page);
+                data.setTotalPage(accounts.getTotalPages());
+                data.setTotalRecord(accounts.getTotalElements());
+            }else {
+                List<Account> accounts = accountService.getAllAccount();
+                for (Account account : accounts) {
+                    accountList.add(accountTransformer.entityToModel(account));
+                }
+                data.setAccountList(accountList);
 
-            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
-            LOGGER.info("End load all accounts");
+                response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
+                LOGGER.info("End load all accounts");
+            }
         }catch (Exception e){
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
             LOGGER.error(e.getMessage());
@@ -106,5 +117,43 @@ public class AccountControllerImpl extends AbstractController implements Account
         return gson.toJson(response);
     }
 
+    public String changeAccountRole(String accountModelString) {
+        Response response = new Response(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
+        try {
+            AccountModel accountModel = gson.fromJson(accountModelString, AccountModel.class);
+            Account accountEntity = accountTransformer.modelToEntity(accountModel);
+            accountService.updateAccount(accountEntity);
+            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, accountModel);
+            LOGGER.info("Account role updated");
+        }catch (Exception e){
+            response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
+            LOGGER.error(e.getMessage());
+        }
+        return gson.toJson(response);
+    }
+    @Override
+    public String checkAdminLogin(String accountModel, HttpSession session) {
+        Response response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
+        try {
+            LOGGER.info("Check admin login: " + accountModel);
 
+            AccountModel accoutModel = gson.fromJson(accountModel, AccountModel.class);
+            Account accountEntity=accountTransformer.modelToEntity(accoutModel);
+            Account account = accountService.getAccountByUsernameAndIsAdmin(accountEntity.getUsername(),accountEntity.getPassword());
+            if(account != null){
+                LOGGER.info("Admin account is authenticated");
+                session.setAttribute("username", account.getUsername());
+                response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, "success");
+            }else {
+                LOGGER.info("Admin account not found");
+                response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, "failed");
+            }
+        } catch (Exception e) {
+            response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
+            LOGGER.error(e.getMessage());
+        }
+        return gson.toJson(response);
+
+    }
 }
+

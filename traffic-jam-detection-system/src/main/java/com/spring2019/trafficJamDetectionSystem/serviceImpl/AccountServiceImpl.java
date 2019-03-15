@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,18 +34,23 @@ public class AccountServiceImpl implements AccountService {
         return false;
     }
 
-    @Override
-    public Page<Account> getAllAccounts(Pageable pageable) {
+    public Page<Account> getAllAccount(Pageable pageable) {
         return accountRepository.findAll(pageable);
     }
 
     @Override
-    public Account getAccountById(Integer id) {
-        return accountRepository.findAccountById(id);
+    public List<Account> getAllAccount() {
+        return accountRepository.findAll();
     }
+
 
     @Override
     public void updateAccount(Account account) {
         accountRepository.save(account);
+    }
+    @Override
+    public Account getAccountByUsernameAndIsAdmin(String username,String password) {
+        Account account=accountRepository.findByUsernameAndPasswordAndRoleId(username,password,1);
+        return account;
     }
 }

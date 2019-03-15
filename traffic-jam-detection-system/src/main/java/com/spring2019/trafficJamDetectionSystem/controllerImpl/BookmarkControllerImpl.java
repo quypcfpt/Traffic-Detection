@@ -83,7 +83,7 @@ public class BookmarkControllerImpl extends AbstractController implements Bookma
         Response<MultipleBookmarkModel> response = new Response<MultipleBookmarkModel>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
         try {
             MultipleBookmarkModel data = new MultipleBookmarkModel();
-            LOGGER.info("Start Book mark" + accountID);
+            LOGGER.info("Get bookmark of user ID: " + accountID);
             List<BookmarkModel> models = new ArrayList<BookmarkModel>();
             List<Bookmark> bookmarkList = bookmarkService.getBookMarkByAccountId(accountID);
             for(Bookmark item : bookmarkList){
@@ -92,7 +92,7 @@ public class BookmarkControllerImpl extends AbstractController implements Bookma
             data.setBookmarkModelList(models);
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
 
-            LOGGER.info("End Book Mark" + accountID);
+            LOGGER.info("End get bookmark of user ID: " + accountID);
         } catch (Exception e) {
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
             LOGGER.error(e.getMessage());

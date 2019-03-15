@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -35,7 +36,11 @@ import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -76,7 +81,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_search_route_actitvity, container, false);
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
@@ -94,13 +99,14 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
             @Override
             public void onClick(View v) {
                 if(cbGPS.isChecked()){
+                    saveBookmark.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.GONE);
+                    empty.setVisibility(View.GONE);
                     if(!des.getText().toString().trim().isEmpty()) {
-
                         checkLocationService();
                     }else{
                         onEmptySearchInput();
                     }
-
                 }else {
                     if(!ori.getText().toString().trim().isEmpty() && !des.getText().toString().trim().isEmpty()) {
                         RequestParams params = getParams(ori.getText().toString(), des.getText().toString());
@@ -123,7 +129,30 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
         saveBookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createBookmark();
+                if(fileExist()){
+                    createBookmark();
+                }else{
+                    ViewPager vp = getActivity().findViewById(R.id.container);
+                    vp.setCurrentItem(2);
+                    vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                        @Override
+                        public void onPageScrolled(int i, float v, int i1) {
+
+                        }
+
+                        @Override
+                        public void onPageSelected(int i) {
+                            if(i == 1){
+                                checkExistedBookmark();
+                            }
+                        }
+
+                        @Override
+                        public void onPageScrollStateChanged(int i) {
+
+                        }
+                    });
+                }
             }
         });
         return rootView;
@@ -211,7 +240,11 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
                     if(onRouteCameras.isEmpty()){
                         onEmptyResult();
                     }else{
-                        checkExistedBookmark();
+                        if(fileExist()){
+                            checkExistedBookmark();
+                        }else{
+                            requestLogin();
+                        }
                         adapter = new CameraAdapter(onRouteCameras, getContext());
                         recyclerView.setAdapter(adapter);
                         empty.setVisibility(View.GONE);
@@ -295,7 +328,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
             List<Address> addresses = geocoder.getFromLocation(newLocation.latitude, newLocation.longitude, 1);
             if(addresses != null){
                 Address add = addresses.get(0);
-                String strAdd = add.getThoroughfare() + " " + add.getSubAdminArea();
+                String strAdd = add.getSubThoroughfare() + " " + add.getThoroughfare() + " " + add.getSubAdminArea();
                 Log.d("Street", add.getThoroughfare());
                 ori.setText(strAdd);
                 des.requestFocus();
@@ -327,10 +360,12 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
 
     public void checkExistedBookmark(){
         BookmarkModel newBookmarkModel = new BookmarkModel();
-        newBookmarkModel.setAccountId(6);
-        newBookmarkModel.setOrigin(ori.getText().toString());
-        newBookmarkModel.setDestination(des.getText().toString());
-        Call<Response<MultipleBookmarkModel>> responseCall = apiInterface.getBookMakByAccountId(6);
+        Integer userId = getUserId();
+        if(userId == null){
+            Toast.makeText(getActivity(), "ERROR: Can not check existed bookmark", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Call<Response<MultipleBookmarkModel>> responseCall = apiInterface.getBookMakByAccountId(userId);
         responseCall.enqueue(new Callback<Response<MultipleBookmarkModel>>() {
             @Override
             public void onResponse(Call<Response<MultipleBookmarkModel>> call, retrofit2.Response<Response<MultipleBookmarkModel>> response) {
@@ -359,7 +394,12 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
 
     public void createBookmark(){
         BookmarkModel newBookmarkModel = new BookmarkModel();
-        newBookmarkModel.setAccountId(6);
+        Integer userId = getUserId();
+        if(userId == null){
+            Toast.makeText(getActivity(), "ERROR: Can not add bookmark", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        newBookmarkModel.setAccountId(userId);
         newBookmarkModel.setOrigin(ori.getText().toString());
         newBookmarkModel.setDestination(des.getText().toString());
         newBookmarkModel.setOri_coordinate(ori_coordinate + "");
@@ -382,5 +422,37 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
             }
         });
     }
+    public Integer getUserId(){
+        Integer userId = null;
+        try {
+            FileInputStream fileInputStream = getContext().openFileInput("accountInfo");
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            StringBuffer buffer = new StringBuffer();
+            String lines;
+            while ((lines = bufferedReader.readLine()) != null){
+                buffer.append(lines);
+            }
+            userId = Integer.parseInt(buffer.toString().split("-")[0]);
+            Log.d("Login Info", buffer.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+            Log.d("RequestLogin-Error", e.getMessage());
+        }
+        return userId;
+    }
+
+    public void requestLogin(){
+        saveBookmark.setVisibility(View.VISIBLE);
+        saveBookmark.setText("Login to add bookmark");
+        saveBookmark.setClickable(true);
+    }
+
+    public boolean fileExist(){
+        File file = getContext().getFileStreamPath("accountInfo");
+        return file.exists();
+    }
 
 }
+
+

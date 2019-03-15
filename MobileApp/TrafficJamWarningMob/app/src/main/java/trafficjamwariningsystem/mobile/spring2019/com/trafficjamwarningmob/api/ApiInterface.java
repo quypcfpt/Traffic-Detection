@@ -25,10 +25,10 @@ public interface  ApiInterface {
     Call<Response<MultiStreetModel>> getStreets(@Path("district") String district);
 
     @GET("api/street")
-    Call<Response<MultiStreetModel>> getAllStreets(@Query("sortBy") String sortBy);
+    Call<Response<MultiStreetModel>> getAllStreets(@Query("sortBy") String sortBy,@Query("size") int size);
 
     @GET("api/street")
-    Call<Response<MultiStreetModel>> getAllStreets(@Query("sortBy") String sortBy, @Query("page") int page);
+    Call<Response<MultiStreetModel>> getAllStreets(@Query("sortBy") String sortBy, @Query("page") int page ,@Query("size") int size);
     @GET("api/street/search/{search}")
     Call<Response<MultiStreetModel>> getStreetsBySearchNameLike (@Path("search") String search ,@Query("sortBy") String sortBy, @Query("page") int page);
 

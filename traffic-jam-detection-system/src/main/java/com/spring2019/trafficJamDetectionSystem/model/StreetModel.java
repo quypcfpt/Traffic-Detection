@@ -14,6 +14,8 @@ public class StreetModel {
     @Expose
     private String city;
     @Expose
+    private Boolean isActive;
+    @Expose
     private List<CameraModel> cameraList;
 
     public StreetModel() {
@@ -57,5 +59,12 @@ public class StreetModel {
 
     public void setCameraList(List<CameraModel> cameraList) {
         this.cameraList = cameraList;
+    }
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean active) {
+        isActive = active;
     }
 }

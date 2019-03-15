@@ -197,7 +197,14 @@ public class StreetControllerImpl extends AbstractController implements StreetCo
             StreetModel streetModel = gson.fromJson(streetModelString, StreetModel.class);
             Street streetEntity = streetTransformer.modelToEntity(streetModel);
             streetService.updateStreet(streetEntity);
-            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, true);
+            if(!streetModel.getIsActive()){
+                ArrayList<Camera> cameras = (ArrayList)cameraService.getCamerasByStreetAndIsActive(streetModel.getId());
+                for (Camera x : cameras) {
+                    x.setIsActive(false);
+                    cameraService.updateCamera(x);
+                }
+            }
+            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, streetModel);
             LOGGER.info("Street updated: " + streetModelString);
         }catch (Exception e){
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);

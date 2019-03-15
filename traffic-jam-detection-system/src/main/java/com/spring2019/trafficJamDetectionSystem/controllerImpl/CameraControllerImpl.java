@@ -79,25 +79,27 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
 
             List<CameraModel> cameraList = new ArrayList<>();
             if (page > 0) {
-                Page<Camera> cameras = cameraService.getAllCameras(pageable);
+                if (page > 0) {
+                    Page<Camera> cameras = cameraService.getAllCameras(pageable);
 
-                for (Camera camera : cameras) {
-                    cameraList.add(cameraTransformer.entityToModel(camera));
-                }
-                data.setCurrentPage(page);
-                data.setTotalPage(cameras.getTotalPages());
-                data.setTotalRecord(cameras.getTotalElements());
-            } else {
-                List<Camera> cameras = cameraService.getAllCameras();
+                    for (Camera camera : cameras) {
+                        cameraList.add(cameraTransformer.entityToModel(camera));
+                    }
+                    data.setCurrentPage(page);
+                    data.setTotalPage(cameras.getTotalPages());
+                    data.setTotalRecord(cameras.getTotalElements());
+                } else {
+                    List<Camera> cameras = cameraService.getAllCameras();
 
-                for (Camera camera : cameras) {
-                    cameraList.add(cameraTransformer.entityToModel(camera));
-                }
+                    for (Camera camera : cameras) {
+                        cameraList.add(cameraTransformer.entityToModel(camera));
+                    }
             }
             data.setCameraList(cameraList);
 
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
             LOGGER.info("End load all cameras");
+            }
         } catch (Exception e) {
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
             LOGGER.error(e.getMessage());
