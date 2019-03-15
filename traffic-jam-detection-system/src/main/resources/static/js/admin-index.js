@@ -1,9 +1,12 @@
 var host = "http://" + location.hostname + ":" + location.port;
 
 $(function () {
+    showCameraTable();
+})
 
+function showCameraTable () {
     var url = host + "/api/camera"
-        + "?page=0";
+        + "?page=0"
 
     $.ajax({
         url: url,
@@ -11,7 +14,6 @@ $(function () {
         type: 'GET',
         success: function (res) {
             var result = JSON.parse(res);
-
             $("#dataTable").find("tr:gt(0)").remove();
 
             var cameraList = result.data.cameraList;
@@ -24,7 +26,7 @@ $(function () {
             alert("Error: " + e.message);
         }
     })
-});
+};
 
 $('#add-camera-btn').click(function () {
 
@@ -64,7 +66,7 @@ $('#save-btn').click(function () {
     var cameraModel = {
         description: $('#txtDescription').val(),
         street: street,
-        position: $('#txtLongitude').val() + ", " + $('#txtLatitude').val(),
+        position: $('#txtLongitude').val() + "," + $('#txtLatitude').val(),
         order: $('#txtOrder').val()
     }
 
@@ -80,10 +82,19 @@ $('#save-btn').click(function () {
         contentType: false,
         processData: false,
         success: function (res) {
-            alert(res.message);
+            $('#create-modal').modal('toggle');
+            showCameraTable();
+            $.bootstrapGrowl('Create Success.',{
+                type: 'success',
+                delay: 2000,
+            });
         },
         error: function (res) {
-            alert(res.message);
+            $('#edit-modal').modal('toggle');
+            $.bootstrapGrowl('You Got Error',{
+                type: 'danger',
+                delay: 2000,
+            });
         }
     });
 });
@@ -115,10 +126,19 @@ $('#edit-btn').click(function () {
         contentType: false,
         processData: false,
         success: function (res) {
-            alert(res.message);
+            $('#edit-modal').modal('toggle');
+            showCameraTable();
+            $.bootstrapGrowl('Edit Success.',{
+                type: 'success',
+                delay: 2000,
+            });
         },
         error: function (res) {
-            alert(res.message);
+            $('#edit-modal').modal('toggle');
+            $.bootstrapGrowl('You Got Error',{
+                type: 'danger',
+                delay: 2000,
+            });
         }
     });
 });
