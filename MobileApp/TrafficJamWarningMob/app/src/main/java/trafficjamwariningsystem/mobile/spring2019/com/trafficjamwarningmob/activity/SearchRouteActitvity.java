@@ -2,7 +2,6 @@ package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.acti
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Criteria;
@@ -24,10 +23,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.PolyUtil;
@@ -39,7 +36,6 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -111,6 +107,8 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
                     if(!ori.getText().toString().trim().isEmpty() && !des.getText().toString().trim().isEmpty()) {
                         RequestParams params = getParams(ori.getText().toString(), des.getText().toString());
                         searchCamera(params);
+                    }else{
+                        onEmptySearchInput();
                     }
                 }
 
@@ -153,6 +151,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
                         }
                     });
                 }
+
             }
         });
         return rootView;
@@ -422,6 +421,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
             }
         });
     }
+
     public Integer getUserId(){
         Integer userId = null;
         try {
@@ -454,5 +454,3 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
     }
 
 }
-
-
