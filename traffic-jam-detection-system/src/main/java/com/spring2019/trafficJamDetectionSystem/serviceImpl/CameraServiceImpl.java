@@ -43,14 +43,6 @@ public class CameraServiceImpl implements CameraService {
     }
 
     @Override
-    public Page<Camera> getCamerasByStreet(Integer streetId, Pageable pageable) {
-        Street street=new Street();
-        street.setId(streetId);
-
-        return cameraRepository.findByStreetByStreetIdAndIsActive(street,true,pageable);
-    }
-
-    @Override
     public List<Camera> getCamerasByStreetAndIsActive(Integer street) {
         return cameraRepository.findByStreetByStreetIdAndIsActive(street,true);
     }

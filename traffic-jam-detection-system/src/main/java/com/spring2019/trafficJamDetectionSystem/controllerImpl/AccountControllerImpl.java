@@ -4,7 +4,7 @@ import com.spring2019.trafficJamDetectionSystem.common.CoreConstant;
 import com.spring2019.trafficJamDetectionSystem.controller.AccountController;
 import com.spring2019.trafficJamDetectionSystem.entity.Account;
 import com.spring2019.trafficJamDetectionSystem.model.AccountModel;
->>>>>>> master
+import com.spring2019.trafficJamDetectionSystem.model.MultiAccountModel;
 import com.spring2019.trafficJamDetectionSystem.model.Response;
 import com.spring2019.trafficJamDetectionSystem.service.AccountService;
 import com.spring2019.trafficJamDetectionSystem.transformer.AccountTransformer;

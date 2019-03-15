@@ -15,9 +15,9 @@ public interface StreetService {
 
     List<Street> getAllStreet();
 
-    List<Street> getAllStreet();
-    Page<Street> getAllStreet(Pageable pageable);
     void createStreet(Street street);
+
     void updateStreet(Street street);
+
     Page<Street> getStreetBySearch(String txtSearch, Pageable pageable);
 }
