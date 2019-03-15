@@ -84,8 +84,17 @@ $('#save-btn').click(function () {
         success: function (res) {
             $('#create-modal').modal('toggle');
             showCameraTable();
+            $.bootstrapGrowl('Create Success.',{
+                type: 'success',
+                delay: 2000,
+            });
         },
         error: function (res) {
+            $('#edit-modal').modal('toggle');
+            $.bootstrapGrowl('You Got Error',{
+                type: 'danger',
+                delay: 2000,
+            });
         }
     });
 });
@@ -119,8 +128,17 @@ $('#edit-btn').click(function () {
         success: function (res) {
             $('#edit-modal').modal('toggle');
             showCameraTable();
+            $.bootstrapGrowl('Edit Success.',{
+                type: 'success',
+                delay: 2000,
+            });
         },
         error: function (res) {
+            $('#edit-modal').modal('toggle');
+            $.bootstrapGrowl('You Got Error',{
+                type: 'danger',
+                delay: 2000,
+            });
         }
     });
 });

@@ -16,6 +16,7 @@ public class AdminControllerImpl extends AbstractController implements AdminCont
         return new ModelAndView("tables");
     }
 
+
     public ModelAndView openTest() {
         return new ModelAndView("blank");
     }
