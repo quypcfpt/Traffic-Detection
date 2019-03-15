@@ -46,4 +46,14 @@
     e.preventDefault();
   });
 
+  //login
+  $('logout-btn').click(function () {
+    $.ajax({
+      url: host + "/portal/logout",
+      type: "GET"
+    })
+  })
+
 })(jQuery); // End of use strict
+
+

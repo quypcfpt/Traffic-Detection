@@ -49,14 +49,13 @@
             <div class="container-fluid">
 
                 <!-- Page Heading -->
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#create-modal"
-                        id="add-camera-btn">Add
-                    Camera
-                </button>
+                <!--<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#create-modal"-->
+                        <!--id="add-camera-btn">Add -->
+                <!--</button>-->
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Camera Table</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Account Table</h6>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -64,11 +63,9 @@
                                 <thead>
                                 <tr>
                                     <th>Id</th>
-                                    <th>Description</th>
-                                    <th>Position</th>
-                                    <th>Street</th>
-                                    <th>Order</th>
-                                    <th>Active</th>
+                                    <th>Username</th>
+                                    <th>Name</th>
+                                    <th>Role</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -85,7 +82,7 @@
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Add Camera</h5>
+                                <h5 class="modal-title">Add Street</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -93,30 +90,16 @@
                             <form>
                                 <div class="modal-body">
                                     <div class="form-group">
-                                        <label for="txtDescription">Description</label>
-                                        <textarea type="text" class="form-control" id="txtDescription"
-                                                  placeholder="1234 Main St"></textarea>
+                                        <label for="txtName">Name</label>
+                                        <input type="text" class="form-control" id="txtName" />
                                     </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-9">
-                                            <label for="txtStreet">Street</label>
-                                            <select id="txtStreet" class="form-control">
-                                            </select>
-                                        </div>
-                                        <div class="form-group col-md-3">
-                                            <label for="txtOrder">Order</label>
-                                            <input type="number" class="form-control" id="txtOrder">
-                                        </div>
+                                    <div class="form-group">
+                                        <label for="txtDistrict">District</label>
+                                        <input type="text" class="form-control" id="txtDistrict" />
                                     </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-6">
-                                            <label for="txtLatitude">Latitude</label>
-                                            <input type="number" class="form-control" id="txtLatitude">
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label for="txtLongitude">Longitude</label>
-                                            <input type="number" class="form-control" id="txtLongitude">
-                                        </div>
+                                    <div class="form-group">
+                                        <label for="txtCity">City</label>
+                                        <input type="text" class="form-control" id="txtCity" />
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-primary" id="save-btn">Save</button>
@@ -136,7 +119,7 @@
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Edit Camera</h5>
+                            <h5 class="modal-title">Edit Account</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -145,36 +128,22 @@
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label for="edtId">Id</label>
-                                    <input type="text" class="form-control" id="edtId" readonly>
+                                    <input type="text" class="form-control" id="edtId" readonly/>
                                 </div>
                                 <div class="form-group">
-                                    <label for="edtDescription">Description</label>
-                                    <textarea type="text" class="form-control" id="edtDescription"
-                                              placeholder="1234 Main St"></textarea>
+                                    <label for="edtUsername">Username</label>
+                                    <input type="text" class="form-control" id="edtUsername" readonly/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="edtName">Name</label>
+                                    <input type="text" class="form-control" id="edtName" readonly/>
                                 </div>
                                 <div class="form-row">
-                                    <div class="form-group col-md-9">
-                                        <label for="txtStreet">Street</label>
-                                        <select id="edtStreet" class="form-control">
+                                    <div class="form-group col-md-3">
+                                        <label for="edtRole">Role</label>
+                                        <select id="edtRole" class="form-control">
                                         </select>
                                     </div>
-                                    <div class="form-group col-md-3">
-                                        <label for="edtOrder">Order</label>
-                                        <input type="number" class="form-control" id="edtOrder">
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md-6">
-                                        <label for="edtLatitude">Latitude</label>
-                                        <input type="number" class="form-control" id="edtLatitude">
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="edtLongitude">Longitude</label>
-                                        <input type="number" class="form-control" id="edtLongitude">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <input id="edtActive" type="checkbox" data-on="Active" data-off="Deactive"  data-toggle="toggle" data-width="100">
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-primary" id="edit-btn">Save</button>
@@ -227,7 +196,7 @@
 <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
 <!-- Page level custom scripts -->
-<script type="application/javascript" src="/js/admin-index.js"></script>
+<script type="application/javascript" src="/js/account-index.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js"></script>
 </body>
 

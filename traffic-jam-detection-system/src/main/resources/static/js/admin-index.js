@@ -1,12 +1,9 @@
 var host = "http://" + location.hostname + ":" + location.port;
 
 $(function () {
-    showCameraTable();
-})
 
-function showCameraTable () {
     var url = host + "/api/camera"
-        + "?page=0"
+        + "?page=0";
 
     $.ajax({
         url: url,
@@ -14,6 +11,7 @@ function showCameraTable () {
         type: 'GET',
         success: function (res) {
             var result = JSON.parse(res);
+
             $("#dataTable").find("tr:gt(0)").remove();
 
             var cameraList = result.data.cameraList;
@@ -26,7 +24,7 @@ function showCameraTable () {
             alert("Error: " + e.message);
         }
     })
-};
+});
 
 $('#add-camera-btn').click(function () {
 
@@ -66,7 +64,7 @@ $('#save-btn').click(function () {
     var cameraModel = {
         description: $('#txtDescription').val(),
         street: street,
-        position: $('#txtLongitude').val() + "," + $('#txtLatitude').val(),
+        position: $('#txtLongitude').val() + ", " + $('#txtLatitude').val(),
         order: $('#txtOrder').val()
     }
 
@@ -82,10 +80,10 @@ $('#save-btn').click(function () {
         contentType: false,
         processData: false,
         success: function (res) {
-            $('#create-modal').modal('toggle');
-            showCameraTable();
+            alert(res.message);
         },
         error: function (res) {
+            alert(res.message);
         }
     });
 });
@@ -117,10 +115,10 @@ $('#edit-btn').click(function () {
         contentType: false,
         processData: false,
         success: function (res) {
-            $('#edit-modal').modal('toggle');
-            showCameraTable();
+            alert(res.message);
         },
         error: function (res) {
+            alert(res.message);
         }
     });
 });
@@ -220,4 +218,14 @@ $('#dataTable').on('click', '.btn', function () {
     }
     $('#edtStreet').val(streetId);
 
+})
+
+$('#logout-btn').click(function (e) {
+    e.preventDefault();
+    $.ajax({
+        url: host + "/portal/logout",
+        type: "GET"
+
+    })
+    window.location.href = "/portal/login";
 })
