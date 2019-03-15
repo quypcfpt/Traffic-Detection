@@ -2,6 +2,7 @@ package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api;
 import org.json.JSONObject;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -10,6 +11,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.AccountModel;
+import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.BookmarkModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.CameraModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.ImageModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.MultiCameraModel;
@@ -23,10 +25,10 @@ public interface  ApiInterface {
     Call<Response<MultiStreetModel>> getStreets(@Path("district") String district);
 
     @GET("api/street")
-    Call<Response<MultiStreetModel>> getAllStreets(@Query("sortBy") String sortBy);
+    Call<Response<MultiStreetModel>> getAllStreets(@Query("sortBy") String sortBy,@Query("size") int size);
 
     @GET("api/street")
-    Call<Response<MultiStreetModel>> getAllStreets(@Query("sortBy") String sortBy, @Query("page") int page);
+    Call<Response<MultiStreetModel>> getAllStreets(@Query("sortBy") String sortBy, @Query("page") int page ,@Query("size") int size);
     @GET("api/street/search/{search}")
     Call<Response<MultiStreetModel>> getStreetsBySearchNameLike (@Path("search") String search ,@Query("sortBy") String sortBy, @Query("page") int page);
 
@@ -59,4 +61,10 @@ public interface  ApiInterface {
 
     @DELETE("api/bookmark/{id}")
     Call<Response<String>> deleteBookmarkWithId(@Path("id") int accountId);
+
+    @GET("api/bookmark")
+    Call<Response<MultipleBookmarkModel>> getAllBookmarks();
+
+    @POST("api/bookmark")
+    Call<BookmarkModel> createBookmark(@Body BookmarkModel newBookmarkModel);
 }

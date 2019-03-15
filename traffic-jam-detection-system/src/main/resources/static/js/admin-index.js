@@ -239,3 +239,13 @@ $('#dataTable').on('click', '.btn', function () {
     $('#edtStreet').val(streetId);
 
 })
+
+$('#logout-btn').click(function (e) {
+    e.preventDefault();
+    $.ajax({
+        url: host + "/portal/logout",
+        type: "GET"
+
+    })
+    window.location.href = "/portal/login";
+})

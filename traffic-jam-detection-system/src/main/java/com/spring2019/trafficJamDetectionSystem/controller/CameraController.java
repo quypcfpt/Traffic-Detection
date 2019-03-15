@@ -1,6 +1,7 @@
 package com.spring2019.trafficJamDetectionSystem.controller;
 
 import com.spring2019.trafficJamDetectionSystem.common.CoreConstant;
+import com.spring2019.trafficJamDetectionSystem.model.CameraModel;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,9 +24,14 @@ public interface CameraController {
                                       @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort,
                                       @RequestParam(name = "sortBy", required = false, defaultValue = "id") String sortBy);
 
+
     @PostMapping(CoreConstant.API_CAMERA)
     public String createCamera(@RequestParam String cameraModelString);
 
-    @PutMapping(CoreConstant.API_CAMERA)
+    @PostMapping(CoreConstant.API_CAMERA + "/update")
     public String updateCamera(@RequestParam String cameraModelString);
+
+
 }
+
+

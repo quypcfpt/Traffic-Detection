@@ -10,7 +10,6 @@ public class Account {
     private String password;
     private String name;
     private Integer roleId;
-    private Boolean status;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,15 +62,7 @@ public class Account {
         this.roleId = roleId;
     }
 
-    @Basic
-    @Column(name = "status", nullable = true)
-    public Boolean getStatus() {
-        return status;
-    }
 
-    public void setStatus(Boolean status) {
-        this.status = status;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -82,12 +73,11 @@ public class Account {
                 Objects.equals(username, account.username) &&
                 Objects.equals(password, account.password) &&
                 Objects.equals(name, account.name) &&
-                Objects.equals(roleId, account.roleId) &&
-                Objects.equals(status, account.status);
+                Objects.equals(roleId, account.roleId) ;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, name, roleId, status);
+        return Objects.hash(id, username, password, name, roleId);
     }
 }

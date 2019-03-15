@@ -17,15 +17,15 @@ public class StreetServiceImpl implements StreetService {
     @Autowired
     StreetRepository streetRepository;
 
-    @Override
-    public Street getStreetById(int id) {
-        Optional<Street> street = streetRepository.findById(id);
-        return street.orElse(null);
-    }
 
     @Override
     public Page<Street> getStreetByDistrict(String district, Pageable pageable) {
         return (Page<Street>) streetRepository.findByDistrictAndIsActive(district,true, pageable);
+    }
+
+    @Override
+    public List<Street> getAllStreet() {
+        return streetRepository.findAll();
     }
 
     @Override
@@ -36,6 +36,14 @@ public class StreetServiceImpl implements StreetService {
     @Override
     public List<Street> getAllStreet() {
         return streetRepository.findAll();
+    public void createStreet(Street street) {
+        street.setIsActive(true);
+        streetRepository.save(street);
+    }
+
+    @Override
+    public void updateStreet(Street street) {
+        streetRepository.save(street);
     }
 
     @Override

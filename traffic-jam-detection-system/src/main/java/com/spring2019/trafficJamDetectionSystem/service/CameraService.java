@@ -21,4 +21,12 @@ public interface CameraService {
     public void createCamera(Camera camera);
 
     public void updateCamera(Camera camera);
+
+    public List<Camera> getAllCameras();
+
+    public Page<Camera> getCamerasByStreet(Integer streetId, Pageable pageable);
+
+    public List<Camera> getCamerasByStreetAndIsActive(Integer street);
+
+
 }

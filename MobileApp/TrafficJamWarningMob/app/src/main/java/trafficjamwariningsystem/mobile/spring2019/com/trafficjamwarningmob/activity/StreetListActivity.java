@@ -73,7 +73,7 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
 
     public void onFirstLoad() {
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        Call<Response<MultiStreetModel>> responseCall = apiInterface.getAllStreets("district");
+        Call<Response<MultiStreetModel>> responseCall = apiInterface.getAllStreets("district",12);
         responseCall.enqueue(new Callback<Response<MultiStreetModel>>() {
             @Override
             public void onResponse(Call<Response<MultiStreetModel>> call, retrofit2.Response<Response<MultiStreetModel>> response) {
@@ -110,7 +110,7 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
                     public void run() {
                         final List<StreetModel> list = null;
                         apiInterface = ApiClient.getClient().create(ApiInterface.class);
-                        Call<Response<MultiStreetModel>> responseCall = apiInterface.getAllStreets("district", currentPage);
+                        Call<Response<MultiStreetModel>> responseCall = apiInterface.getAllStreets("district", currentPage,12);
                         responseCall.enqueue(new Callback<Response<MultiStreetModel>>() {
                             @Override
                             public void onResponse(Call<Response<MultiStreetModel>> call, retrofit2.Response<Response<MultiStreetModel>> response) {

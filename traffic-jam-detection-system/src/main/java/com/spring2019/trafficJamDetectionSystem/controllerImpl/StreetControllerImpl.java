@@ -2,11 +2,14 @@ package com.spring2019.trafficJamDetectionSystem.controllerImpl;
 
 import com.spring2019.trafficJamDetectionSystem.common.CoreConstant;
 import com.spring2019.trafficJamDetectionSystem.controller.StreetController;
+import com.spring2019.trafficJamDetectionSystem.entity.Camera;
 import com.spring2019.trafficJamDetectionSystem.entity.Street;
 import com.spring2019.trafficJamDetectionSystem.model.MultiStreetModel;
 import com.spring2019.trafficJamDetectionSystem.model.Response;
 import com.spring2019.trafficJamDetectionSystem.model.StreetModel;
+import com.spring2019.trafficJamDetectionSystem.service.CameraService;
 import com.spring2019.trafficJamDetectionSystem.service.StreetService;
+import com.spring2019.trafficJamDetectionSystem.transformer.CameraTransformer;
 import com.spring2019.trafficJamDetectionSystem.transformer.StreetTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +35,13 @@ public class StreetControllerImpl extends AbstractController implements StreetCo
 
     @Autowired
     StreetTransformer streetTransformer;
+
+    @Autowired
+    CameraService cameraService;
+
+    @Autowired
+    CameraTransformer cameraTransformer;
+
 
     @Override
     public String loadStreetByDistrict(String district, Integer page, Integer size, String sort, String sortBy) {
@@ -116,7 +126,6 @@ public class StreetControllerImpl extends AbstractController implements StreetCo
             }
 
             data.setStreetList(streetList);
-
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
             LOGGER.info("End load streets");
         } catch (Exception e) {
@@ -164,5 +173,46 @@ public class StreetControllerImpl extends AbstractController implements StreetCo
         }
         return gson.toJson(response);
 
+    }
+
+    @Override
+    public String createStreet(String streetModelString) {
+        Response response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
+        try {
+            LOGGER.info("Start create street: " + streetModelString);
+            StreetModel streetModel = gson.fromJson(streetModelString, StreetModel.class);
+            Street streetEntity = streetTransformer.modelToEntity(streetModel);
+            streetService.createStreet(streetEntity);
+            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, true);
+            LOGGER.info("End create street");
+        }catch (Exception e){
+            response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
+            LOGGER.error(e.getMessage());
+        }
+        return gson.toJson(response);
+    }
+
+    @Override
+    public String updateStreet(String streetModelString) {
+
+        Response response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
+        try {
+            StreetModel streetModel = gson.fromJson(streetModelString, StreetModel.class);
+            Street streetEntity = streetTransformer.modelToEntity(streetModel);
+            streetService.updateStreet(streetEntity);
+            if(!streetModel.getIsActive()){
+                ArrayList<Camera> cameras = (ArrayList)cameraService.getCamerasByStreetAndIsActive(streetModel.getId());
+                for (Camera x : cameras) {
+                    x.setIsActive(false);
+                    cameraService.updateCamera(x);
+                }
+            }
+            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, streetModel);
+            LOGGER.info("Street updated: " + streetModelString);
+        }catch (Exception e){
+            response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
+            LOGGER.error(e.getMessage());
+        }
+        return gson.toJson(response);
     }
 }

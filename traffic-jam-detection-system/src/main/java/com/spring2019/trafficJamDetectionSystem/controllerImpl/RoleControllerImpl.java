@@ -29,7 +29,7 @@ public class RoleControllerImpl extends AbstractController implements RoleContro
     public String loadAllRole() {
         Response<RoleModel> response = new Response<RoleModel>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
         try {
-            LOGGER.info("Start create camera: ");
+            LOGGER.info("Start load all role");
             RoleModel roleModel = new RoleModel();
             List<RoleModel> models = new ArrayList<RoleModel>();
             List<Role> entities = roleService.getAllRole();
@@ -38,7 +38,7 @@ public class RoleControllerImpl extends AbstractController implements RoleContro
             }
             roleModel.setList(models);
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS,roleModel);
-            LOGGER.info("End create camera");
+            LOGGER.info("End load all role");
         } catch (Exception e) {
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
             LOGGER.error(e.getMessage());
