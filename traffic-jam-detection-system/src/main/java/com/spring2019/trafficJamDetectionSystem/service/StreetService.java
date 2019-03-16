@@ -11,7 +11,7 @@ import java.util.List;
 public interface StreetService {
     Page<Street> getStreetByDistrict(String district, Pageable pageable);
 
-    Page<Street> getAllStreet(Pageable pageable);
+    Page<Street> getAllStreetAndIsActive(Pageable pageable);
 
     List<Street> getAllStreet();
 

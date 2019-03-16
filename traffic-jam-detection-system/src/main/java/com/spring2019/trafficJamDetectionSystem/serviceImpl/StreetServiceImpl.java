@@ -29,8 +29,8 @@ public class StreetServiceImpl implements StreetService {
     }
 
     @Override
-    public Page<Street> getAllStreet(Pageable pageable) {
-        return streetRepository.findAll(pageable);
+    public Page<Street> getAllStreetAndIsActive(Pageable pageable) {
+        return streetRepository.findAllByIsActive(pageable, true);
     }
 
     public void createStreet(Street street) {

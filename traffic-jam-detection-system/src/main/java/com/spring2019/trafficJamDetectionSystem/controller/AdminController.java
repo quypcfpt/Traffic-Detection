@@ -15,7 +15,6 @@ public interface AdminController {
     public ModelAndView openLogin(HttpSession session);
 
     @GetMapping("/test")
-    public ModelAndView openIndex();
     public ModelAndView openIndex(HttpSession session);
 
     @GetMapping("/street")

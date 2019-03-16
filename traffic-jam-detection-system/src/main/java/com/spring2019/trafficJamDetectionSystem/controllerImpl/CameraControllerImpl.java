@@ -70,18 +70,14 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
         if (page > 0) {
             pageable = PageRequest.of(page - 1, size, sortable);
         }
+
         Response<MultiCameraModel> response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
-
         LOGGER.info("Start load all cameras");
-
         try {
             MultiCameraModel data = new MultiCameraModel();
-
             List<CameraModel> cameraList = new ArrayList<>();
-
             if (page > 0) {
                 Page<Camera> cameras = cameraService.getAllCameras(pageable);
-
                 for (Camera camera : cameras) {
                     cameraList.add(cameraTransformer.entityToModel(camera));
                 }
@@ -90,16 +86,13 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
                 data.setTotalRecord(cameras.getTotalElements());
             } else {
                 List<Camera> cameras = cameraService.getAllCameras();
-
                 for (Camera camera : cameras) {
                     cameraList.add(cameraTransformer.entityToModel(camera));
                 }
-
-                    data.setCameraList(cameraList);
-
-                    response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
-                    LOGGER.info("End load all cameras");
-                }
+            }
+            data.setCameraList(cameraList);
+            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
+            LOGGER.info("End load all cameras");
         } catch (Exception e) {
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
             LOGGER.error(e.getMessage());
@@ -123,7 +116,7 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
 
         Response<MultiCameraModel> response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
 
-        LOGGER.error("Start load cameras by street with ID: " + streetId);
+        LOGGER.info("Start load cameras by street with ID: " + streetId);
 
         try {
             MultiCameraModel data = new MultiCameraModel();

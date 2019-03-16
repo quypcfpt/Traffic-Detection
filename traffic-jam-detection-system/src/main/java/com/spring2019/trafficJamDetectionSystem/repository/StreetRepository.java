@@ -11,6 +11,8 @@ public interface StreetRepository extends JpaRepository<Street,Integer> {
 
     Page<Street> findByDistrictAndIsActive(String district,boolean isActive, Pageable pageable);
 
+    Page<Street> findAllByIsActive(Pageable pageable, boolean isActive);
+
     Page<Street> findByNameContainingIgnoreCaseAndIsActive (String district,Boolean isActive ,Pageable pageable);
 }
 
