@@ -42,4 +42,7 @@ dependencies {
     implementation 'com.google.maps.android:android-maps-utils:0.5+'
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
 
+    implementation 'com.google.firebase:firebase-core:11.0.2'
+    implementation 'com.google.firebase:firebase-messaging:11.0.2'
 }
+apply plugin: 'com.google.gms.google-services'

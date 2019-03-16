@@ -9,17 +9,18 @@ import java.util.List;
 
 @Service
 public interface CameraService {
+
     public Camera getCameraById(int id);
 
     public Page<Camera> getAllCameras(Pageable pageable);
 
-    public void createCamera(Camera camera);
-
-    public void updateCamera(Camera camera);
-
     public List<Camera> getAllCameras();
 
     public Page<Camera> getCamerasByStreet(Integer streetId, Pageable pageable);
+
+    public void createCamera(Camera camera);
+
+    public void updateCamera(Camera camera);
 
     public List<Camera> getCamerasByStreetAndIsActive(Integer street);
 
