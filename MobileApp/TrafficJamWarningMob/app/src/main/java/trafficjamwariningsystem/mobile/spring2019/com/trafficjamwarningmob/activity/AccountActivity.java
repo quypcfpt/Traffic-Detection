@@ -82,7 +82,11 @@ private ImageButton logOutbtn;
         isLogin=false;isLogout=false;
         String fileName = "accountInfo";
         File file = getContext().getFileStreamPath(fileName);
-        initialView(false);
+        if(file.exists()){
+            autoLogin();
+        }else {
+            initialView(false);
+        }
         return v;
     }
 
@@ -112,21 +116,26 @@ private ImageButton logOutbtn;
                 progressBar.setVisibility(View.VISIBLE);
                 final String username=edtUsername.getText()+"";
                 final String password=edtPassword.getText()+"";
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         checkLogin(username,password);
                         progressBar.setVisibility(View.GONE);
+                        edtPassword.setText("");
                     }
                 },1000);
 
 
                 break;
             case R.id.txtSignUp:
+                edtPassword.setText("");
                 Intent intent = new Intent(v.getContext(),SignUpActivity.class);
                 startActivity(intent);
                 break;
             case R.id.btnLogout:
+                    edtPassword.setText("");
+                    fileExist("accountInfo");
                     signInLayout.setVisibility(View.VISIBLE);
                     accountLayout.setVisibility(View.GONE);
                     isLogin=false;
@@ -232,7 +241,39 @@ private ImageButton logOutbtn;
             }
     }
     public void fileExist(String fname){
+        String yourFilePath = getContext().getFilesDir() + "/" + "hello.txt";
+        Log.d("localFile : ",yourFilePath);
         File file = getContext().getFileStreamPath(fname);
         file.delete();
     }
+    private void autoLogin(){
+        try{
+                String username;
+                String password;
+                int id;
+                String fileName ="accountInfo";
+                FileInputStream fileIn = getContext().openFileInput(fileName);
+                InputStreamReader InputRead = new InputStreamReader(fileIn);
+
+                char[] inputBuffer = new char[100];
+                String s = "";
+                int charRead;
+                while ((charRead=InputRead.read(inputBuffer))>0) {
+                    // char to string conversion
+                    String readstring=String.copyValueOf(inputBuffer,0,charRead);
+                    s +=readstring;
+                }
+                InputRead.close();
+                String[] parts =s.split("-");
+                id=Integer.parseInt(parts[0]);
+                username=parts[1];
+                password=parts[2];
+                checkLogin(username,password);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

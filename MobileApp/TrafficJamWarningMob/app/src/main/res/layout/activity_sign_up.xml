@@ -14,17 +14,25 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryLight">
+            android:background="@color/colorPrimary">
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/back"
+                android:background="@color/colorPrimary"
+                android:layout_gravity="end"
+                android:id="@+id/btnBack"
+                android:textColor="#FFFFFF"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textSize="30dp"
                 android:textAlignment="center"
+                android:layout_marginRight="@dimen/activity_vertical_margin"
                 android:textColor="@color/colorText"
-                android:text="Welcome" />
+                android:text="Welcome"/>
 
         </LinearLayout>
-
         <LinearLayout
             android:gravity="center"
             android:layout_gravity="center"
@@ -60,6 +68,20 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="Confirm Password  :" />
+                <EditText
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:id="@+id/txtConfirmPassword"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:text="Password  :" />
                 <EditText
                     android:layout_width="250dp"
@@ -67,7 +89,6 @@
                     android:inputType="textPassword"
                     android:id="@+id/txtPassword"/>
             </LinearLayout>
-            android:text="Register"/>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
