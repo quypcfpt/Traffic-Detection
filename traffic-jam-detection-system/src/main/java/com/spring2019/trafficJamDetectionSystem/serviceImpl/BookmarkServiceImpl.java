@@ -10,10 +10,8 @@ import java.util.List;
 
 @Service
 public class BookmarkServiceImpl implements BookmarkService {
-
     @Autowired
     BookmarkRepository bookmarkRepository;
-
     @Override
     public List<Bookmark> getBookMarkByAccountId(Integer accountID) {
         List<Bookmark> bookmarkList= bookmarkRepository.findBookmarksByAccountId(accountID);
@@ -22,7 +20,6 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Override
     public Integer removeBookMarkById(Integer id) {
-        bookmarkRepository.deleteBookmarkById(id);
         Integer isDelete=bookmarkRepository.deleteBookmarkById(id);
         return isDelete;
     }

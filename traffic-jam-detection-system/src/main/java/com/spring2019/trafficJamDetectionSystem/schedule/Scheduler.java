@@ -55,6 +55,7 @@ public class Scheduler {
                 if (oldResult.getStatusId() != newResult.getStatusId()) {
                     Street street = cameraService.getCameraById(cameraId).getStreetByStreetId();
 
+
                     String msg = "";
                     switch (newResult.getStatusId()) {
                         case 0:

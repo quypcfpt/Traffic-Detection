@@ -15,8 +15,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".MainActivity">
-        </activity>
         <activity android:name=".MainActivity"></activity>
 
         <!--
@@ -43,12 +41,6 @@
         </activity>
         <activity android:name=".activity.ListCameraActivity" />
         <activity android:name=".activity.ImageActivity" />
-
-        <service android:name=".utils.FCMClass">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
         <activity android:name=".activity.SignUpActivity"></activity>
     </application>
 
