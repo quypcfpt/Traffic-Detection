@@ -1,5 +1,6 @@
 package com.spring2019.trafficJamDetectionSystem.service;
 
+import com.spring2019.trafficJamDetectionSystem.entity.Account;
 import com.spring2019.trafficJamDetectionSystem.entity.Bookmark;
 import org.springframework.stereotype.Service;
 
@@ -13,5 +14,8 @@ public interface BookmarkService {
     public Integer removeBookMarkById(Integer id);
 
     public List<Bookmark> getAllBookmarks();
+
     public void createBookmark(Bookmark newBookmark);
+
+    public List<Account> getAccountByCameraId(int cameraId);
 }

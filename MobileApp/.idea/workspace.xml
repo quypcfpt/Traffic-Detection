@@ -19,6 +19,15 @@
         </counts>
       </usages-collector>
     </session>
+    <session id="932772170">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="1" />
+          <entry key="project.open.time.1" value="1" />
+          <entry key="project.opened" value="1" />
+        </counts>
+      </usages-collector>
+    </session>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -43,6 +52,11 @@
               <item name="MobileApp" type="b2602c69:ProjectViewProjectNode" />
               <item name="MobileApp" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="MobileApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MobileApp" type="462c0819:PsiDirectoryNode" />
+              <item name="TrafficJamWarningMob" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -52,7 +66,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="android.sdk.path" value="P:/Android/SDK" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../TrafficJamWarningMobile" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/TrafficJamWarningMob" />
     <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
   </component>
   <component name="RunDashboard">
@@ -84,7 +98,7 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <layout>
       <window_info id="Captures" order="0" weight="0.25" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.32980832" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.3294271" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Image Layers" order="3" />
       <window_info id="Designer" order="4" />
