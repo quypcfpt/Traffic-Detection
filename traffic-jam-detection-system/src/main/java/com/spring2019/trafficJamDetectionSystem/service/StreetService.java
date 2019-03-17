@@ -12,7 +12,7 @@ import java.util.List;
 public interface StreetService {
     Page<Street> getStreetByDistrict(String district, Pageable pageable);
     List<Street> getAllStreet();
-    Page<Street> getAllStreet(Pageable pageable);
+    Page<Street> getAllStreetAndIsActive(Pageable pageable);
     void createStreet(Street street);
     void updateStreet(Street street);
     Page<Street> getStreetBySearch(String txtSearch, Pageable pageable);

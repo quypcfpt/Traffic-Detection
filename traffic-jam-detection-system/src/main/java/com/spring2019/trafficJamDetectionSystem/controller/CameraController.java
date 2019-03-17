@@ -28,7 +28,7 @@ public interface CameraController {
     @PostMapping(CoreConstant.API_CAMERA)
     public String createCamera(@RequestParam String cameraModelString);
 
-    @PostMapping(CoreConstant.API_CAMERA + "/update")
+    @PutMapping(CoreConstant.API_CAMERA)
     public String updateCamera(@RequestParam String cameraModelString);
 
 

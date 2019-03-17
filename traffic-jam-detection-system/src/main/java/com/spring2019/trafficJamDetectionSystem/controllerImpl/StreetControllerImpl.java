@@ -105,7 +105,7 @@ public class StreetControllerImpl extends AbstractController implements StreetCo
 
             List<StreetModel> streetList = new ArrayList<>();
             if (page > 0) {
-                Page<Street> streets = streetService.getAllStreet(pageable);
+                Page<Street> streets = streetService.getAllStreetAndIsActive(pageable);
                 if (streets.getSize() == 0) {
                     LOGGER.info("Empty result!");
                 }

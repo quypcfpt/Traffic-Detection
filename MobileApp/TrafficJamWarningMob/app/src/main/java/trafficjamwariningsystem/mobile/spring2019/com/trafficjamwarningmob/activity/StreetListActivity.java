@@ -79,6 +79,8 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
             public void onResponse(Call<Response<MultiStreetModel>> call, retrofit2.Response<Response<MultiStreetModel>> response) {
                 Response<MultiStreetModel> res = response.body();
                 MultiStreetModel multiStreetModel = res.getData();
+                if(multiStreetModel == null)
+                    return;
                 currentPage = multiStreetModel.getCurrentPage();
                 totalPage = multiStreetModel.getTotalPage();
                 long totalRecord = multiStreetModel.getTotalRecord();

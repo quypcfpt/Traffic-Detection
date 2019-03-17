@@ -16,7 +16,7 @@ public class StreetTransformerImpl implements StreetTransformer {
         model.setName(entity.getName());
         model.setDistrict(entity.getDistrict());
         model.setCity(entity.getCity());
-
+        model.setIsActive(entity.getIsActive());
         return model;
     }
 
@@ -28,7 +28,7 @@ public class StreetTransformerImpl implements StreetTransformer {
         entity.setName(model.getName());
         entity.setDistrict(model.getDistrict());
         entity.setCity(model.getCity());
-
+        entity.setIsActive(model.getIsActive());
         return entity;
     }
 }

@@ -14,36 +14,35 @@ public class AdminControllerImpl extends AbstractController implements AdminCont
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminControllerImpl.class);
     @Override
     public ModelAndView openLogin(HttpSession session) {
-        String username = (String)session.getAttribute("username");
-        if(username != null){
+        String username = (String) session.getAttribute("username");
+        if (username != null) {
             return new ModelAndView("redirect:/portal/test");
-        }else{
+        } else {
             return new ModelAndView("login");
         }
     }
 
     @Override
-    public ModelAndView openIndex(HttpSession session)  {
-        String username = (String)session.getAttribute("username");
-        if(username != null){
+    public ModelAndView openIndex(HttpSession session) {
+        String username = (String) session.getAttribute("username");
+        if (username != null) {
             return new ModelAndView("tables");
-        }else{
+        } else {
             return new ModelAndView("redirect:/portal/login");
         }
     }
 
     @Override
-    public ModelAndView openStreet(HttpSession session)  {
-        String username = (String)session.getAttribute("username");
-        if(username != null){
+    public ModelAndView openStreet(HttpSession session) {
+        String username = (String) session.getAttribute("username");
+        if (username != null) {
             return new ModelAndView("street_tables");
-        }else{
+        } else {
             return new ModelAndView("redirect:/portal/login");
         }
     }
 
-    @Override
-    public ModelAndView logout(HttpSession session){
+    public ModelAndView logout(HttpSession session) {
         session.removeAttribute("username");
         LOGGER.info("Admin account logged out");
         return new ModelAndView("redirect:/portal/login");

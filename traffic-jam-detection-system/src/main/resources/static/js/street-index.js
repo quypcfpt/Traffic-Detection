@@ -47,13 +47,21 @@ $('#save-btn').click(function () {
         processData: false,
         success: function (res) {
             $('#create-modal').modal('toggle');
+            $.bootstrapGrowl('Add Success.',{
+                type: 'success',
+                delay: 2000,
+            });
             onLoadStreetView();
             $('#txtName').val('');
             $('#txtDistrict').val('');
             $('#txtCity').val('')
         },
         error: function (res) {
-            alert(res.message);
+            $('#create-modal').modal('toggle');
+            $.bootstrapGrowl('You Got Error',{
+                type: 'danger',
+                delay: 2000,
+            });
         }
     });
 });
@@ -81,10 +89,18 @@ $('#edit-btn').click(function () {
         processData: false,
         success: function (res) {
             $('#edit-modal').modal('toggle');
+            $.bootstrapGrowl('Edit Success.',{
+                type: 'success',
+                delay: 2000,
+            });
             onLoadStreetView();
         },
         error: function (res) {
-            alert(res.message);
+            $('#edit-modal').modal('toggle');
+            $.bootstrapGrowl('You Got Error',{
+                type: 'danger',
+                delay: 2000,
+            });
         }
     });
 });
