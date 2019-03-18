@@ -160,7 +160,7 @@ private ImageButton logOutbtn;
                     account = new AccountModel();
                     AccountModel data = message.getData();
                     if(data !=null){
-                        FirebaseMessaging.getInstance().subscribeToTopic(data.getUsername());
+//                        FirebaseMessaging.getInstance().subscribeToTopic(data.getUsername());
 
                         account.setId(data.getId());
                         account.setUsername(data.getUsername());

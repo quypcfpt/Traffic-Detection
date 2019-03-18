@@ -18,12 +18,7 @@ public interface CameraController {
                                  @RequestParam(name = "sortBy", required = false, defaultValue = "id") String sortBy);
 
     @GetMapping(CoreConstant.API_CAMERA + "/streetId/{streetId}")
-    public String loadCamerasByStreet(@PathVariable("streetId") Integer streetId,
-                                      @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
-                                      @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
-                                      @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort,
-                                      @RequestParam(name = "sortBy", required = false, defaultValue = "id") String sortBy);
-
+    public String loadCamerasByStreet(@PathVariable("streetId") Integer streetId);
 
     @PostMapping(CoreConstant.API_CAMERA)
     public String createCamera(@RequestParam String cameraModelString);

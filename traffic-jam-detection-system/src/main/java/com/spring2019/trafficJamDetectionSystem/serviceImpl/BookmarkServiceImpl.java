@@ -32,7 +32,6 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Override
     public Integer removeBookMarkById(Integer id) {
-        Integer isDelete=bookmarkRepository.deleteBookmarkById(id);
         bookmarkRepository.deleteBookmarkById(id);
         Integer isDelete = bookmarkRepository.deleteBookmarkById(id);
         return isDelete;

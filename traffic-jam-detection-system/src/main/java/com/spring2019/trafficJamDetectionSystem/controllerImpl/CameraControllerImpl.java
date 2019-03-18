@@ -108,37 +108,21 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
     }
 
     @Override
-    public String loadCamerasByStreet(Integer streetId, Integer page, Integer size, String sort, String sortBy) {
-
-        Sort sortable = null;
-        if (sort.equals("ASC")) {
-            sortable = Sort.by(sortBy).ascending();
-        }
-        if (sort.equals("DESC")) {
-            sortable = Sort.by(sortBy).descending();
-        }
-
-        Pageable pageable = PageRequest.of(page - 1, size, sortable);
-
+    public String loadCamerasByStreet(Integer streetId) {
         Response<MultiCameraModel> response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
-
         LOGGER.error("Start load cameras by street with ID: "+streetId);
-
         try {
             MultiCameraModel data = new MultiCameraModel();
             List<CameraModel> cameraList = new ArrayList<>();
-            Page<Camera> cameras = cameraService.getCamerasByStreet(streetId,pageable);
+            List<Camera> cameras = cameraService.getCamerasByStreetAndIsActive(streetId);
 
-            if (cameras.getSize()==0){
+            if (cameras.size()==0){
                 LOGGER.info("Empty result!");
             }
 
             for (Camera camera : cameras) {
                 cameraList.add(cameraTransformer.entityToModel(camera));
             }
-            data.setCurrentPage(page);
-            data.setTotalPage(cameras.getTotalPages());
-            data.setTotalRecord(cameras.getTotalElements());
             data.setCameraList(cameraList);
 
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
