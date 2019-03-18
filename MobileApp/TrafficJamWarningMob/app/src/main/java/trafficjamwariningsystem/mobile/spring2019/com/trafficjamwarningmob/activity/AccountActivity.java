@@ -96,6 +96,19 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            String fileName = "accountInfo";
+            File file = getContext().getFileStreamPath(fileName);
+            if (file.exists()) {
+                autoLogin();
+            } else {
+                initialView(false);
+            }
+        }
+    }
+    @Override
     public void onResume() {
         super.onResume();
         txtSignUp.setOnClickListener(this);
@@ -107,6 +120,9 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
         if (isLogin) {
             signInLayout.setVisibility(View.GONE);
             accountLayout.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+            progressBar1.setVisibility(View.VISIBLE);
+
         } else {
             signInLayout.setVisibility(View.VISIBLE);
             accountLayout.setVisibility(View.GONE);
@@ -232,6 +248,7 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
 
                 }
             });
+            recyclerView.setVisibility(View.VISIBLE);
             progressBar1.setVisibility(View.GONE);
             progressBar.setVisibility(View.GONE);
         }
@@ -303,4 +320,6 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
 
         return null;
     }
+
+
 }
