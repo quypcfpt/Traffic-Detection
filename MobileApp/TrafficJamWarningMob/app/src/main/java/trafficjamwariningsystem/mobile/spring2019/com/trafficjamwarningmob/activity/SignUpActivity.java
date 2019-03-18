@@ -1,8 +1,7 @@
 package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.activity;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -20,18 +19,19 @@ import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
     ApiInterface apiInterface;
-    private EditText edtUsername,edtPassword ,edtFullName,edtConfirmPassword;
+    private EditText edtUsername, edtPassword, edtFullName, edtConfirmPassword;
     private boolean isSuccess;
     private ImageButton btnBack;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-        btnBack=(ImageButton)findViewById(R.id.btnBack);
-        edtFullName=(EditText)findViewById(R.id.txtFullName);
-        edtUsername=(EditText)findViewById(R.id.txtUsername);
-        edtPassword=(EditText)findViewById(R.id.txtPassword);
-        edtConfirmPassword=(EditText)findViewById(R.id.txtConfirmPassword);
+        btnBack = (ImageButton) findViewById(R.id.btnBack);
+        edtFullName = (EditText) findViewById(R.id.txtFullName);
+        edtUsername = (EditText) findViewById(R.id.txtUsername);
+        edtPassword = (EditText) findViewById(R.id.txtPassword);
+        edtConfirmPassword = (EditText) findViewById(R.id.txtConfirmPassword);
         btnBack.setOnClickListener(this);
     }
 
@@ -39,9 +39,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
         JSONObject acountModel = new JSONObject();
         try {
-            if(!edtPassword.equals(edtConfirmPassword)){
+            if (!edtPassword.equals(edtConfirmPassword)) {
                 Toast.makeText(this, "Password and Confirm Password do not match !!!", Toast.LENGTH_SHORT).show();
-            }else {
+            } else {
                 acountModel.put("username", edtUsername.getText() + "");
                 acountModel.put("password", edtPassword.getText() + "");
                 acountModel.put("name", edtFullName.getText() + "");
@@ -69,9 +69,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             e.printStackTrace();
         }
     }
+
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btnBack:
                 SignUpActivity.this.finish();
                 break;

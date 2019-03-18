@@ -2,7 +2,6 @@ package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.acti
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -20,7 +19,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONException;
@@ -34,7 +32,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.R;
@@ -43,7 +40,6 @@ import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api.A
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api.ApiInterface;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.AccountModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.BookmarkModel;
-import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.MultiStreetModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.MultipleBookmarkModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.Response;
 
@@ -155,7 +151,7 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.btnLogout:
-                AccountModel accountModel=readInternal();
+                AccountModel accountModel = readInternal();
                 FirebaseMessaging.getInstance().unsubscribeFromTopic(accountModel.getUsername());
 
                 edtPassword.setText("");
