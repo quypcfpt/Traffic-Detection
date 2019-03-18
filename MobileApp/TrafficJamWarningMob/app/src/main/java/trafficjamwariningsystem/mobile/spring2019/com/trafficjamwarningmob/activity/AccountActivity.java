@@ -20,6 +20,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -158,6 +160,8 @@ private ImageButton logOutbtn;
                     account = new AccountModel();
                     AccountModel data = message.getData();
                     if(data !=null){
+                        FirebaseMessaging.getInstance().subscribeToTopic(data.getUsername());
+
                         account.setId(data.getId());
                         account.setUsername(data.getUsername());
                         account.setPassword(data.getPassword());

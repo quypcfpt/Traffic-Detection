@@ -34,6 +34,9 @@ public class MainTabActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+      //  FirebaseMessaging.getInstance().subscribeToTopic(TOPIC);
+
         setContentView(R.layout.activity_main_tab);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.container);
