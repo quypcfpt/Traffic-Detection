@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import com.google.firebase.FirebaseApp;
 import com.squareup.picasso.Picasso;
 
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.R;
