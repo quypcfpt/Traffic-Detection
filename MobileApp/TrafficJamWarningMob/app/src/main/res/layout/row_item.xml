@@ -12,6 +12,7 @@
     android:layout_marginBottom="5dp"
     android:background="@color/colorSecondaryLight"
     android:padding="10dp">
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,7 +20,7 @@
         android:text="Marshallow"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@android:color/black"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/item_info"
@@ -28,7 +29,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:src="@android:drawable/ic_dialog_info"/>
+        android:src="@android:drawable/ic_dialog_info" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -41,6 +42,6 @@
             android:id="@+id/version_heading"
             android:text="API:"
             android:textColor="@android:color/black"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
     </LinearLayout>
 </RelativeLayout>
