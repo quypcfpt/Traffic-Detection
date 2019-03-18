@@ -78,7 +78,6 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
             MultiCameraModel data = new MultiCameraModel();
 
             List<CameraModel> cameraList = new ArrayList<>();
-            if (page > 0) {
                 if (page > 0) {
                     Page<Camera> cameras = cameraService.getAllCameras(pageable);
 
@@ -94,7 +93,7 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
                     for (Camera camera : cameras) {
                         cameraList.add(cameraTransformer.entityToModel(camera));
                     }
-            }
+
             data.setCameraList(cameraList);
 
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
