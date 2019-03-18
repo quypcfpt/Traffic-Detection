@@ -28,15 +28,21 @@ import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.adapt
 public class MainTabActivity extends AppCompatActivity {
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
+<<<<<<< HEAD
 
+=======
+>>>>>>> HiepTB
     private ViewPager mViewPager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+<<<<<<< HEAD
+=======
 
       //  FirebaseMessaging.getInstance().subscribeToTopic(TOPIC);
 
+>>>>>>> HiepTB
         setContentView(R.layout.activity_main_tab);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.container);
