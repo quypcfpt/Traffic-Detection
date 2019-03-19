@@ -1,8 +1,11 @@
 package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api;
+import org.json.JSONObject;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -16,19 +19,18 @@ import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.MultipleBookmarkModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.Response;
 
-public interface ApiInterface {
+public interface  ApiInterface {
     //Street
     @GET("api/street/{district}")
     Call<Response<MultiStreetModel>> getStreets(@Path("district") String district);
 
     @GET("api/street")
-    Call<Response<MultiStreetModel>> getAllStreets(@Query("sortBy") String sortBy, @Query("size") int size);
+    Call<Response<MultiStreetModel>> getAllStreets(@Query("sortBy") String sortBy,@Query("size") int size);
 
     @GET("api/street")
-    Call<Response<MultiStreetModel>> getAllStreets(@Query("sortBy") String sortBy, @Query("page") int page, @Query("size") int size);
-
+    Call<Response<MultiStreetModel>> getAllStreets(@Query("sortBy") String sortBy, @Query("page") int page ,@Query("size") int size);
     @GET("api/street/search/{search}")
-    Call<Response<MultiStreetModel>> getStreetsBySearchNameLike(@Path("search") String search, @Query("sortBy") String sortBy, @Query("page") int page);
+    Call<Response<MultiStreetModel>> getStreetsBySearchNameLike (@Path("search") String search ,@Query("sortBy") String sortBy, @Query("page") int page);
 
     //Camera
     @GET("api/camera/{id}")
@@ -49,10 +51,9 @@ public interface ApiInterface {
 
     //Account
     @POST("api/account/checkLogin")
-    Call<Response<AccountModel>> checkUserLogin(@Query("accountModel") String accountModel);
-
+    Call<Response<AccountModel>> checkUserLogin(@Query("accountModel")String accountModel);
     @POST("api/account/createNewAccount")
-    Call<Response<String>> createNewAccount(@Query("accountModel") String accountModel);
+    Call<Response<String>> createNewAccount(@Query("accountModel")String accountModel);
 
     //Bookmark
     @GET("api/bookmark/{id}")

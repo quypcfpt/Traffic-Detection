@@ -22,7 +22,7 @@ public class CameraModel {
     private int camOrder;
 
     @Expose
-    private StreetModel street;
+    private float street_id;
 
 
     public CameraModel() {
@@ -76,11 +76,13 @@ public class CameraModel {
         this.camOrder = camOrder;
     }
 
-    public StreetModel getStreet() {
-        return street;
+    public float getStreet_id() {
+        return street_id;
     }
 
-    public void setStreet(StreetModel street) {
-        this.street = street;
+    public void setStreet_id(float street_id) {
+        this.street_id = street_id;
     }
+
+
 }

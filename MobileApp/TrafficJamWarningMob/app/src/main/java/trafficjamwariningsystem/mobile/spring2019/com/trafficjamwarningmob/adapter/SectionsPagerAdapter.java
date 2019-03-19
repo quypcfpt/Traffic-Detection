@@ -18,15 +18,15 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        switch (position) {
+        switch (position){
             case 0:
                 return new StreetListActivity();
             case 1:
                 return new SearchRouteActitvity();
             case 2:
                 return new AccountActivity();
-            default:
-                return null;
+                default:
+                    return null;
         }
     }
 
@@ -38,7 +38,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        switch (position) {
+        switch (position){
             case 0:
                 return "List";
             case 1:
