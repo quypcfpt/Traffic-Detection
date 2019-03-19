@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +46,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.R;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.adapter.CameraAdapter;
+import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.adapter.CameraInBookmarkAdapter;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api.ApiClient;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api.ApiInterface;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.BookmarkModel;
@@ -62,7 +64,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
     LocationManager locationManager;
     String locationProvider = "";
     public static final int REQUEST_ID_ACCESS_COURSE_FINE_LOCATION = 3;
-    private static CameraAdapter adapter;
+    private static CameraInBookmarkAdapter adapter;
     private RecyclerView recyclerView;
     private LinearLayoutManager mLayoutManager;
     private EditText ori;
@@ -72,6 +74,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
     private LatLng des_coordinate;
     private Button saveBookmark;
     private TextView empty;
+    private ProgressBar pb;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,6 +91,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
         final Button searchCamera = rootView.findViewById(R.id.btnSearchCamera);
         saveBookmark = rootView.findViewById(R.id.btnSaveBookmark);
         empty = rootView.findViewById(R.id.txtEmpty);
+        pb = rootView.findViewById(R.id.pbSearching);
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         final ViewPager vp = getActivity().findViewById(R.id.container);
         vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -96,7 +100,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
 
             @Override
             public void onPageSelected(int i) {
-                if(i == 1){
+                if(i == 1 && empty.getVisibility() == View.GONE){
                     if(fileExist()) {
                         checkExistedBookmark();
                     }else{
@@ -111,6 +115,9 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
         searchCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                saveBookmark.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
+                empty.setVisibility(View.GONE);
                 if(cbGPS.isChecked()){
                     saveBookmark.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.GONE);
@@ -122,6 +129,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
                     }
                 }else {
                     if(!ori.getText().toString().trim().isEmpty() && !des.getText().toString().trim().isEmpty()) {
+                        pb.setVisibility(View.VISIBLE);
                         RequestParams params = getParams(ori.getText().toString(), des.getText().toString());
                         searchCamera(params);
                     }else{
@@ -202,6 +210,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
                         }
 
                     }
+                    pb.setVisibility(View.GONE);
                     if(points.isEmpty()){
                         onEmptyResult();
                     }else{
@@ -243,7 +252,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
                         }else{
                             requestLogin();
                         }
-                        adapter = new CameraAdapter(onRouteCameras, getContext());
+                        adapter = new CameraInBookmarkAdapter(onRouteCameras, getContext());
                         recyclerView.setAdapter(adapter);
                         empty.setVisibility(View.GONE);
                         recyclerView.setVisibility(View.VISIBLE);
@@ -304,6 +313,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
             return;
         }
         try {
+            pb.setVisibility(View.VISIBLE);
             Toast.makeText(getActivity(), "Locating your position...", Toast.LENGTH_SHORT).show();
             locationManager.requestLocationUpdates(locationProvider, 0, 1000, this);
         } catch (SecurityException e){
@@ -371,7 +381,8 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
     public void onProviderDisabled(String provider) {}
 
     public void checkExistedBookmark(){
-        if(ori_coordinate == null && des_coordinate == null){
+
+        if (ori_coordinate == null && des_coordinate == null ) {
             return;
         }
         Integer userId = getUserId();
@@ -385,8 +396,10 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
             public void onResponse(Call<Response<MultipleBookmarkModel>> call, retrofit2.Response<Response<MultipleBookmarkModel>> response) {
                 Response<MultipleBookmarkModel> res = response.body();
                 MultipleBookmarkModel bookmarkList = res.getData();
+                String strOri = ori_coordinate.latitude + "," + ori_coordinate.longitude;
+                String strDes = des_coordinate.latitude + "," + des_coordinate.longitude;
                 for (BookmarkModel x : bookmarkList.getBookmarkModelList()) {
-                    if(x.getOri_coordinate().equals(ori_coordinate + "") && x.getDes_coordinate().equals(des_coordinate + "")){
+                    if (x.getOri_coordinate().equals(strOri) && x.getDes_coordinate().equals(strDes)) {
                         saveBookmark.setVisibility(View.VISIBLE);
                         saveBookmark.setText("Added bookmark");
                         saveBookmark.setClickable(false);
@@ -416,8 +429,8 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
         newBookmarkModel.setAccountId(userId);
         newBookmarkModel.setOrigin(ori.getText().toString());
         newBookmarkModel.setDestination(des.getText().toString());
-        newBookmarkModel.setOri_coordinate(ori_coordinate + "");
-        newBookmarkModel.setDes_coordinate(des_coordinate + "");
+        newBookmarkModel.setOri_coordinate(ori_coordinate.latitude + "," + ori_coordinate.longitude);
+        newBookmarkModel.setDes_coordinate(des_coordinate.latitude + "," + des_coordinate.longitude);
         Call<BookmarkModel> responseCall = apiInterface.createBookmark(newBookmarkModel);
         responseCall.enqueue(new Callback<BookmarkModel>() {
             @Override

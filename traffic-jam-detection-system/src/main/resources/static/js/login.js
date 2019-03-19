@@ -26,9 +26,10 @@ $('#login-btn').click(function (e) {
         success: function (res) {
             var result = JSON.parse(res);
             if(result.data === "success"){
-                window.location.href = "/portal/test";
+                window.location.href = "/portal/camera";
             }else if(result.data === "failed"){
                 $('#login-error').css('visibility', 'visible');
+                $('#txtPassword').val("");
                 console.log(res);
                 // alert(("Invalid username or password"));
             }
