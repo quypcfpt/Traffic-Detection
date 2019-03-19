@@ -1,6 +1,7 @@
 package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.R;
+import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.activity.CameraInBookmarkActivity;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api.ApiClient;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api.ApiInterface;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.BookmarkModel;
@@ -34,8 +36,7 @@ class RecycleViewBookmarkHolder extends RecyclerView.ViewHolder implements View.
     public ImageView info;
     public RelativeLayout relativeLayout;
     private ItemClickListener itemClickListener;
-
-    public RecycleViewBookmarkHolder(@NonNull View itemView) {
+    public RecycleViewBookmarkHolder(@NonNull final View itemView) {
         super(itemView);
         txtName = (TextView) itemView.findViewById(R.id.name);
         txtDistrict = (TextView) itemView.findViewById(R.id.version_heading);
@@ -88,6 +89,17 @@ public class BookmarkAdapter extends RecyclerView.Adapter<RecycleViewBookmarkHol
             @Override
             public void onClick(View v) {
                 doDeleteBookmark(models.getId());
+            }
+        });
+        viewHolder.setItemClickListener(new ItemClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Intent intent = new Intent(view.getContext(), CameraInBookmarkActivity.class);
+                intent.putExtra("ORI", models.getOri_coordinate());
+                intent.putExtra("DES", models.getDes_coordinate());
+                String header = models.getOrigin() + " - " + models.getDestination();
+                intent.putExtra("HEADER", header);
+                view.getContext().startActivity(intent);
             }
         });
     }
