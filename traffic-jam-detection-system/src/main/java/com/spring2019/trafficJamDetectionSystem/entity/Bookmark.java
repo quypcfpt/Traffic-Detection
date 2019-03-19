@@ -11,6 +11,9 @@ public class Bookmark {
     private String destination;
     private String ori_coordinate;
     private String des_coordinate;
+    private String oriCoordinate;
+    private String desCoordinate;
+    private Account accountByAccountId;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +45,7 @@ public class Bookmark {
     public void setOrigin(String routeJson) {
         this.origin = routeJson;
     }
+
     @Basic
     @Column(name = "destination", nullable = true, length = 2147483647)
     public String getDestination() {
@@ -51,6 +55,7 @@ public class Bookmark {
     public void setDestination(String destination) {
         this.destination = destination;
     }
+
     @Basic
     @Column(name = "ori_coordinate", nullable = true, length = 2147483647)
     public String getOri_coordinate() {
@@ -60,6 +65,7 @@ public class Bookmark {
     public void setOri_coordinate(String ori_coordinate) {
         this.ori_coordinate = ori_coordinate;
     }
+
     @Basic
     @Column(name = "des_coordinate", nullable = true, length = 2147483647)
     public String getDes_coordinate() {
@@ -69,6 +75,7 @@ public class Bookmark {
     public void setDes_coordinate(String des_coordinate) {
         this.des_coordinate = des_coordinate;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -86,4 +93,5 @@ public class Bookmark {
     public int hashCode() {
         return Objects.hash(id, accountId, origin,destination,ori_coordinate,des_coordinate);
     }
+
 }

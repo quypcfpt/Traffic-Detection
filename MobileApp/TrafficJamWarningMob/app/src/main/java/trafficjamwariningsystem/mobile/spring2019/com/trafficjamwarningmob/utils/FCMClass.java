@@ -12,7 +12,7 @@ import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.R;
 
 public class FCMClass extends FirebaseMessagingService {
 
-    private final String TAG = "Demo";
+    private final String TAG = "Notification";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {

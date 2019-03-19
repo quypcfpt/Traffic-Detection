@@ -12,10 +12,12 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimaryLight">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -24,64 +26,75 @@
                 android:textColor="@color/colorText"
                 android:text="Sign In" />
         </LinearLayout>
+
         <LinearLayout
             android:gravity="center"
             android:layout_gravity="center"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
->
+            android:layout_height="match_parent">
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Username : " />
+
                 <EditText
                     android:layout_width="250dp"
                     android:layout_height="wrap_content"
-                    android:id="@+id/txtUsername"/>
+                    android:id="@+id/txtUsername" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Password  :" />
+
                 <EditText
                     android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
-                    android:id="@+id/txtPassword"/>
+                    android:id="@+id/txtPassword" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@color/colorPrimaryLight"
                     android:textColor="@color/colorText"
                     android:id="@+id/btnSignIn"
-                    android:text="Sign in"/>
+                    android:text="Sign in" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Click here to Sign up"
-                    android:id="@+id/txtSignUp"/>
+                    android:id="@+id/txtSignUp" />
 
             </LinearLayout>
+
             <ProgressBar
                 android:id="@+id/progress"
                 android:layout_width="wrap_content"
@@ -90,11 +103,11 @@
                 android:layout_centerHorizontal="true"
                 android:indeterminate="false"
                 android:indeterminateTint="@color/colorPrimaryDark"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
         </LinearLayout>
 
     </LinearLayout>
+
     <LinearLayout
         android:visibility="visible"
         android:id="@+id/viewAccount"
@@ -105,14 +118,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary">
+            android:background="@color/colorPrimaryLight">
+
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@mipmap/logout"
-                android:background="@color/colorPrimary"
+                android:background="@color/colorPrimaryLight"
                 android:layout_gravity="end"
                 android:id="@+id/btnLogout" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -123,6 +138,7 @@
                 android:text="Account" />
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -134,68 +150,80 @@
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
                 android:layout_height="wrap_content">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20dp"
-                    android:text="Username : "/>
+                    android:text="Username : " />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="20dp"
                     android:text="AAAA"
                     android:textAlignment="textEnd"
-                    android:id="@+id/viewUserName"/>
+                    android:id="@+id/viewUserName" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:orientation="horizontal"
                 android:layout_height="wrap_content">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20dp"
-                    android:text="Password : "/>
+                    android:text="Password : " />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="20dp"
                     android:text="AAAA"
                     android:textAlignment="textEnd"
-                    android:id="@+id/viewPassword"/>
+                    android:id="@+id/viewPassword" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20dp"
-                    android:text="Account Name : "/>
+                    android:text="Account Name : " />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="20dp"
                     android:text="AAAA"
                     android:textAlignment="textEnd"
-                    android:id="@+id/viewAccountName"/>
+                    android:id="@+id/viewAccountName" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20dp"
-                    android:text="Road Book Mark : "/>
+                    android:text="Road Book Mark : " />
             </LinearLayout>
+
             <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:background="@drawable/border"
                 android:visibility="gone"
-                android:id="@+id/recycleViewBookmark"/>
+                android:id="@+id/recycleViewBookmark" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -204,17 +232,17 @@
                 android:layout_marginTop="10dp"
                 android:text="You haven't bookmark the route"
                 android:visibility="gone"
-                android:id="@+id/emptyView"/>
+                android:id="@+id/emptyView" />
+
             <ProgressBar
                 android:id="@+id/progress1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-               android:layout_gravity="center"
+                android:layout_gravity="center"
                 android:indeterminate="false"
-                android:indeterminateTint="@color/colorPrimaryDark"
-                android:visibility="visible"
-                />
+                android:indeterminateTint="@color/colorPrimaryLight"
+                android:visibility="visible" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

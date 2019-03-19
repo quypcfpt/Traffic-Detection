@@ -25,5 +25,4 @@ public class CoreConstant {
     public static final int STATUS_CAMERA_JAM=1;
 
     public static final String FIREBASE_TOPIC = "Traffic_Jam_Notification";
-
 }

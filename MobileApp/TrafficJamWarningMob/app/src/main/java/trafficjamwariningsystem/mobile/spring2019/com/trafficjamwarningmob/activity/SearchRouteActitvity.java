@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,25 +45,25 @@ import cz.msebera.android.httpclient.Header;
 import retrofit2.Call;
 import retrofit2.Callback;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.R;
-import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.adapter.CameraAdapter;
+import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.adapter.CameraInBookmarkAdapter;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api.ApiClient;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api.ApiInterface;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.BookmarkModel;
-import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.MultipleBookmarkModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.CameraModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.MultiCameraModel;
+import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.MultipleBookmarkModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.Response;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.utils.DirectionsJSONParser;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.utils.HttpUtils;
 
-public class SearchRouteActitvity extends Fragment implements LocationListener{
+public class SearchRouteActitvity extends Fragment implements LocationListener {
 
     ApiInterface apiInterface;
     Boolean locationPermission = false;
     LocationManager locationManager;
     String locationProvider = "";
     public static final int REQUEST_ID_ACCESS_COURSE_FINE_LOCATION = 3;
-    private static CameraAdapter adapter;
+    private static CameraInBookmarkAdapter adapter;
     private RecyclerView recyclerView;
     private LinearLayoutManager mLayoutManager;
     private EditText ori;
@@ -72,6 +73,8 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
     private LatLng des_coordinate;
     private Button saveBookmark;
     private TextView empty;
+    private ProgressBar pb;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,6 +91,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
         final Button searchCamera = rootView.findViewById(R.id.btnSearchCamera);
         saveBookmark = rootView.findViewById(R.id.btnSaveBookmark);
         empty = rootView.findViewById(R.id.txtEmpty);
+        pb = rootView.findViewById(R.id.pbSearching);
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         final ViewPager vp = getActivity().findViewById(R.id.container);
         vp.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -111,20 +115,21 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
         searchCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(cbGPS.isChecked()){
-                    saveBookmark.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.GONE);
-                    empty.setVisibility(View.GONE);
-                    if(!des.getText().toString().trim().isEmpty()) {
+                saveBookmark.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
+                empty.setVisibility(View.GONE);
+                if (cbGPS.isChecked()) {
+                    if (!des.getText().toString().trim().isEmpty()) {
                         checkLocationService();
-                    }else{
+                    } else {
                         onEmptySearchInput();
                     }
-                }else {
-                    if(!ori.getText().toString().trim().isEmpty() && !des.getText().toString().trim().isEmpty()) {
+                } else {
+                    if (!ori.getText().toString().trim().isEmpty() && !des.getText().toString().trim().isEmpty()) {
+                        pb.setVisibility(View.VISIBLE);
                         RequestParams params = getParams(ori.getText().toString(), des.getText().toString());
                         searchCamera(params);
-                    }else{
+                    } else {
                         onEmptySearchInput();
                     }
                 }
@@ -134,7 +139,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
         cbGPS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(cbGPS.isChecked()){
+                if (cbGPS.isChecked()) {
                     checkLocationAccessPermission();
                 }
                 Log.d("Check", cbGPS.isChecked() + "");
@@ -144,9 +149,9 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
         saveBookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(fileExist()){
+                if (fileExist()) {
                     createBookmark();
-                }else{
+                } else {
                     vp.setCurrentItem(2);
                 }
             }
@@ -155,7 +160,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
 
     }
 
-    private void onEmptySearchInput(){
+    private void onEmptySearchInput() {
         empty.setVisibility(View.GONE);
         saveBookmark.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
@@ -202,9 +207,10 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
                         }
 
                     }
-                    if(points.isEmpty()){
+                    pb.setVisibility(View.GONE);
+                    if (points.isEmpty()) {
                         onEmptyResult();
-                    }else{
+                    } else {
                         getOnRouteCamera(points);
                     }
                 }
@@ -213,11 +219,11 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
 
     }
 
-    private void getOnRouteCamera(final List<LatLng> points){
+    private void getOnRouteCamera(final List<LatLng> points) {
         ori_coordinate = points.get(0);
         des_coordinate = points.get(points.size() - 1);
         Log.d("ori", ori_coordinate + "");
-        Log.d("des", des_coordinate+"");
+        Log.d("des", des_coordinate + "");
 
         Call<Response<MultiCameraModel>> responseCall = apiInterface.loadAllCameras("id");
         responseCall.enqueue(new Callback<Response<MultiCameraModel>>() {
@@ -225,8 +231,8 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
             public void onResponse(Call<Response<MultiCameraModel>> call, retrofit2.Response<Response<MultiCameraModel>> response) {
                 Response<MultiCameraModel> res = response.body();
                 MultiCameraModel multiCameraModel = res.getData();
-                if(multiCameraModel != null){
-                    ArrayList<CameraModel> cameras = (ArrayList)multiCameraModel.getCameraList();
+                if (multiCameraModel != null) {
+                    ArrayList<CameraModel> cameras = (ArrayList) multiCameraModel.getCameraList();
                     ArrayList<CameraModel> onRouteCameras = new ArrayList<>();
                     for (CameraModel x : cameras) {
                         String[] xPosArr = x.getPosition().split(",");
@@ -235,15 +241,15 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
                             onRouteCameras.add(x);
                         }
                     }
-                    if(onRouteCameras.isEmpty()){
+                    if (onRouteCameras.isEmpty()) {
                         onEmptyResult();
-                    }else{
-                        if(fileExist()){
+                    } else {
+                        if (fileExist()) {
                             checkExistedBookmark();
-                        }else{
+                        } else {
                             requestLogin();
                         }
-                        adapter = new CameraAdapter(onRouteCameras, getContext());
+                        adapter = new CameraInBookmarkAdapter(onRouteCameras, getContext());
                         recyclerView.setAdapter(adapter);
                         empty.setVisibility(View.GONE);
                         recyclerView.setVisibility(View.VISIBLE);
@@ -258,13 +264,13 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
         });
     }
 
-    private void onEmptyResult(){
+    private void onEmptyResult() {
         empty.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
         saveBookmark.setVisibility(View.GONE);
     }
 
-    private void checkLocationAccessPermission(){
+    private void checkLocationAccessPermission() {
         int accessCoarsePermission = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION);
         int accessFinePermission = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION);
         if (accessCoarsePermission != PackageManager.PERMISSION_GRANTED || accessFinePermission != PackageManager.PERMISSION_GRANTED) {
@@ -272,7 +278,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
                     REQUEST_ID_ACCESS_COURSE_FINE_LOCATION);
 
-        }else {
+        } else {
             Toast.makeText(getActivity(), "GPS Access: Ready", Toast.LENGTH_SHORT).show();
             cbGPS.setChecked(true);
         }
@@ -297,16 +303,17 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
         }
     }
 
-    private void checkLocationService(){
+    private void checkLocationService() {
         locationProvider = getBestEnabledLocationProvider();
-        if (locationProvider.equals("passive")){
+        if (locationProvider.equals("passive")) {
             Toast.makeText(getActivity(), "You need to turn on GPS service and try again.", Toast.LENGTH_SHORT).show();
             return;
         }
         try {
+            pb.setVisibility(View.VISIBLE);
             Toast.makeText(getActivity(), "Locating your position...", Toast.LENGTH_SHORT).show();
             locationManager.requestLocationUpdates(locationProvider, 0, 1000, this);
-        } catch (SecurityException e){
+        } catch (SecurityException e) {
             e.printStackTrace();
         }
     }
@@ -324,14 +331,14 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(newLocation.latitude, newLocation.longitude, 5);
-            if(addresses != null){
+            if (addresses != null) {
                 Address add = addresses.get(0);
                 String strAdd = "";
                 String subthorough = "";
                 String thorough = "";
                 String feature = "";
                 String subadmin = "";
-                for(int i = 0; i < addresses.size(); i++){
+                for (int i = 0; i < addresses.size(); i++) {
                     subthorough = addresses.get(i).getSubThoroughfare();
                     thorough = addresses.get(i).getThoroughfare();
                     feature = addresses.get(i).getFeatureName();
@@ -353,7 +360,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
             }else{
                 Log.d("street", "null address");
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         Toast.makeText(getActivity(), "Located your position", Toast.LENGTH_SHORT).show();
@@ -375,7 +382,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
             return;
         }
         Integer userId = getUserId();
-        if(userId == null){
+        if (userId == null) {
             Toast.makeText(getActivity(), "ERROR: Can not check existed bookmark", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -385,8 +392,10 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
             public void onResponse(Call<Response<MultipleBookmarkModel>> call, retrofit2.Response<Response<MultipleBookmarkModel>> response) {
                 Response<MultipleBookmarkModel> res = response.body();
                 MultipleBookmarkModel bookmarkList = res.getData();
+                String strOri = ori_coordinate.latitude + "," + ori_coordinate.longitude;
+                String strDes = des_coordinate.latitude + "," + des_coordinate.longitude;
                 for (BookmarkModel x : bookmarkList.getBookmarkModelList()) {
-                    if(x.getOri_coordinate().equals(ori_coordinate + "") && x.getDes_coordinate().equals(des_coordinate + "")){
+                    if (x.getOri_coordinate().equals(strOri) && x.getDes_coordinate().equals(strDes)) {
                         saveBookmark.setVisibility(View.VISIBLE);
                         saveBookmark.setText("Added bookmark");
                         saveBookmark.setClickable(false);
@@ -406,23 +415,23 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
         });
     }
 
-    public void createBookmark(){
+    public void createBookmark() {
         BookmarkModel newBookmarkModel = new BookmarkModel();
         Integer userId = getUserId();
-        if(userId == null){
+        if (userId == null) {
             Toast.makeText(getActivity(), "ERROR: Can not add bookmark", Toast.LENGTH_SHORT).show();
             return;
         }
         newBookmarkModel.setAccountId(userId);
         newBookmarkModel.setOrigin(ori.getText().toString());
         newBookmarkModel.setDestination(des.getText().toString());
-        newBookmarkModel.setOri_coordinate(ori_coordinate + "");
-        newBookmarkModel.setDes_coordinate(des_coordinate + "");
+        newBookmarkModel.setOri_coordinate(ori_coordinate.latitude + "," + ori_coordinate.longitude);
+        newBookmarkModel.setDes_coordinate(des_coordinate.latitude + "," + des_coordinate.longitude);
         Call<BookmarkModel> responseCall = apiInterface.createBookmark(newBookmarkModel);
         responseCall.enqueue(new Callback<BookmarkModel>() {
             @Override
             public void onResponse(Call<BookmarkModel> call, retrofit2.Response<BookmarkModel> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     Toast.makeText(getActivity(), "Added a new bookmark", Toast.LENGTH_SHORT).show();
                     saveBookmark.setVisibility(View.VISIBLE);
                     saveBookmark.setText("Added bookmark");
@@ -444,12 +453,12 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             StringBuffer buffer = new StringBuffer();
             String lines;
-            while ((lines = bufferedReader.readLine()) != null){
+            while ((lines = bufferedReader.readLine()) != null) {
                 buffer.append(lines);
             }
             userId = Integer.parseInt(buffer.toString().split("-")[0]);
             Log.d("Login Info", buffer.toString());
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             Log.d("RequestLogin-Error", e.getMessage());
         }
@@ -466,11 +475,10 @@ public class SearchRouteActitvity extends Fragment implements LocationListener{
 
     }
 
-    public boolean fileExist(){
+    public boolean fileExist() {
         File file = getContext().getFileStreamPath("accountInfo");
         return file.exists();
     }
 
 }
-
 
