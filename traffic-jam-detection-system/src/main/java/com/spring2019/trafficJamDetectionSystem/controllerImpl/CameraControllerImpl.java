@@ -46,6 +46,7 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
 
             Camera camera = cameraService.getCameraById(id);
             CameraModel data = cameraTransformer.entityToModel(camera);
+
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
             LOGGER.info("End camera" + id);
         } catch (Exception e) {
@@ -56,7 +57,7 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
     }
 
     @Override
-    public String loadAllCameras( Integer page, Integer size, String sort, String sortBy) {
+    public String loadAllCameras(Integer page, Integer size, String sort, String sortBy) {
         Sort sortable = null;
         if (sort.equals("ASC")) {
             sortable = Sort.by(sortBy).ascending();
@@ -65,67 +66,77 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
             sortable = Sort.by(sortBy).descending();
         }
 
-        Pageable pageable=null;
+        Pageable pageable = null;
         if (page > 0) {
             pageable = PageRequest.of(page - 1, size, sortable);
         }
 
         Response<MultiCameraModel> response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
-
         LOGGER.info("Start load all cameras");
-
         try {
             MultiCameraModel data = new MultiCameraModel();
-
             List<CameraModel> cameraList = new ArrayList<>();
-                if (page > 0) {
-                    Page<Camera> cameras = cameraService.getAllCameras(pageable);
-
-                    for (Camera camera : cameras) {
-                        cameraList.add(cameraTransformer.entityToModel(camera));
-                    }
-                    data.setCurrentPage(page);
-                    data.setTotalPage(cameras.getTotalPages());
-                    data.setTotalRecord(cameras.getTotalElements());
-                } else {
-                    List<Camera> cameras = cameraService.getAllCameras();
-
-                    for (Camera camera : cameras) {
-                        cameraList.add(cameraTransformer.entityToModel(camera));
-                    }
-
+            if (page > 0) {
+                Page<Camera> cameras = cameraService.getAllCameras(pageable);
+                for (Camera camera : cameras) {
+                    cameraList.add(cameraTransformer.entityToModel(camera));
+                }
+                data.setCurrentPage(page);
+                data.setTotalPage(cameras.getTotalPages());
+                data.setTotalRecord(cameras.getTotalElements());
+            } else {
+                List<Camera> cameras = cameraService.getAllCameras();
+                for (Camera camera : cameras) {
+                    cameraList.add(cameraTransformer.entityToModel(camera));
+                }
+            }
             data.setCameraList(cameraList);
-
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
             LOGGER.info("End load all cameras");
-            }
         } catch (Exception e) {
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
             LOGGER.error(e.getMessage());
         }
         return gson.toJson(response);
+
     }
 
     @Override
-    public String loadCamerasByStreet(Integer streetId) {
+    public String loadCamerasByStreet(Integer streetId, Integer page, Integer size, String sort, String sortBy) {
+
+        Sort sortable = null;
+        if (sort.equals("ASC")) {
+            sortable = Sort.by(sortBy).ascending();
+        }
+        if (sort.equals("DESC")) {
+            sortable = Sort.by(sortBy).descending();
+        }
+
+        Pageable pageable = PageRequest.of(page - 1, size, sortable);
+
         Response<MultiCameraModel> response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
-        LOGGER.error("Start load cameras by street with ID: "+streetId);
+
+        LOGGER.info("Start load cameras by street with ID: " + streetId);
+
         try {
             MultiCameraModel data = new MultiCameraModel();
             List<CameraModel> cameraList = new ArrayList<>();
-            List<Camera> cameras = cameraService.getCamerasByStreetAndIsActive(streetId);
+            Page<Camera> cameras = cameraService.getCamerasByStreet(streetId, pageable);
 
-            if (cameras.size()==0){
+            if (cameras.getSize() == 0) {
                 LOGGER.info("Empty result!");
             }
 
             for (Camera camera : cameras) {
                 cameraList.add(cameraTransformer.entityToModel(camera));
             }
+            data.setCurrentPage(page);
+            data.setTotalPage(cameras.getTotalPages());
+            data.setTotalRecord(cameras.getTotalElements());
             data.setCameraList(cameraList);
 
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
-            LOGGER.info("End load street with ID: "+streetId);
+            LOGGER.info("End load street with ID: " + streetId);
         } catch (Exception e) {
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
             LOGGER.error(e.getMessage());
@@ -138,18 +149,20 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
         Response response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
         try {
             LOGGER.info("Start create camera: " + cameraModelString);
-            CameraModel cameraModel = gson.fromJson(cameraModelString, CameraModel.class);
-            Camera cameraEntity = cameraTransformer.modelToEntity(cameraModel);
-            cameraService.createCamera(cameraEntity);
-            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, true);
+
+            CameraModel newCamera = gson.fromJson(cameraModelString, CameraModel.class);
+            Camera camera = cameraTransformer.modelToEntity(newCamera);
+            cameraService.createCamera(camera);
+            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS);
             LOGGER.info("End create camera");
-        }catch (Exception e){
+        } catch (Exception e) {
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
             LOGGER.error(e.getMessage());
         }
         return gson.toJson(response);
     }
 
+    @Override
     public String updateCamera(String cameraModelString) {
         Response response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
         try {
@@ -158,7 +171,7 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
             cameraService.updateCamera(cameraEntity);
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, true);
             LOGGER.info("Camera updated: " + cameraModelString);
-        }catch (Exception e){
+        } catch (Exception e) {
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
             LOGGER.error(e.getMessage());
         }

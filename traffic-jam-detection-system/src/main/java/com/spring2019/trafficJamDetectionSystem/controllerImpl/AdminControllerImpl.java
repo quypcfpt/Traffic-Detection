@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 public class AdminControllerImpl extends AbstractController implements AdminController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminControllerImpl.class);
+
     @Override
     public ModelAndView openLogin(HttpSession session) {
         String username = (String) session.getAttribute("username");

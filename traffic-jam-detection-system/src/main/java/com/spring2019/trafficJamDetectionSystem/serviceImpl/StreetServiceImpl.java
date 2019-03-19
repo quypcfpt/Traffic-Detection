@@ -20,7 +20,7 @@ public class StreetServiceImpl implements StreetService {
 
     @Override
     public Page<Street> getStreetByDistrict(String district, Pageable pageable) {
-        return (Page<Street>) streetRepository.findByDistrictAndIsActive(district,true, pageable);
+        return (Page<Street>) streetRepository.findByDistrictAndIsActive(district, true, pageable);
     }
 
     @Override
@@ -33,7 +33,6 @@ public class StreetServiceImpl implements StreetService {
         return streetRepository.findAllByIsActive(pageable, true);
     }
 
-    @Override
     public void createStreet(Street street) {
         street.setIsActive(true);
         streetRepository.save(street);
@@ -46,7 +45,7 @@ public class StreetServiceImpl implements StreetService {
 
     @Override
     public Page<Street> getStreetBySearch(String txtSearch, Pageable pageable) {
-        return streetRepository.findByNameContainingIgnoreCaseAndIsActive(txtSearch,true,pageable);
+        return streetRepository.findByNameContainingIgnoreCaseAndIsActive(txtSearch, true, pageable);
     }
 
 

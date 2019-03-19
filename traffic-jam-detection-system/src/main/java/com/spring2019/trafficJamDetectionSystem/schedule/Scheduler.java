@@ -2,11 +2,9 @@ package com.spring2019.trafficJamDetectionSystem.schedule;
 
 import com.spring2019.trafficJamDetectionSystem.common.CoreConstant;
 import com.spring2019.trafficJamDetectionSystem.controllerImpl.DetectionControllerImpl;
-import com.spring2019.trafficJamDetectionSystem.entity.Account;
 import com.spring2019.trafficJamDetectionSystem.entity.Street;
 import com.spring2019.trafficJamDetectionSystem.model.DetectionModel;
 import com.spring2019.trafficJamDetectionSystem.service.AndroidPushNotificationsService;
-import com.spring2019.trafficJamDetectionSystem.service.BookmarkService;
 import com.spring2019.trafficJamDetectionSystem.service.CameraService;
 import com.spring2019.trafficJamDetectionSystem.service.StreetService;
 import org.json.JSONException;
@@ -20,7 +18,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Configuration
@@ -34,9 +31,6 @@ public class Scheduler {
 
     @Autowired
     StreetService streetService;
-
-    @Autowired
-    BookmarkService bookmarkService;
 
     @Autowired
     AndroidPushNotificationsService androidPushNotificationsService;
@@ -61,7 +55,6 @@ public class Scheduler {
                 if (oldResult.getStatusId() != newResult.getStatusId()) {
                     Street street = cameraService.getCameraById(cameraId).getStreetByStreetId();
 
-
                     String msg = "";
                     switch (newResult.getStatusId()) {
                         case 0:
@@ -71,15 +64,7 @@ public class Scheduler {
                             msg = "Kẹt xe ở đường " + street.getName() + " quận " + street.getDistrict();
                             break;
                     }
-
-                    List<Account> accountList = bookmarkService.getAccountByCameraId(cameraId);
-                    LOGGER.info("list size: " +accountList.size());
-                    if (accountList.size() > 0) {
-                        for (Account account : accountList) {
-                            sendNotification(msg, account.getUsername());
-                            LOGGER.info("Notification: " +msg);
-                        }
-                    }
+                    sendNotification(msg);
                 }
             });
 
@@ -87,10 +72,10 @@ public class Scheduler {
         }
     }
 
-    private void sendNotification(String msg, String username) throws JSONException {
+    private void sendNotification(String msg) throws JSONException {
 
         JSONObject body = new JSONObject();
-        body.put("to", "/topics/" + username);
+        body.put("to", "/topics/" + CoreConstant.FIREBASE_TOPIC);
         body.put("priority", "high");
 
         JSONObject notification = new JSONObject();
