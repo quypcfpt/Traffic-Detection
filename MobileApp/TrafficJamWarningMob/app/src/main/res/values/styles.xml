@@ -14,6 +14,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:textColor">@color/colorText</item>
     </style>
+
     <style name="TextAppearance.AppCompat.Widget.ActionBar.Title" parent="@style/TextAppearance.AppCompat">
         <item name="android:textSize">30dp</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>

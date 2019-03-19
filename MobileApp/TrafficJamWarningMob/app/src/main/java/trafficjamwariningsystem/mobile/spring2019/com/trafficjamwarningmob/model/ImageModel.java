@@ -1,4 +1,5 @@
 package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model;
+
 import com.google.gson.annotations.Expose;
 
 public class ImageModel {

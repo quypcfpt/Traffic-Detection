@@ -2,6 +2,7 @@ package com.spring2019.trafficJamDetectionSystem.model;
 
 import com.google.gson.annotations.Expose;
 
+
 public class ImageModel {
     @Expose
     private int id;

@@ -38,6 +38,7 @@ public class CameraServiceImpl implements CameraService {
     public Page<Camera> getCamerasByStreet(Integer streetId, Pageable pageable) {
         Street street=new Street();
         street.setId(streetId);
+
         return cameraRepository.findByStreetByStreetIdAndIsActive(street,true,pageable);
     }
 

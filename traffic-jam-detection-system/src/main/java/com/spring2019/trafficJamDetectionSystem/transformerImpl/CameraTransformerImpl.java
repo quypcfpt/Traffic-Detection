@@ -30,21 +30,11 @@ public class CameraTransformerImpl implements CameraTransformer {
 
     @Override
     public Camera modelToEntity(CameraModel model) {
-        Camera entity = new Camera();
+        Camera entity=new Camera();
 
         entity.setId(model.getId());
         entity.setDescription(model.getDescription());
         entity.setPosition(model.getPosition());
-
-        if (model.getObserverStatus() != null) {
-            entity.setObservedStatus(model.getObserverStatus());
-        }
-
-        if (model.getResource() != null) {
-            entity.setResource(model.getResource());
-        }
-
-        entity.setCamOrder(model.getOrder());
 
         if (model.getObserverStatus() != null) {
             entity.setObservedStatus(model.getObserverStatus());
@@ -58,7 +48,6 @@ public class CameraTransformerImpl implements CameraTransformer {
         street.setId(model.getStreet().getId());
         entity.setStreetByStreetId(street);
         entity.setIsActive(model.isActive());
-
         return entity;
     }
 }
