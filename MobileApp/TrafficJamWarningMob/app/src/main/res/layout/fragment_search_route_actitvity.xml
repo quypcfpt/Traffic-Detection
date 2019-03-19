@@ -55,8 +55,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnSaveBookmark"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:layout_marginTop="15px"/>
 
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/pbSearching"
+            android:layout_gravity="center"
+            android:layout_marginTop="15px"
+            android:indeterminate="true"
+            android:visibility="gone"
+            />
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
