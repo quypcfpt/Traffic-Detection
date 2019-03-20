@@ -94,15 +94,7 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            String fileName = "accountInfo";
-            File file = getContext().getFileStreamPath(fileName);
-            if (file.exists()) {
-                autoLogin();
-            } else {
-                initialView(false);
-            }
-        }
+
     }
     @Override
     public void onResume() {

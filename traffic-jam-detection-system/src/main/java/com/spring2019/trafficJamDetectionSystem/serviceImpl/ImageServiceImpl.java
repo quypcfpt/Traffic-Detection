@@ -17,4 +17,9 @@ public class ImageServiceImpl implements ImageService {
         Optional<Image> image = imageRepository.getByCameraId(id);
         return image.orElse(null);
     }
+
+    @Override
+    public void updateImage(Image image) {
+        imageRepository.save(image);
+    }
 }
