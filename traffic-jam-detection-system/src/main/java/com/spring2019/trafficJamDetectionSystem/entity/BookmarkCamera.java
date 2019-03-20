@@ -4,11 +4,11 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "Camera_Account", schema = "dbo", catalog = "casptonetrafficjamdb")
-public class CameraAccount {
+@Table(name = "Bookmark_Camera", schema = "dbo", catalog = "casptonetrafficjamdb")
+public class BookmarkCamera {
     private int id;
     private Camera cameraByCameraId;
-    private Account accountByAccountId;
+    private Bookmark bookmarkByBookmarkId;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +25,7 @@ public class CameraAccount {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CameraAccount that = (CameraAccount) o;
+        BookmarkCamera that = (BookmarkCamera) o;
         return id == that.id;
     }
 
@@ -45,12 +45,12 @@ public class CameraAccount {
     }
 
     @ManyToOne
-    @JoinColumn(name = "account_id", referencedColumnName = "id", nullable = false)
-    public Account getAccountByAccountId() {
-        return accountByAccountId;
+    @JoinColumn(name = "bookmark_id", referencedColumnName = "id", nullable = false)
+    public Bookmark getBookmarkByBookmarkId() {
+        return bookmarkByBookmarkId;
     }
 
-    public void setAccountByAccountId(Account accountByAccountId) {
-        this.accountByAccountId = accountByAccountId;
+    public void setBookmarkByBookmarkId(Bookmark bookmarkByBookmarkId) {
+        this.bookmarkByBookmarkId = bookmarkByBookmarkId;
     }
 }

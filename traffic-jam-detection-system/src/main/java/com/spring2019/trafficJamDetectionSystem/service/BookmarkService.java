@@ -16,5 +16,5 @@ public interface BookmarkService {
 
     public void createBookmark(Bookmark newBookmark);
 
-    public List<Account> getAccountByCameraId(int cameraId);
+    public List<String> getAccountByCameraId(int cameraId);
 }

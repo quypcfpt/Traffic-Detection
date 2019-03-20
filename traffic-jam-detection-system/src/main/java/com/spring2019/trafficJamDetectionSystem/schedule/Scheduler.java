@@ -72,12 +72,12 @@ public class Scheduler {
                             break;
                     }
 
-                    List<Account> accountList = bookmarkService.getAccountByCameraId(cameraId);
-                    LOGGER.info("list size: " +accountList.size());
+                    List<String> accountList = bookmarkService.getAccountByCameraId(cameraId);
+                    LOGGER.info("list size: " + accountList.size());
                     if (accountList.size() > 0) {
-                        for (Account account : accountList) {
-                            sendNotification(msg, account.getUsername());
-                            LOGGER.info("Notification: " +msg);
+                        for (String account : accountList) {
+                            sendNotification(msg, account);
+                            LOGGER.info("Notification: " + msg);
                         }
                     }
                 }
