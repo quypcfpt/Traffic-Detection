@@ -6,13 +6,11 @@ import com.google.gson.annotations.Expose;
 public class DetectionModel {
     @Expose
     private int CameraId;
-
     @Expose
     private int statusId;
     @Expose
     private String imageUrl;
-    @Expose
-    private String time;
+
 
 
     public DetectionModel() {
@@ -37,12 +35,6 @@ public class DetectionModel {
     }
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-    public String getTime() {
-        return time;
-    }
-    public void setTime(String time) {
-        this.time = time;
     }
 }
 

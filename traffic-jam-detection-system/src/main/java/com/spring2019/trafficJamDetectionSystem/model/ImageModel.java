@@ -7,7 +7,7 @@ public class ImageModel {
     @Expose
     private int id;
     @Expose
-    private int cameraId;
+    private Integer cameraId;
     @Expose
     private String link;
     @Expose
@@ -16,11 +16,11 @@ public class ImageModel {
     public ImageModel() {
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

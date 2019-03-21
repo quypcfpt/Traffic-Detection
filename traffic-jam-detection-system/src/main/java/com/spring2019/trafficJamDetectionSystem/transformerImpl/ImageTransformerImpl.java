@@ -27,11 +27,12 @@ public class ImageTransformerImpl implements ImageTransformer {
     @Override
     public Image modelToEntity(ImageModel model) {
         Image entity = new Image();
-
         entity.setId(model.getId());
         entity.setCameraId(model.getCameraId());
         entity.setLink(model.getLink());
-        entity.setTime(Timestamp.valueOf(model.getTime()));
+        if(model.getTime() !=null) {
+            entity.setTime(Timestamp.valueOf(model.getTime()));
+        }
 
         return entity;
     }
