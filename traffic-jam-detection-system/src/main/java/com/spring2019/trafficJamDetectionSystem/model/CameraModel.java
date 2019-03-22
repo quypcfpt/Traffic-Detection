@@ -20,6 +20,10 @@ public class CameraModel {
     private StreetModel street;
     @Expose
     private boolean isActive;
+    @Expose
+    private String imgUrl;
+    @Expose
+    private String time;
 
     public CameraModel() {
     }
@@ -86,5 +90,21 @@ public class CameraModel {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }

@@ -3,15 +3,12 @@ package com.spring2019.trafficJamDetectionSystem.controllerImpl;
 import com.spring2019.trafficJamDetectionSystem.common.CoreConstant;
 import com.spring2019.trafficJamDetectionSystem.controller.DetectionController;
 import com.spring2019.trafficJamDetectionSystem.entity.Camera;
-import com.spring2019.trafficJamDetectionSystem.entity.Image;
 import com.spring2019.trafficJamDetectionSystem.model.CameraModel;
 import com.spring2019.trafficJamDetectionSystem.model.DetectionModel;
 import com.spring2019.trafficJamDetectionSystem.model.ImageModel;
 import com.spring2019.trafficJamDetectionSystem.model.Response;
 import com.spring2019.trafficJamDetectionSystem.service.CameraService;
-import com.spring2019.trafficJamDetectionSystem.service.ImageService;
 import com.spring2019.trafficJamDetectionSystem.transformer.CameraTransformer;
-import com.spring2019.trafficJamDetectionSystem.transformer.ImageTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +29,7 @@ public class DetectionControllerImpl extends AbstractController implements Detec
     CameraService cameraService;
 
     @Autowired
-    ImageService imageService;
-
-    @Autowired
     CameraTransformer cameraTransformer;
-
-    @Autowired
-    ImageTransformer imageTransformer;
 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DetectionControllerImpl.class);
@@ -53,24 +44,20 @@ public class DetectionControllerImpl extends AbstractController implements Detec
             CameraModel cameraModel = new CameraModel();
             cameraModel.setId(detectionResult.getCameraId());
             cameraModel.setObserverStatus(detectionResult.getStatusId());
+
+            //Update Image  link and time
+            cameraModel.setImgUrl(detectionResult.getImageUrl());
+
+            Date date= new Date();
+            long time = date.getTime();
+            Timestamp ts = new Timestamp(time);
+            cameraModel.setTime(ts.toString());
+
             Camera camera = cameraTransformer.modelToEntity(cameraModel);
             Camera Newcamera = cameraService.getCameraById(camera.getId());
             Newcamera.setObservedStatus(camera.getObservedStatus());
             cameraService.updateCamera(Newcamera);
-            //Update Image  link and time
-            ImageModel imageModel = new ImageModel();
-            imageModel.setId(cameraModel.getId());
-            imageModel.setCameraId(cameraModel.getId());
-            imageModel.setLink(detectionResult.getImageUrl());
-            Image image = imageTransformer.modelToEntity(imageModel);
-            image.setLink(image.getLink());
-                    // Get currentTime
-            Date date= new Date();
-            long time = date.getTime();
-            Timestamp ts = new Timestamp(time);
-            image.setTime(ts);
-            image.setCameraId(image.getCameraId());
-            imageService.updateImage(image);
+
             detectResultData.put(detectionResult.getCameraId(), detectionResult);
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS);
             LOGGER.info("End update traffic info");

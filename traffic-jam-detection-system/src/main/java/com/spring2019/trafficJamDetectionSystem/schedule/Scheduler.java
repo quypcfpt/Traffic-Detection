@@ -77,7 +77,7 @@ public class Scheduler {
                     if (accountList.size() > 0) {
                         for (String account : accountList) {
                             sendNotification(msg, account);
-                            LOGGER.info("Notification: " + msg);
+                            LOGGER.info("Notification to user "+account +": " + msg);
                         }
                     }
                 }

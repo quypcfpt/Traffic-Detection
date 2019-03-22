@@ -1,6 +1,7 @@
 package com.spring2019.trafficJamDetectionSystem.entity;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
@@ -13,6 +14,8 @@ public class Camera {
     private Integer camOrder;
     private Boolean isActive;
     private Street streetByStreetId;
+    private String imageUrl;
+    private Timestamp time;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -112,5 +115,25 @@ public class Camera {
 
     public void setStreetByStreetId(Street streetByStreetId) {
         this.streetByStreetId = streetByStreetId;
+    }
+
+    @Basic
+    @Column(name = "image_url", nullable = true, length = 255)
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    @Basic
+    @Column(name = "time", nullable = true)
+    public Timestamp getTime() {
+        return time;
+    }
+
+    public void setTime(Timestamp time) {
+        this.time = time;
     }
 }
