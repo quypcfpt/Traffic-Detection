@@ -23,7 +23,26 @@ public class CameraModel {
 
     @Expose
     private StreetModel street;
+    @Expose
+    private String imgUrl;
+    @Expose
+    private String time;
 
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
 
     public CameraModel() {
     }

@@ -36,7 +36,7 @@ public class ListCameraActivity extends AppCompatActivity implements View.OnClic
     private LinearLayoutManager mLayoutManager;
     private static List<StreetModel> streetModelList;
     private int currentItems, scrollOutItems, totalItems, id;
-    private TextView labelTextView;
+    private TextView labelTextView , textErr;
     private ProgressBar progressBar;
     private ImageButton btnBack;
 
@@ -50,6 +50,7 @@ public class ListCameraActivity extends AppCompatActivity implements View.OnClic
         mLayoutManager = new LinearLayoutManager(this);
         progressBar = (ProgressBar) findViewById(R.id.progress);
         btnBack = (ImageButton) findViewById(R.id.btnBack);
+        textErr = (TextView)findViewById(R.id.txtError);
         recyclerView.setLayoutManager(mLayoutManager);
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Intent intent = getIntent();
@@ -70,14 +71,18 @@ public class ListCameraActivity extends AppCompatActivity implements View.OnClic
 
                 final MultiCameraModel multiCameraModel = res.getData();
                 final List<CameraModel> cameraModelList = multiCameraModel.getCameraList();
-                if (cameraModelList != null) {
+                if (!cameraModelList.isEmpty()) {
                     adapter = new CameraAdapter(cameraModelList, getApplicationContext());
                     recyclerView.setAdapter(adapter);
+                    textErr.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
                 } else {
                     Toast.makeText(ListCameraActivity.this, "This Street doesn't have any camera. We will update soon.", Toast.LENGTH_SHORT).show();
+                    recyclerView.setVisibility(View.GONE);
+                    textErr.setVisibility(View.VISIBLE);
+
                 }
             }
-
             @Override
             public void onFailure(Call<Response<MultiCameraModel>> call, Throwable t) {
 

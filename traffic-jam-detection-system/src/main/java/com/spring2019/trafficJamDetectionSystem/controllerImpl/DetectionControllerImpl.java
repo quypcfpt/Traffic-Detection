@@ -5,7 +5,6 @@ import com.spring2019.trafficJamDetectionSystem.controller.DetectionController;
 import com.spring2019.trafficJamDetectionSystem.entity.Camera;
 import com.spring2019.trafficJamDetectionSystem.model.CameraModel;
 import com.spring2019.trafficJamDetectionSystem.model.DetectionModel;
-import com.spring2019.trafficJamDetectionSystem.model.ImageModel;
 import com.spring2019.trafficJamDetectionSystem.model.Response;
 import com.spring2019.trafficJamDetectionSystem.service.CameraService;
 import com.spring2019.trafficJamDetectionSystem.transformer.CameraTransformer;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 

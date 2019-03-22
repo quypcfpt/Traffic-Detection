@@ -76,5 +76,5 @@
         android:textAlignment="center"
         android:id="@+id/txtError"
         android:visibility="gone"
-        android:text="Please Connect to the Internet" />
+        android:text="Please Check the Internet Connection" />
 </LinearLayout>

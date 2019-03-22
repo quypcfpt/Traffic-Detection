@@ -47,6 +47,7 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
     private RelativeLayout view;
     private TextView txtError;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -82,7 +83,7 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
                 totalPage = multiStreetModel.getTotalPage();
                 long totalRecord = multiStreetModel.getTotalRecord();
                 streetModelList = multiStreetModel.getStreetList();
-                if (streetModelList != null) {
+                if (!streetModelList.isEmpty()) {
                     view.setVisibility(View.VISIBLE);
                     txtError.setVisibility(View.GONE);
                     adapter = new StreetAdapter(streetModelList, getContext());
