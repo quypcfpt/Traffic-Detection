@@ -23,6 +23,7 @@ public interface CameraService {
 
     public List<Camera> getCamerasByStreetAndIsActive(Integer street);
 
+    public List<Camera>  getCameraByStreetNameAndIsActive(String streetName);
 
 
 }

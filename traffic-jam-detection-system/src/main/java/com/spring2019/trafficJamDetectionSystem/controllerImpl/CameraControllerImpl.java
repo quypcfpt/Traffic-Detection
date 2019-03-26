@@ -164,4 +164,25 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
         }
         return gson.toJson(response);
     }
+
+    @Override
+    public String loadCamerasByStreetNameAndIsActive(String streetName) {
+        Response response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
+        try {
+            LOGGER.info("Start load camera by Street Name " + streetName);
+            List<Camera> camera = new ArrayList<>();
+            List<CameraModel> dataa = new ArrayList<>();
+            camera = cameraService.getCameraByStreetNameAndIsActive(streetName);
+            for(Camera item : camera){
+                dataa.add(cameraTransformer.entityToModel(item));
+            }
+
+            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, dataa);
+            LOGGER.info("End load camera by Street Name " + streetName);
+        } catch (Exception e) {
+            response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
+            LOGGER.error(e.getMessage());
+        }
+        return gson.toJson(response);
+    }
 }

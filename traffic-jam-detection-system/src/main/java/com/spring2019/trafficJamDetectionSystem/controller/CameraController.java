@@ -26,6 +26,8 @@ public interface CameraController {
     @PutMapping(CoreConstant.API_CAMERA)
     public String updateCamera(@RequestParam String cameraModelString);
 
+    @GetMapping(CoreConstant.API_CAMERA + "/streetName/{streetName}")
+    public String loadCamerasByStreetNameAndIsActive(@PathVariable("streetName") String streetName);
 
 }
 

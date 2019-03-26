@@ -25,5 +25,7 @@ public interface CameraRepository extends JpaRepository<Camera,Integer> {
     List<Camera> findByStreetByStreetIdAndIsActive(Street street, Boolean isActive);
     List<Camera> findByStreetByStreetIdAndIsActive(Integer street, Boolean isActive);
 
-
+    @Query(value="SELECT * FROM Camera C JOIN Street S " +
+            "ON S.id = C.street_id Where S.isActive = 1 AND S.name = :streetName",nativeQuery = true)
+    List<Camera> findCameraByStreetName(@Param("streetName") String streetName);
 }

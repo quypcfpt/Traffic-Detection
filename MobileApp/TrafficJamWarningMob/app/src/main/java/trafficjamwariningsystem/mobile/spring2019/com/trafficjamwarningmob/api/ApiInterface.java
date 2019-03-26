@@ -1,5 +1,7 @@
 package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -40,8 +42,8 @@ public interface ApiInterface {
     @GET("api/camera/streetId/{streetId}")
     Call<Response<MultiCameraModel>> loadCamerasByStreet(@Path("streetId") int streetId);
 
-    @GET("api/camera/streetId/{streetId}")
-    Call<Response<MultiCameraModel>> loadCamerasByStreet2(@Path("streetId") int streetId, @Query("sortBy") String sortBy);
+    @GET("api/camera/streetName/{streetName}")
+    Call<Response<List<CameraModel>>> loadCamerasByStreetName(@Path("streetName") String streetName);
 
     //Image
     @GET("api/camera/image/{id}")

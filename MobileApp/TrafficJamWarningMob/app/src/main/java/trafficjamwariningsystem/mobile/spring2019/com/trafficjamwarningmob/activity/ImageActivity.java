@@ -45,7 +45,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
         labelTextView.setText(cameraName);
         final String imagePath = "https://d1ix0byejyn2u7.cloudfront.net/drive/images/uploads/headers/ws_cropper/1_0x0_790x520_0x520_traffic_jams.jpg";
         cameraId.setText(cameraID + "");
-        cameraStatus.setImageResource(status == 1 ? R.mipmap.green : R.mipmap.red);
+        cameraStatus.setImageResource(status == 0 ? R.mipmap.green : R.mipmap.red);
         Call<Response<CameraModel>> responseCall = apiInterface.loadCameraById(1);
         responseCall.enqueue(new Callback<Response<CameraModel>>() {
             @Override

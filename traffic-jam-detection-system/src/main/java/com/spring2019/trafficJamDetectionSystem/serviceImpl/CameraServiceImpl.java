@@ -49,8 +49,10 @@ public class CameraServiceImpl implements CameraService {
         return cameraRepository.findByStreetByStreetIdAndIsActive(street,true);
     }
 
-
-
+    @Override
+    public List<Camera> getCameraByStreetNameAndIsActive(String streetName) {
+        return cameraRepository.findCameraByStreetName(streetName);
+    }
 
 
     @Override
