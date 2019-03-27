@@ -2,6 +2,7 @@ package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.acti
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -47,7 +48,7 @@ import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model
 public class AccountActivity extends Fragment implements View.OnClickListener {
     private ApiInterface apiInterface;
     private boolean isLogin, isCheckLogin, isLogout;
-    private TextView txtSignUp, accountUsername, accountPassword, accountName, emptyView;
+    private TextView txtSignUp, accountUsername, accountPassword, accountName, emptyView,txtSignInErr;
     private EditText edtUsername, edtPassword;
     private Button btnSignIn;
     private LinearLayout signInLayout, accountLayout;
@@ -58,7 +59,7 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
     private ProgressBar progressBar, progressBar1;
     private LinearLayoutManager mLayoutManager;
     private ImageButton logOutbtn;
-
+    AccountModel accountModel;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -77,24 +78,36 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
         logOutbtn = (ImageButton) v.findViewById(R.id.btnLogout);
         progressBar = (ProgressBar) v.findViewById(R.id.progress);
         progressBar1 = (ProgressBar) v.findViewById(R.id.progress1);
+        txtSignInErr = (TextView) v.findViewById(R.id.txtSignInError);
         mLayoutManager = new LinearLayoutManager(v.getContext());
+        txtSignInErr.setVisibility(View.GONE);
+        txtSignUp.setPaintFlags(txtSignUp.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
         recyclerView.setLayoutManager(mLayoutManager);
         isLogin = false;
         isLogout = false;
+
         String fileName = "accountInfo";
         File file = getContext().getFileStreamPath(fileName);
         if (file.exists()) {
-            autoLogin();
+            recyclerView.setVisibility(View.GONE);
+            progressBar1.setVisibility(View.VISIBLE);
+            accountModel = readInternal();
+            autoLogin(accountModel);
+            loadAccountInfo(accountModel);
+
         } else {
             initialView(false);
         }
+
         return v;
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-
+        if(isVisibleToUser){
+            getFragmentManager().beginTransaction().detach(this).attach(this).commit();
+        }
     }
     @Override
     public void onResume() {
@@ -184,7 +197,7 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
                     } else {
                         isLogin = false;
                         initialView(isLogin);
-                        Toast.makeText(getContext(), "Username and Password is invalid", Toast.LENGTH_SHORT).show();
+                        txtSignInErr.setText("The UserName or Password is Invalid");
                     }
                 }
 
@@ -265,8 +278,7 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
         file.delete();
     }
 
-    private void autoLogin() {
-        AccountModel accountModel = readInternal();
+    private void autoLogin(AccountModel accountModel) {
         checkLogin(accountModel.getUsername(), accountModel.getPassword());
     }
 

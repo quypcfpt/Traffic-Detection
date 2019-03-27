@@ -104,7 +104,9 @@ public class BookmarkControllerImpl extends AbstractController implements Bookma
         Response<String> response = new Response<String>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
         try {
             LOGGER.info("Start Delete Bookmark" + id);
-            List<BookmarkModel> models = new ArrayList<BookmarkModel>();
+            Bookmark bookmark = new Bookmark();
+            bookmark.setId(id);
+             bookmarkService.removeBookMarkCameraWithBookMarkID(bookmark);
             String check = bookmarkService.removeBookMarkById(id) + "";
 
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS,check);

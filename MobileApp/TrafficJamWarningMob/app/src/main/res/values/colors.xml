@@ -7,4 +7,5 @@
     <color name="colorSecondary">#e0e0e0</color>
     <color name="colorSecondaryDark">#aeaeae</color>
     <color name="colorSecondaryLight">#f5f5f5</color>
+    <color name="Error">#ff0000</color>
 </resources>
