@@ -51,12 +51,29 @@
             android:background="@color/colorPrimary"
             android:text="Check traffic " />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnSaveBookmark"
-            android:visibility="gone"
-            android:layout_marginTop="15px"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnSaveBookmark"
+                android:visibility="gone"
+                android:layout_marginTop="15px"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnViewMap"
+                android:visibility="gone"
+                android:textAlignment="center"
+                android:text="View Map"
+                android:layout_marginTop="15px"
+                android:layout_alignParentRight="true"
+                />
+        </RelativeLayout>
+
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -83,7 +100,8 @@
                 android:visibility="gone"
                 android:text="No result found"
                 android:paddingLeft="10px"
-                android:textSize="50px" />
+                android:textSize="50px"
+                />
         </RelativeLayout>
 
     </LinearLayout>

@@ -2,7 +2,9 @@ package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.mode
 
 import com.google.gson.annotations.Expose;
 
-public class CameraModel {
+import java.io.Serializable;
+
+public class CameraModel implements Serializable {
     @Expose
     private int id;
 
