@@ -28,21 +28,22 @@ public class CameraTransformerImpl implements CameraTransformer {
         model.setStreet(streetTransformer.entityToModel(entity.getStreetByStreetId()));
         model.setActive(entity.getIsActive());
         model.setImgUrl(entity.getImageUrl());
-        model.setTime(entity.getTime().toString());
-
+        if (entity.getTime() != null) {
+            model.setTime(entity.getTime().toString());
+        }
         return model;
     }
 
     @Override
     public Camera modelToEntity(CameraModel model) {
-        Camera entity=new Camera();
+        Camera entity = new Camera();
 
         entity.setId(model.getId());
-        if(model.getDescription()!=null) {
+        if (model.getDescription() != null) {
             entity.setDescription(model.getDescription());
         }
 
-        if(model.getPosition()!=null) {
+        if (model.getPosition() != null) {
             entity.setPosition(model.getPosition());
         }
 
@@ -54,22 +55,22 @@ public class CameraTransformerImpl implements CameraTransformer {
             entity.setResource(model.getResource());
         }
 
-        if(model.getOrder()!=null) {
+        if (model.getOrder() != null) {
             entity.setCamOrder(model.getOrder());
         }
 
-        if(model.getStreet()!=null) {
+        if (model.getStreet() != null) {
             Street street = new Street();
             street.setId(model.getStreet().getId());
             entity.setStreetByStreetId(street);
             entity.setIsActive(model.isActive());
         }
 
-        if (model.getImgUrl()!=null){
+        if (model.getImgUrl() != null) {
             entity.setImageUrl(model.getImgUrl());
         }
 
-        if (model.getTime()!=null){
+        if (model.getTime() != null) {
             entity.setTime(Timestamp.valueOf(model.getTime()));
         }
         return entity;
