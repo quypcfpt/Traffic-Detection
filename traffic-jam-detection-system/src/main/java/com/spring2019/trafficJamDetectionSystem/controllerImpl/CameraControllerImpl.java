@@ -93,12 +93,12 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
                     for (Camera camera : cameras) {
                         cameraList.add(cameraTransformer.entityToModel(camera));
                     }
+                }
 
             data.setCameraList(cameraList);
 
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
             LOGGER.info("End load all cameras");
-            }
         } catch (Exception e) {
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
             LOGGER.error(e.getMessage());

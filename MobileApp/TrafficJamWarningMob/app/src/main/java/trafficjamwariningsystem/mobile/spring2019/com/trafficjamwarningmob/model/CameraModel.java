@@ -28,6 +28,41 @@ public class CameraModel {
     @Expose
     private String time;
 
+    public CameraModel(int id, String description, String position, String resource, int observerStatus, int camOrder, StreetModel street, String imgUrl, String time) {
+        this.id = id;
+        this.description = description;
+        this.position = position;
+        this.resource = resource;
+        this.observerStatus = observerStatus;
+        this.camOrder = camOrder;
+        this.street = street;
+        this.imgUrl = imgUrl;
+        this.time = time;
+    }
+
+    public CameraModel(int id, String description, String position, String resource, int observerStatus, int camOrder, StreetModel street, String imgUrl, String time, float distance) {
+        this.id = id;
+        this.description = description;
+        this.position = position;
+        this.resource = resource;
+        this.observerStatus = observerStatus;
+        this.camOrder = camOrder;
+        this.street = street;
+        this.imgUrl = imgUrl;
+        this.time = time;
+        this.distance = distance;
+    }
+
+    private float distance;
+
+    public float getDistance() {
+        return distance;
+    }
+
+    public void setDistance(float distance) {
+        this.distance = distance;
+    }
+
     public String getImgUrl() {
         return imgUrl;
     }

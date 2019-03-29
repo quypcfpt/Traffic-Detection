@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.R;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.adapter.SectionsPagerAdapter;
@@ -25,7 +26,7 @@ public class MainTabActivity extends AppCompatActivity implements View.OnClickLi
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
     private ViewPager mViewPager;
-    private Button buttonToMap;
+    private LinearLayout buttonToMap;
     static public final String[] PERMISSION  = {Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION};
     static public final int REQUEST_CODE=1;
     @Override
@@ -41,7 +42,7 @@ public class MainTabActivity extends AppCompatActivity implements View.OnClickLi
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        buttonToMap = (Button)findViewById(R.id.goToMap);
+        buttonToMap = (LinearLayout)findViewById(R.id.goToMap);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setBackgroundColor(getColor(R.color.colorPrimary));
         tabLayout.setupWithViewPager(mViewPager);

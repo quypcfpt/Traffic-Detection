@@ -55,6 +55,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -104,6 +105,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private List<CameraModel> cameraModels=null;
     String strAdd = "";
     String oldStreet = "";
+    String currenPostion = "";
     int count = 0;
     GoogleMap googleMap;
     @Override
@@ -177,12 +179,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if (MY_REQUEST_CHECK) {
             //Rung demo Check device location
-//            getDeviceLocation();
+            getDeviceLocation();
 
             //Show map and draw route
-            MarkerOptions place1 = new MarkerOptions().position(new LatLng(10.838751, 106.648976));
-            MarkerOptions place2 = new MarkerOptions().position(new LatLng(10.852706, 106.629692));
-            getDirectionURL(place1.getPosition(),place2.getPosition());
+//            MarkerOptions place1 = new MarkerOptions().position(new LatLng(10.838751, 106.648976));
+//            MarkerOptions place2 = new MarkerOptions().position(new LatLng(10.852706, 106.629692));
+//            getDirectionURL(place1.getPosition(),place2.getPosition());
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
@@ -202,16 +204,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     @Override
                     public void onComplete(@NonNull Task task) {
                         if (task.isSuccessful()) {
-//                            Log.d("SUCESS", "on found location");
-//                            Location currenLocation = (Location) task.getResult();
-//                            moveCamera(new LatLng(currenLocation.getLatitude(), currenLocation.getLongitude()), ZOOMVALUE);
-//                            String streetName = getStreetNameAtLocation(new LatLng(currenLocation.getLatitude(), currenLocation.getLongitude()));
-//
-//                            if(!streetName.equals("")) {
-//                                getCamearaOnStreet(streetName);
-//                            }
                             testGPS();
-
                         } else {
                             Toast.makeText(MapsActivity.this, "unable to get location", Toast.LENGTH_SHORT).show();
                         }
@@ -282,50 +275,53 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             busyStatusCount += 1;
                         }
                     }
-                }
-                if(busyStatusCount >0 && !strAdd.equals(oldStreet)){
-                    oldStreet = strAdd;
-                    final int finalBusyStatusCount = busyStatusCount;
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            AlertDialog.Builder builder=new AlertDialog.Builder(MapsActivity.this);
-                            builder.setCancelable(false);
-                            builder.setTitle("Road Status");
-                            builder.setMessage("The Road "+strAdd+" has "+ finalBusyStatusCount +" locations is busy .Click Show to get more infomation");
-                            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                }
-                            });
-                            builder.setPositiveButton("Show", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Intent intent = new Intent(MapsActivity.this,ListCameraActivity.class);
-                                    intent.putExtra("STREET_NAME",cameraModels.get(0).getStreet().getName());
-                                    intent.putExtra("STREET_ID",cameraModels.get(0).getStreet().getId()+"");
-                                    startActivity(intent);
-                                }
-                            });
-                            final AlertDialog alert = builder.create();
-                            alert.show();
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if(alert.isShowing()){
-                                        alert.dismiss();
-                                    }
-                                }
-                            },1000*5);
-                        }
-                    },1000*2);
-                }
 
+                    if(busyStatusCount >0 && !strAdd.equals(oldStreet)){
+                        oldStreet = strAdd;
+                        final int finalBusyStatusCount = busyStatusCount;
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                AlertDialog.Builder builder=new AlertDialog.Builder(MapsActivity.this);
+                                builder.setCancelable(false);
+                                builder.setTitle("Road Status");
+                                builder.setMessage("The Road "+strAdd+" has "+ finalBusyStatusCount +" locations is busy .Click Show to get more infomation");
+                                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+                                builder.setPositiveButton("Show", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent(MapsActivity.this,ListCameraActivity.class);
+                                        intent.putExtra("STREET_NAME",cameraModels.get(0).getStreet().getName());
+                                        intent.putExtra("STREET_ID",cameraModels.get(0).getStreet().getId()+"");
+                                        intent.putExtra("POSITION",currenPostion);
+                                        onPause();
+                                        startActivity(intent);
+                                        onResume();
+                                    }
+                                });
+                                final AlertDialog alert = builder.create();
+                                alert.show();
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if(alert.isShowing()){
+                                            alert.dismiss();
+                                        }
+                                    }
+                                },1000*3);//show message box
+                            }
+                        },1000/2);
+                    }
+                }
             }
             @Override
             public void onFailure(Call<Response<List<CameraModel>>> call, Throwable t) {
-                Log.e("ERROR",t.getMessage());
+//                Log.e("ERROR",t.getMessage());
             }
         });
     }
@@ -345,39 +341,51 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         postion.add(new PositionModel(10.850242, 106.631050));
         postion.add(new PositionModel(10.848841, 106.633274));
         postion.add(new PositionModel(10.846822, 106.636058));
-        postion.add(new PositionModel(10.841815, 106.643752));
-        postion.add(new PositionModel(10.841100, 106.644942));
-        postion.add(new PositionModel(10.840075, 106.646103));
-        postion.add(new PositionModel(10.839264, 106.647215));
-        postion.add(new PositionModel(10.838751, 106.648976));
-//        LatLng newPostion = new LatLng(postion.get(6).getLatitude(), postion.get(6).getLongtitude());
+       //position change to QT road
+        postion.add(new PositionModel(10.845546, 106.638081));
+        postion.add(new PositionModel(10.845483, 106.638205));
+        postion.add(new PositionModel(10.845374, 106.638422));
+        postion.add(new PositionModel(10.845328, 106.638505));
+        postion.add(new PositionModel(10.845168, 106.638788));
+        postion.add(new PositionModel(10.845040, 106.638990));
+        postion.add(new PositionModel(10.844948, 106.639150));
+
+//        LatLng newPostion = new LatLng(10.849294, 106.632329);
+//        LatLng lastPosition = new LatLng(10.841762, 106.643714);
 //        moveCamera(new LatLng(postion.get(6).getLatitude(), postion.get(6).getLongtitude()), ZOOMVALUE);
 //        String streetName = getStreetNameAtLocation(newPostion);
 //        Log.d("DEMOGPS", "Street Name :" + streetName + " latitude : " + postion.get(count).getLatitude());
 //        if (!streetName.equals("")) {
 //            getCamearaOnStreet(streetName);
 //        }
+//        calculationByDistance(newPostion,lastPosition);
         final Handler handler = new Handler();
         handler.post(new Runnable() {
             int counter = 0;
             int delay = 5000;
             @Override
             public void run() {
-                mMap.clear();
-                LatLng newPostion = new LatLng(postion.get(counter).getLatitude(), postion.get(counter).getLongtitude());
-                moveCamera(new LatLng(postion.get(counter).getLatitude(), postion.get(counter).getLongtitude()), ZOOMVALUE);
-                MarkerOptions options = new MarkerOptions().position(new LatLng(postion.get(counter).getLatitude(), postion.get(counter).getLongtitude())).title("Your Here");
-                mMap.addMarker(options);
-                String streetName = getStreetNameAtLocation(newPostion);
-                Log.d("DEMOGPS", "Street Name :" + streetName + " latitude : " + postion.get(count).getLatitude());
-                if (!streetName.equals("")) {
-                    getCamearaOnStreet(streetName);
-                }
                 boolean wasPlacedInQue = false;
-                if(counter<postion.size()){
-                    wasPlacedInQue = handler.postDelayed(this, delay);
+                if(counter < postion.size()){
+                    mMap.clear();
+                    LatLng newPostion = new LatLng(postion.get(counter).getLatitude(), postion.get(counter).getLongtitude());
+                    moveCamera(new LatLng(postion.get(counter).getLatitude(), postion.get(counter).getLongtitude()), ZOOMVALUE);
+                    MarkerOptions options = new MarkerOptions().position(new LatLng(postion.get(counter).getLatitude(), postion.get(counter).getLongtitude())).title("Your Here");
+                    mMap.addMarker(options);
+                    String streetName = getStreetNameAtLocation(newPostion);
+                    Log.d("DEMOGPS", "Street Name :" + streetName + " latitude : " + postion.get(count).getLatitude());
+                    if (!streetName.equals("")) {
+                        currenPostion=newPostion.latitude+"_"+newPostion.longitude;
+                        getCamearaOnStreet(streetName);
+                    }
+                    handler.postDelayed(this, delay);
+                    counter++;
+                }else{
+                    counter = 5;
+//                    handler.postDelayed(this, delay);
                 }
-                counter++;
+
+                Toast.makeText(MapsActivity.this, "Count " + counter, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -430,4 +438,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return params;
     }
 
+    private float calculationByDistance(LatLng startP,LatLng endP){
+       float[] result =new float[1];
+       Location.distanceBetween(startP.latitude,startP.longitude,endP.latitude,endP.longitude,result);
+        Log.d("DISTANCE : ",result[0]+"");
+        return result[0];
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        MapsActivity.this.finish();
+    }
 }

@@ -22,6 +22,7 @@ import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.utils
 class RecycleViewCameraHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     public TextView txtName;
     public TextView txtDistrict;
+    public TextView txtDistance;
     public ImageView info;
     public RelativeLayout relativeLayout;
     private ItemClickListener itemClickListener;
@@ -30,6 +31,7 @@ class RecycleViewCameraHolder extends RecyclerView.ViewHolder implements View.On
         super(itemView);
         txtName = (TextView) itemView.findViewById(R.id.name);
         txtDistrict = (TextView) itemView.findViewById(R.id.version_heading);
+        txtDistance=(TextView)itemView.findViewById(R.id.distance);
         info = (ImageView) itemView.findViewById(R.id.item_info);
         relativeLayout = (RelativeLayout) itemView.findViewById(R.id.relativeLayout);
         itemView.setOnClickListener(this);
@@ -65,6 +67,12 @@ public class CameraAdapter extends RecyclerView.Adapter<RecycleViewCameraHolder>
     public void onBindViewHolder(@NonNull RecycleViewCameraHolder myViewHolder, int position) {
         final CameraModel models = dataSet.get(position);
         myViewHolder.txtName.setText(models.getDescription());
+        if(models.getDistance()!= 0){
+            myViewHolder.txtDistance.setVisibility(View.VISIBLE);
+            myViewHolder.txtDistance.setText(models.getDistance()+"");
+        }else{
+            myViewHolder.txtDistance.setVisibility(View.GONE);
+        }
         myViewHolder.txtDistrict.setVisibility(View.GONE);
         myViewHolder.info.setImageResource(models.getObserverStatus() == 0 ? R.mipmap.green : R.mipmap.red);
         myViewHolder.setItemClickListener(new ItemClickListener() {
