@@ -48,7 +48,7 @@ import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model
 public class AccountActivity extends Fragment implements View.OnClickListener {
     private ApiInterface apiInterface;
     private boolean isLogin, isCheckLogin, isLogout;
-    private TextView txtSignUp, accountUsername, accountPassword, accountName, emptyView,txtSignInErr;
+    private TextView txtSignUp, accountUsername, accountName, emptyView,txtSignInErr;
     private EditText edtUsername, edtPassword;
     private Button btnSignIn;
     private LinearLayout signInLayout, accountLayout;
@@ -71,7 +71,6 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
         edtPassword = (EditText) v.findViewById(R.id.txtPassword);
         btnSignIn = (Button) v.findViewById(R.id.btnSignIn);
         accountUsername = (TextView) v.findViewById(R.id.viewUserName);
-        accountPassword = (TextView) v.findViewById(R.id.viewPassword);
         accountName = (TextView) v.findViewById(R.id.viewAccountName);
         emptyView = (TextView) v.findViewById(R.id.emptyView);
         recyclerView = (RecyclerView) v.findViewById(R.id.recycleViewBookmark);
@@ -218,7 +217,6 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
             progressBar1.setVisibility(View.VISIBLE);
             accountName.setText(account.getName());
             accountUsername.setText(account.getUsername());
-            accountPassword.setText(account.getPassword());
             int accountID = account.getId();
             apiInterface = ApiClient.getClient().create(ApiInterface.class);
             Call<Response<MultipleBookmarkModel>> responseCall = apiInterface.getBookMakByAccountId(accountID);
