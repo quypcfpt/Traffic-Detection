@@ -40,8 +40,8 @@ public class BookmarkServiceImpl implements BookmarkService {
     }
 
     @Override
-    public void createBookmark(Bookmark newBookmark) {
-        bookmarkRepository.save(newBookmark);
+    public Bookmark createBookmark(Bookmark newBookmark) {
+        return bookmarkRepository.save(newBookmark);
     }
 
     @Override
@@ -59,5 +59,7 @@ public class BookmarkServiceImpl implements BookmarkService {
     @Override
     public void removeBookMarkCameraWithBookMarkID(Bookmark bookMarkId) {
          bookmarkCameraRepository.deleteBookmarkCamerasByBookmarkByBookmarkId(bookMarkId);
+    public void saveBookmarkCamera(BookmarkCamera bookmarkCamera) {
+        bookmarkCameraRepository.save(bookmarkCamera);
     }
 }

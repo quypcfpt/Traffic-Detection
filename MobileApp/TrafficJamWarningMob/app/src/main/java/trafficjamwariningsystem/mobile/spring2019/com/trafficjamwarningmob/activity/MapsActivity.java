@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -40,8 +43,16 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.RoundCap;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
@@ -113,13 +124,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     int latiWayStatus=0;
     int longtiWayStatus = 0;
     GoogleMap googleMap;
+    private ArrayList<LatLng> searchPoints;
+    private ArrayList<CameraModel> searchCameras;
+    private String oriStr = "";
+    private String desStr = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         mLayoutManager = new LinearLayoutManager(this);
         btnBack = (ImageButton) findViewById(R.id.btnBack);
-        getLocationPermission();
+        Bundle bundle = getIntent().getExtras();
+        if(bundle != null){
+            initMap();
+            searchPoints = bundle.getParcelableArrayList("POINTS");
+            searchCameras = (ArrayList<CameraModel>) bundle.getSerializable("CAMERAS");
+            oriStr = bundle.getString("ORI");
+            desStr = bundle.getString("DES");
+        }else{
+            getLocationPermission();
+        }
+
 
     }
 
@@ -196,6 +222,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
 //            mMap.setOnMyLocationChangeListener(this);
+        }else{
+
+            PolylineOptions lineOptions = new PolylineOptions();
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            for(LatLng x : searchPoints){
+                builder.include(x);
+            }
+            lineOptions.addAll(searchPoints);
+            lineOptions.width(15);
+            lineOptions.color(Color.BLUE);
+            Polyline directionPolyline = mMap.addPolyline(lineOptions);
+            directionPolyline.setStartCap(new RoundCap());
+            directionPolyline.setEndCap(new RoundCap());
+            directionPolyline.setJointType(JointType.ROUND);
+            directionPolyline.setPattern(null);
+            //bound route
+            LatLngBounds bounds = builder.build();
+            mMap.addMarker(new MarkerOptions().position(searchPoints.get(0)).title(oriStr)).showInfoWindow();
+            mMap.addMarker(new MarkerOptions().position(searchPoints.get(searchPoints.size() - 1)).title(desStr));
+            for(CameraModel x : searchCameras){
+                Double lat = Double.parseDouble(x.getPosition().split(",")[0]);
+                Double longi = Double.parseDouble(x.getPosition().split(",")[1]);
+                MarkerOptions marker = new MarkerOptions().position(new LatLng(lat, longi)).title(x.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker));
+                mMap.addMarker(marker);
+            }
+            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
         }
     }
 

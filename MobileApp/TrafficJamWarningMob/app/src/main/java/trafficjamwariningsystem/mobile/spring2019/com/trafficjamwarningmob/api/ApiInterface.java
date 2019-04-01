@@ -13,6 +13,7 @@ import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.BookmarkModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.CameraModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.ImageModel;
+import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.MultiBookmarkCameraModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.MultiCameraModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.MultiStreetModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.MultipleBookmarkModel;
@@ -67,5 +68,8 @@ public interface ApiInterface {
     Call<Response<MultipleBookmarkModel>> getAllBookmarks();
 
     @POST("api/bookmark")
-    Call<BookmarkModel> createBookmark(@Body BookmarkModel newBookmarkModel);
+    Call<Response<BookmarkModel>> createBookmark(@Body BookmarkModel newBookmarkModel);
+
+    @POST("api/bookmark/camera")
+    Call<Response> saveBookmarkCamera(@Body MultiBookmarkCameraModel multiBookmarkCameraModel);
 }

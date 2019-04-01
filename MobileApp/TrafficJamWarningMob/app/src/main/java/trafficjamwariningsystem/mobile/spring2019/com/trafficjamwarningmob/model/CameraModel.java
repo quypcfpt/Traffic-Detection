@@ -5,7 +5,9 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 
-public class CameraModel{
+import java.io.Serializable;
+
+public class CameraModel implements Serializable {
     @Expose
     private int id;
 
