@@ -1,8 +1,11 @@
 package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 
-public class CameraModel {
+public class CameraModel{
     @Expose
     private int id;
 
@@ -52,6 +55,14 @@ public class CameraModel {
         this.time = time;
         this.distance = distance;
     }
+    public CameraModel(int id, String description, String position,int observerStatus, float distance) {
+        this.id = id;
+        this.description = description;
+        this.position = position;
+        this.observerStatus = observerStatus;
+        this.distance = distance;
+    }
+
 
     private float distance;
 
@@ -137,6 +148,8 @@ public class CameraModel {
     public void setStreet(StreetModel street) {
         this.street = street;
     }
+
+
 
 
 }

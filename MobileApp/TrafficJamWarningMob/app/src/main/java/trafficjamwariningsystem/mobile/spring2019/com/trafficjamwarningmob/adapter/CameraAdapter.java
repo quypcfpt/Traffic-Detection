@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,6 +67,9 @@ public class CameraAdapter extends RecyclerView.Adapter<RecycleViewCameraHolder>
     @Override
     public void onBindViewHolder(@NonNull RecycleViewCameraHolder myViewHolder, int position) {
         final CameraModel models = dataSet.get(position);
+        myViewHolder.txtName.setEllipsize(TextUtils.TruncateAt.END);
+        myViewHolder.txtName.setMaxWidth(200);
+        myViewHolder.txtName.setMaxLines(1);
         myViewHolder.txtName.setText(models.getDescription());
         if(models.getDistance()!= 0){
             myViewHolder.txtDistance.setVisibility(View.VISIBLE);
@@ -74,7 +78,7 @@ public class CameraAdapter extends RecyclerView.Adapter<RecycleViewCameraHolder>
             myViewHolder.txtDistance.setVisibility(View.GONE);
         }
         myViewHolder.txtDistrict.setVisibility(View.GONE);
-        myViewHolder.info.setImageResource(models.getObserverStatus() == 0 ? R.mipmap.green : R.mipmap.red);
+        myViewHolder.info.setImageResource(models.getObserverStatus() == 0 ? R.mipmap.green : models.getObserverStatus()==1 ? R.mipmap.red : R.mipmap.yellow );
         myViewHolder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int position) {

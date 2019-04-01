@@ -1,6 +1,5 @@
 package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -11,13 +10,19 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -35,18 +40,15 @@ public class ListCameraActivity extends AppCompatActivity implements View.OnClic
     ApiInterface apiInterface;
     private static CameraAdapter adapter;
     private RecyclerView recyclerView;
-    private EditText editText;
-    private int currentPage, totalPage;
-    private boolean isScrolling = false;
+    private LinearLayout viewHeader;
     private LinearLayoutManager mLayoutManager;
     private static List<StreetModel> streetModelList;
-    private int currentItems, scrollOutItems, totalItems, id;
-    private TextView labelTextView , textErr;
+    private int  id;
+    private TextView labelTextView , textErr,txtDistance;
     private ProgressBar progressBar;
     private ImageButton btnBack;
-    private String currentPostion;
-    private LatLng currenLatLng;
-    @SuppressLint("WrongViewCast")
+    private List<CameraModel> mlistCamera=new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,16 +60,24 @@ public class ListCameraActivity extends AppCompatActivity implements View.OnClic
         btnBack = (ImageButton) findViewById(R.id.btnBack);
         textErr = (TextView)findViewById(R.id.txtError);
         recyclerView.setLayoutManager(mLayoutManager);
+        txtDistance=(TextView)findViewById(R.id.viewDistance);
+        txtDistance.setVisibility(View.GONE);
+        viewHeader = (LinearLayout)findViewById(R.id.viewHeader);
+        viewHeader.setVisibility(View.VISIBLE);
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Intent intent = getIntent();
-        String label = intent.getStringExtra("STREET_NAME");
+        Bundle bundle =getIntent().getExtras();
+        String label = bundle.getString("STREET_NAME");
         labelTextView.setText(label);
-        String street_id = intent.getStringExtra("STREET_ID");
-        currentPostion =intent.getStringExtra("POSITION");
-        if(currentPostion != null){
-            String[] item = currentPostion.split("_");
-            currenLatLng = new LatLng(Double.parseDouble(item[0]),Double.parseDouble(item[1]));
-            Log.d("Position",currentPostion.toString());
+        String street_id = bundle.getString("STREET_ID");
+        String listCamJsonObj = bundle.getString("LIST");
+        if(listCamJsonObj !=null){
+            Log.d("JSON",listCamJsonObj);
+            try {
+                mlistCamera = parseJsonintoList(listCamJsonObj);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         id = Integer.parseInt(street_id);
         onLoadList();
@@ -75,48 +85,48 @@ public class ListCameraActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void onLoadList() {
-        Call<Response<MultiCameraModel>> responseCall = apiInterface.loadCamerasByStreet(id);
-        responseCall.enqueue(new Callback<Response<MultiCameraModel>>() {
-            @Override
-            public void onResponse(Call<Response<MultiCameraModel>> call, retrofit2.Response<Response<MultiCameraModel>> response) {
-                Response<MultiCameraModel> res = response.body();
+        progressBar.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
+        if(!mlistCamera.isEmpty()){
+            adapter = new CameraAdapter(mlistCamera, getApplicationContext());
+            recyclerView.setAdapter(adapter);
+            textErr.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            txtDistance.setVisibility(View.VISIBLE);
+            viewHeader.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+        }else {
+            Call<Response<MultiCameraModel>> responseCall = apiInterface.loadCamerasByStreet(id);
+            responseCall.enqueue(new Callback<Response<MultiCameraModel>>() {
+                @Override
+                public void onResponse(Call<Response<MultiCameraModel>> call, retrofit2.Response<Response<MultiCameraModel>> response) {
+                    Response<MultiCameraModel> res = response.body();
 
-                final MultiCameraModel multiCameraModel = res.getData();
-                final List<CameraModel> cameraModelList = multiCameraModel.getCameraList();
-                if (!cameraModelList.isEmpty()) {
-                    if(currenLatLng!=null){
-                        List<CameraModel> cameraList =  new ArrayList<>();
-                        for(CameraModel item  : cameraModelList){
-                            LatLng position = getCameraLocation(item.getPosition());
-                            float distance = calculationByDistance(currenLatLng,position); // calculate distance from current device location wo camera on street
-                            cameraList.add(new CameraModel(item.getId(),item.getDescription(),item.getPosition(),item.getResource(),item.getObserverStatus(),
-                                    item.getCamOrder(),item.getStreet(),item.getImgUrl(),item.getTime(),distance)
-                            );
-
-                        }
-                        adapter = new CameraAdapter(cameraList, getApplicationContext());
-                        recyclerView.setAdapter(adapter);
-                        textErr.setVisibility(View.GONE);
-                        recyclerView.setVisibility(View.VISIBLE);
-                    }else{
-                        adapter = new CameraAdapter(cameraModelList, getApplicationContext());
-                        recyclerView.setAdapter(adapter);
-                        textErr.setVisibility(View.GONE);
-                        recyclerView.setVisibility(View.VISIBLE);
+                    final MultiCameraModel multiCameraModel = res.getData();
+                    final List<CameraModel> cameraModelList = multiCameraModel.getCameraList();
+                    if (!cameraModelList.isEmpty()) {
+                            adapter = new CameraAdapter(cameraModelList, getApplicationContext());
+                            recyclerView.setAdapter(adapter);
+                            textErr.setVisibility(View.GONE);
+                            progressBar.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
+                            viewHeader.setVisibility(View.VISIBLE);
+                            txtDistance.setVisibility(View.GONE);
+                    } else {
+                        Toast.makeText(ListCameraActivity.this, "This Street doesn't have any camera. We will update soon.", Toast.LENGTH_SHORT).show();
+                        recyclerView.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.GONE);
+                        textErr.setVisibility(View.VISIBLE);
+                        viewHeader.setVisibility(View.GONE);
                     }
-
-                } else {
-                    Toast.makeText(ListCameraActivity.this, "This Street doesn't have any camera. We will update soon.", Toast.LENGTH_SHORT).show();
-                    recyclerView.setVisibility(View.GONE);
-                    textErr.setVisibility(View.VISIBLE);
+                }
+                @Override
+                public void onFailure(Call<Response<MultiCameraModel>> call, Throwable t) {
 
                 }
-            }
-            @Override
-            public void onFailure(Call<Response<MultiCameraModel>> call, Throwable t) {
+            });
+        }
 
-            }
-        });
 
     }
 
@@ -141,4 +151,21 @@ public class ListCameraActivity extends AppCompatActivity implements View.OnClic
         LatLng result = new LatLng(Double.parseDouble(parts[0]),Double.parseDouble(parts[1]));
         return result;
     }
+
+    public List<CameraModel> parseJsonintoList(String jsonObject) throws JSONException {
+        List<CameraModel> resultList = new ArrayList<>();
+//        JSONObject jsonObj = new JSONObject(jsonObject);
+        JSONArray contacts = new JSONArray(jsonObject);
+        for (int i = 0 ; i< contacts.length();i++){
+            JSONObject cam = contacts.getJSONObject(i);
+            int id = cam.getInt("id");
+            String description = cam.getString("description");
+            String position = cam.getString("position");
+            int observerStatus = cam.getInt("observerStatus");
+            float distance = Float.parseFloat(cam.getString("distance"));
+            resultList.add(new CameraModel(id,description,position,observerStatus,distance));
+        }
+        return resultList;
+    }
+
 }

@@ -21,7 +21,7 @@ import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.Response;
 
 public class ImageActivity extends AppCompatActivity implements View.OnClickListener {
-    TextView cameraId, imageTime, labelTextView;
+    TextView cameraId, imageTime, labelTextView,txtStatus;
     ImageButton btnBack;
     ImageView cameraStatus, imageRoad;
     ApiInterface apiInterface;
@@ -35,6 +35,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
         final int status = Integer.parseInt(intent.getStringExtra("CAMERA_STATUS"));
         String cameraName = intent.getStringExtra("CAMERA_NAME");
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        txtStatus=(TextView) findViewById(R.id.txtStatusView);
         labelTextView = (TextView) findViewById(R.id.labelTextView);
         cameraId = (TextView) findViewById(R.id.cameraId);
         imageRoad = (ImageView) findViewById(R.id.imageRoad);
@@ -45,7 +46,8 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
         labelTextView.setText(cameraName);
         final String imagePath = "https://d1ix0byejyn2u7.cloudfront.net/drive/images/uploads/headers/ws_cropper/1_0x0_790x520_0x520_traffic_jams.jpg";
         cameraId.setText(cameraID + "");
-        cameraStatus.setImageResource(status == 0 ? R.mipmap.green : R.mipmap.red);
+        cameraStatus.setImageResource(status == 0 ? R.mipmap.green : status ==1 ? R.mipmap.red : R.mipmap.yellow);
+        txtStatus.setText(status == 0 ? "Bình Thường" : status ==1 ? "Kẹt" : "Đông");
         Call<Response<CameraModel>> responseCall = apiInterface.loadCameraById(1);
         responseCall.enqueue(new Callback<Response<CameraModel>>() {
             @Override

@@ -96,7 +96,7 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
 
             @Override
             public void onFailure(Call<Response<MultiStreetModel>> call, Throwable t) {
-                Log.d("Failure", t.getMessage());
+//                Log.d("Failure", t.getMessage());
             }
         });
     }

@@ -2,8 +2,10 @@ package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.adap
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,6 +68,8 @@ public class StreetAdapter extends RecyclerView.Adapter<RecycleViewHolder> {
     public void onBindViewHolder(@NonNull final RecycleViewHolder myViewHolder, int position) {
         final StreetModel models = dataSet.get(position);
         myViewHolder.txtName.setText(models.getName());
+        myViewHolder.txtName.setEllipsize(TextUtils.TruncateAt.END);
+        myViewHolder.txtName.setMaxLines(1);
         myViewHolder.txtDistrict.setText(models.getDistrict());
         myViewHolder.info.setVisibility(View.GONE);
         myViewHolder.setItemClickListener(new ItemClickListener() {
@@ -73,8 +77,10 @@ public class StreetAdapter extends RecyclerView.Adapter<RecycleViewHolder> {
             public void onClick(View view, int position) {
                 Context context = view.getContext();
                 Intent intent = new Intent(view.getContext(), ListCameraActivity.class);
-                intent.putExtra("STREET_NAME", models.getName());
-                intent.putExtra("STREET_ID", models.getId() + "");
+                Bundle bundle = new Bundle();
+                bundle.putString("STREET_NAME", models.getName());
+                bundle.putString("STREET_ID", models.getId() + "");
+                intent.putExtras(bundle);
                 view.getContext().startActivity(intent);
             }
         });

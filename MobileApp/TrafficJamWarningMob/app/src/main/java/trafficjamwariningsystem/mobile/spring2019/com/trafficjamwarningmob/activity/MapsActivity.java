@@ -44,6 +44,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.gson.Gson;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
@@ -106,7 +107,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     String strAdd = "";
     String oldStreet = "";
     String currenPostion = "";
+    String theWayOfDevice="";
     int count = 0;
+    LatLng newPostion;
+    int latiWayStatus=0;
+    int longtiWayStatus = 0;
     GoogleMap googleMap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -237,7 +242,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     thorough = addresses.get(i).getThoroughfare();
                     feature = addresses.get(i).getFeatureName();
                     subadmin = addresses.get(i).getSubAdminArea();
-                    strAdd =thorough.trim().toString();
+                    if(thorough.contains("Đường")){
+                        String [] arr = thorough.split(" ", 2);
+
+                        strAdd = arr[1];
+                    }else{
+                        strAdd =thorough.trim().toString();
+                    }
+
                      if (!strAdd.equals("")){
                          break;
                      }
@@ -269,14 +281,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 final List<CameraModel> multiCameraModel = res.getData();
                 cameraModels = res.getData();
+                    final List<CameraModel> cameraList =  new ArrayList<>();
+                    for(CameraModel item  : cameraModels) {
+                        LatLng position = getCameraLocation(item.getPosition());
+                        //compare to find the device way
+                        double resultLatitude =   position.latitude - newPostion.latitude;
+                        double resultLontitude =  position.longitude -newPostion.longitude ;
+                        if (latiWayStatus == 1 && longtiWayStatus == 1 && resultLatitude > 0 && resultLontitude > 0) {
+                            float distance = calculationByDistance(newPostion, position); // calculate distance from current device location wo camera on street
+                            cameraList.add(new CameraModel(item.getId(), item.getDescription(), item.getPosition(), item.getResource(), item.getObserverStatus(),
+                                    item.getCamOrder(), item.getStreet(), item.getImgUrl(), item.getTime(), distance)
+                            );
+                        } else if (latiWayStatus == 1 && longtiWayStatus == 0 && resultLatitude > 0 && resultLontitude < 0) {
+                            float distance = calculationByDistance(newPostion, position); // calculate distance from current device location wo camera on street
+                            cameraList.add(new CameraModel(item.getId(), item.getDescription(), item.getPosition(), item.getResource(), item.getObserverStatus(),
+                                    item.getCamOrder(), item.getStreet(), item.getImgUrl(), item.getTime(), distance)
+                            );
+                        } else if (latiWayStatus == 0 && longtiWayStatus == 1 && resultLatitude < 0 && resultLontitude > 0) {
+                            float distance = calculationByDistance(newPostion, position); // calculate distance from current device location wo camera on street
+                            cameraList.add(new CameraModel(item.getId(), item.getDescription(), item.getPosition(), item.getResource(), item.getObserverStatus(),
+                                    item.getCamOrder(), item.getStreet(), item.getImgUrl(), item.getTime(), distance)
+                            );
+                        } else if (latiWayStatus == 0 && longtiWayStatus == 0 && resultLatitude < 0 && resultLontitude < 0) {
+                            float distance = calculationByDistance(newPostion, position); // calculate distance from current device location wo camera on street
+                            cameraList.add(new CameraModel(item.getId(), item.getDescription(), item.getPosition(), item.getResource(), item.getObserverStatus(),
+                                    item.getCamOrder(), item.getStreet(), item.getImgUrl(), item.getTime(), distance)
+                            );
+                        }
+                    }
+
                 if(!multiCameraModel.isEmpty()) {
-                    for (CameraModel camera : multiCameraModel) {
+                    for (CameraModel camera : cameraList) {
                         if (camera.getObserverStatus() == 1) {
                             busyStatusCount += 1;
                         }
                     }
-
-                    if(busyStatusCount >0 && !strAdd.equals(oldStreet)){
+//                    if(busyStatusCount >0 && !strAdd.equals(oldStreet)){
+                        if(busyStatusCount >0){
                         oldStreet = strAdd;
                         final int finalBusyStatusCount = busyStatusCount;
                         new Handler().postDelayed(new Runnable() {
@@ -296,12 +337,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         Intent intent = new Intent(MapsActivity.this,ListCameraActivity.class);
-                                        intent.putExtra("STREET_NAME",cameraModels.get(0).getStreet().getName());
-                                        intent.putExtra("STREET_ID",cameraModels.get(0).getStreet().getId()+"");
-                                        intent.putExtra("POSITION",currenPostion);
-                                        onPause();
+                                        Bundle bundle = new Bundle();
+                                        String listCamJsonObj = new Gson().toJson(cameraList);
+                                        bundle.putString("LIST",listCamJsonObj);
+                                        bundle.putString("STREET_NAME",cameraModels.get(0).getStreet().getName());
+                                        bundle.putString("STREET_ID",cameraModels.get(0).getStreet().getId()+"");
+                                        intent.putExtras(bundle);
                                         startActivity(intent);
-                                        onResume();
                                     }
                                 });
                                 final AlertDialog alert = builder.create();
@@ -334,21 +376,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
     public void testGPS() {
         final List<PositionModel> postion = new ArrayList<>();
-        postion.add(new PositionModel(10.852706, 106.629692));
-        postion.add(new PositionModel(10.852358, 106.627646));
-        postion.add(new PositionModel(10.852291, 106.626731));
-        postion.add(new PositionModel(10.851073, 106.628148));
-        postion.add(new PositionModel(10.850242, 106.631050));
-        postion.add(new PositionModel(10.848841, 106.633274));
-        postion.add(new PositionModel(10.846822, 106.636058));
+//        postion.add(new PositionModel(10.852706, 106.629692));
+//        postion.add(new PositionModel(10.852358, 106.627646));
+//        postion.add(new PositionModel(10.852291, 106.626731));
+//        postion.add(new PositionModel(10.851073, 106.628148));
+//        postion.add(new PositionModel(10.850242, 106.631050));
+//        postion.add(new PositionModel(10.850094, 106.631375));
+//        postion.add(new PositionModel(10.849502, 106.632250));
        //position change to QT road
-        postion.add(new PositionModel(10.845546, 106.638081));
-        postion.add(new PositionModel(10.845483, 106.638205));
-        postion.add(new PositionModel(10.845374, 106.638422));
-        postion.add(new PositionModel(10.845328, 106.638505));
-        postion.add(new PositionModel(10.845168, 106.638788));
-        postion.add(new PositionModel(10.845040, 106.638990));
-        postion.add(new PositionModel(10.844948, 106.639150));
+        postion.add(new PositionModel(10.842553, 106.642668));
+        postion.add(new PositionModel(10.841229, 106.644644));
+        postion.add(new PositionModel(10.840535, 106.645538));
+        postion.add(new PositionModel(10.839354, 106.646986));
+        postion.add(new PositionModel(10.838978, 106.648116));
+        postion.add(new PositionModel(10.838717, 106.649182));
+
+    // position move backward
+//        postion.add(new PositionModel(10.838717, 106.649182));
+//        postion.add(new PositionModel(10.838978, 106.648116));
+//        postion.add(new PositionModel(10.839354, 106.646986));
+//        postion.add(new PositionModel(10.840535, 106.645538));
+//        postion.add(new PositionModel(10.841229, 106.644644));
+//        postion.add(new PositionModel(10.842553, 106.642668));
+
+        //Test for anthor street
+//        postion.add(new PositionModel(10.843921, 106.639865));
+//        postion.add(new PositionModel(10.843005, 106.639326));
+//        postion.add(new PositionModel(10.841694, 106.638478));
+//        postion.add(new PositionModel(10.840671, 106.637792));
+//        postion.add(new PositionModel(10.838750, 106.636894));
+//        postion.add(new PositionModel(10.836207, 106.635722));
+        //Test for anthor street backward
+        postion.add(new PositionModel(10.836207, 106.635722));
+        postion.add(new PositionModel(10.838750, 106.636894));
+        postion.add(new PositionModel(10.840671, 106.637792));
+        postion.add(new PositionModel(10.841694, 106.638478));
+        postion.add(new PositionModel(10.843005, 106.639326));
+        postion.add(new PositionModel(10.843921, 106.639865));
+
+
 
 //        LatLng newPostion = new LatLng(10.849294, 106.632329);
 //        LatLng lastPosition = new LatLng(10.841762, 106.643714);
@@ -368,14 +434,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 boolean wasPlacedInQue = false;
                 if(counter < postion.size()){
                     mMap.clear();
-                    LatLng newPostion = new LatLng(postion.get(counter).getLatitude(), postion.get(counter).getLongtitude());
+                    //get the way of device
+                    if(counter>0) {
+                        double latiWay = postion.get(counter).getLatitude() - postion.get(counter-1).getLatitude();
+                        double longtiWay = postion.get(counter).getLongtitude() - postion.get(counter-1).getLongtitude();
+                        if(latiWay > 0){
+                            latiWayStatus = 1;
+                        }else{
+                            latiWayStatus = 0;
+                        }
+                        if(longtiWay >0){
+                            longtiWayStatus = 1;
+                        }else{
+                            longtiWayStatus = 0;
+                        }
+                    }
+                    //************
+                    newPostion = new LatLng(postion.get(counter).getLatitude(), postion.get(counter).getLongtitude());
                     moveCamera(new LatLng(postion.get(counter).getLatitude(), postion.get(counter).getLongtitude()), ZOOMVALUE);
                     MarkerOptions options = new MarkerOptions().position(new LatLng(postion.get(counter).getLatitude(), postion.get(counter).getLongtitude())).title("Your Here");
                     mMap.addMarker(options);
                     String streetName = getStreetNameAtLocation(newPostion);
                     Log.d("DEMOGPS", "Street Name :" + streetName + " latitude : " + postion.get(count).getLatitude());
                     if (!streetName.equals("")) {
-                        currenPostion=newPostion.latitude+"_"+newPostion.longitude;
+                        currenPostion=newPostion.latitude+","+newPostion.longitude;
                         getCamearaOnStreet(streetName);
                     }
                     handler.postDelayed(this, delay);
@@ -450,4 +532,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onBackPressed();
         MapsActivity.this.finish();
     }
+        private LatLng getCameraLocation(String location){
+            String[] parts = location.split(",");
+            LatLng result = new LatLng(Double.parseDouble(parts[0]),Double.parseDouble(parts[1]));
+            return result;
+        }
 }

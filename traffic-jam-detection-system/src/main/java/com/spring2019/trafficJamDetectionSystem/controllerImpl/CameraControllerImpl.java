@@ -95,6 +95,7 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
                     }
                 }
 
+
             data.setCameraList(cameraList);
 
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
