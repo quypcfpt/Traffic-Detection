@@ -4,7 +4,7 @@ $(function () {
     showCameraTable();
 })
 
-function showCameraTable () {
+function showCameraTable() {
     var url = host + "/api/camera"
         + "?page=0"
 
@@ -84,14 +84,14 @@ $('#save-btn').click(function () {
         success: function (res) {
             $('#create-modal').modal('toggle');
             showCameraTable();
-            $.bootstrapGrowl('Create Success.',{
+            $.bootstrapGrowl('Create Success.', {
                 type: 'success',
                 delay: 2000,
             });
         },
         error: function (res) {
             $('#edit-modal').modal('toggle');
-            $.bootstrapGrowl('You Got Error',{
+            $.bootstrapGrowl('You Got Error', {
                 type: 'danger',
                 delay: 2000,
             });
@@ -128,14 +128,14 @@ $('#edit-btn').click(function () {
         success: function (res) {
             $('#edit-modal').modal('toggle');
             showCameraTable();
-            $.bootstrapGrowl('Edit Success.',{
+            $.bootstrapGrowl('Edit Success.', {
                 type: 'success',
                 delay: 2000,
             });
         },
         error: function (res) {
             $('#edit-modal').modal('toggle');
-            $.bootstrapGrowl('You Got Error',{
+            $.bootstrapGrowl('You Got Error', {
                 type: 'danger',
                 delay: 2000,
             });
@@ -153,7 +153,16 @@ function loadDataTable(cameraList) {
         columns: [
             {data: "id"},
             {data: "description"},
-            {data: "position"},
+            {
+                data: null,
+                render: function (data, type, row) {
+                    var ret;
+                    var position = (row || {}).position;
+                    var id = (row || {}).id;
+                    ret = ' <a href="#" class="a-tag" data-toggle="modal" data-target="#map-modal">' + position + '</a>'
+                    return ret;
+                }
+            },
             {data: "street.name"},
             {data: "order"},
             {
@@ -188,18 +197,18 @@ $('#dataTable').on('click', '.btn', function () {
     var data = $('#dataTable').DataTable().row(curRow).data();
 
     var id = data["id"];
-    var description =data["description"];
+    var description = data["description"];
     var position = data["position"];
     var spit = position.split(", ");
     var order = data["order"];
 
     var street = data["street"];
-    var streetId=street.id;
+    var streetId = street.id;
 
-    var active=data["isActive"];
-    if (active==true){
+    var active = data["isActive"];
+    if (active == true) {
         $('#edtActive').prop("checked", true).change();
-    }else{
+    } else {
         $('#edtActive').prop("checked", false).change();
     }
 
