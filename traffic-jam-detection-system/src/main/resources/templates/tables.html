@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Tables</title>
+    <title>TJWS</title>
 
     <!-- Custom fonts for this template -->
     <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -51,15 +51,14 @@
                 <hr class="sidebar-divider d-none d-md-block">
                 <!-- Page Heading -->
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#create-modal"
-                        id="add-camera-btn">Add
-                    Camera
+                        id="add-camera-btn">Thêm camera
                 </button>
 
                 <hr class="sidebar-divider d-none d-md-block">
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Camera Table</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Camera</h6>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -67,12 +66,12 @@
                                 <thead>
                                 <tr>
                                     <th>Id</th>
-                                    <th>Description</th>
-                                    <th>Position</th>
-                                    <th>Street</th>
-                                    <th>Order</th>
-                                    <th>Active</th>
-                                    <th>Action</th>
+                                    <th>Mô tả</th>
+                                    <th>Vị trí</th>
+                                    <th>Đường</th>
+                                    <th>Thứ tự</th>
+                                    <th>Tình trạng</th>
+                                    <th>Thao tác</th>
                                 </tr>
                                 </thead>
                                 <tbody id="show-camera-list">
@@ -88,7 +87,7 @@
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Add Camera</h5>
+                                <h5 class="modal-title">Thêm Camera</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -96,34 +95,34 @@
                             <form>
                                 <div class="modal-body">
                                     <div class="form-group">
-                                        <label for="txtDescription">Description</label>
+                                        <label for="txtDescription">Mô tả</label>
                                         <textarea type="text" class="form-control" id="txtDescription"
                                                   placeholder="1234 Main St"></textarea>
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group col-md-9">
-                                            <label for="txtStreet">Street</label>
+                                            <label for="txtStreet">Đường</label>
                                             <select id="txtStreet" class="form-control">
                                             </select>
                                         </div>
                                         <div class="form-group col-md-3">
-                                            <label for="txtOrder">Order</label>
+                                            <label for="txtOrder">Thứ tự</label>
                                             <input type="number" class="form-control" id="txtOrder">
                                         </div>
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group col-md-5">
-                                            <label for="txtLatitude">Latitude</label>
+                                            <label for="txtLatitude">Vĩ độ</label>
                                             <input type="number" class="form-control" id="txtLatitude">
                                         </div>
                                         <div class="form-group col-md-5">
-                                            <label for="txtLongitude">Longitude</label>
+                                            <label for="txtLongitude">Kinh độ</label>
                                             <input type="number" class="form-control" id="txtLongitude">
                                         </div>
                                         <div class="form-group col-md-2">
-                                            <label for="search-btn">Search Map</label>
+                                            <label for="search-btn">Bản đồ</label>
                                             <button type="button" class="btn btn-primary form-control" id="search-btn">
-                                                Search
+                                                Định vị
                                             </button>
                                         </div>
                                     </div>
@@ -131,8 +130,8 @@
                                         <div id="map" class="form-control" style="height: 500px; width: 100%"></div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" id="save-btn">Save</button>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                                        <button type="button" class="btn btn-primary" id="save-btn">Lưu</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng
                                         </button>
                                     </div>
                                 </div>
@@ -148,7 +147,7 @@
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Edit Camera</h5>
+                            <h5 class="modal-title">Chỉnh sửa camera</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -160,38 +159,38 @@
                                     <input type="text" class="form-control" id="edtId" readonly>
                                 </div>
                                 <div class="form-group">
-                                    <label for="edtDescription">Description</label>
+                                    <label for="edtDescription">Mô tả</label>
                                     <textarea type="text" class="form-control" id="edtDescription"
                                               placeholder="1234 Main St"></textarea>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-9">
-                                        <label for="txtStreet">Street</label>
+                                        <label for="txtStreet">Đường</label>
                                         <select id="edtStreet" class="form-control">
                                         </select>
                                     </div>
                                     <div class="form-group col-md-3">
-                                        <label for="edtOrder">Order</label>
+                                        <label for="edtOrder">Thứ tự</label>
                                         <input type="number" class="form-control" id="edtOrder">
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
-                                        <label for="edtLatitude">Latitude</label>
+                                        <label for="edtLatitude">Vĩ độ</label>
                                         <input type="number" class="form-control" id="edtLatitude">
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <label for="edtLongitude">Longitude</label>
+                                        <label for="edtLongitude">Kinh độ</label>
                                         <input type="number" class="form-control" id="edtLongitude">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input id="edtActive" type="checkbox" data-on="Active" data-off="Deactive"
-                                           data-toggle="toggle" data-width="100">
+                                    <input id="edtActive" type="checkbox" data-on="Đang hoạt động" data-off="Ngừng hoạt động"
+                                           data-toggle="toggle" data-width="200">
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary" id="edit-btn">Save</button>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                                    <button type="button" class="btn btn-primary" id="edit-btn">Lưu</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng
                                     </button>
                                 </div>
                             </div>

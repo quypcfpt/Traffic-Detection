@@ -123,9 +123,9 @@ function loadDataTable(streetList) {
                     var ret;
                     var isActive = (row || {}).isActive;
                     if (isActive == true) {
-                        ret = '<span class="label text-success">Active</span>';
+                        ret = '<span class="label text-success">Đang hoạt động</span>';
                     } else {
-                        ret = '<span class="label text-danger">Deactive</span>';
+                        ret = '<span class="label text-danger">Ngừng hoạt động</span>';
                     }
                     return ret;
                 }
@@ -137,7 +137,7 @@ function loadDataTable(streetList) {
                     var ret;
                     var isActive = (row || {}).isActive;
                     var id = (row || {}).id;
-                    ret = ' <button class="btn btn-warning" data-toggle="modal" data-target="#edit-modal">Edit Info</button>'
+                    ret = ' <button class="btn btn-warning" data-toggle="modal" data-target="#edit-modal">Chỉnh sửa</button>'
                     return ret;
                 }
             }],

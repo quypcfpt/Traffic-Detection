@@ -89,6 +89,6 @@
         android:textAlignment="center"
         android:id="@+id/txtError"
         android:visibility="gone"
-        android:text="There is no Camera to show" />
+        android:text="Không có camera nào" />
 
 </LinearLayout>

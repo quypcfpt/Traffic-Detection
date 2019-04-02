@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Tables</title>
+    <title>TJWS</title>
 
     <!-- Custom fonts for this template -->
     <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -52,15 +52,14 @@
                 <hr class="sidebar-divider d-none d-md-block">
 
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#create-modal"
-                        id="add-camera-btn">Add
-                    Street
+                        id="add-camera-btn">Thêm đường
                 </button>
 
                 <hr class="sidebar-divider d-none d-md-block">
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Street Table</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Đường</h6>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -68,11 +67,11 @@
                                 <thead>
                                 <tr>
                                     <th>Id</th>
-                                    <th>Name</th>
-                                    <th>District</th>
-                                    <th>City</th>
-                                    <th>Active</th>
-                                    <th>Action</th>
+                                    <th>Tên</th>
+                                    <th>Quận</th>
+                                    <th>Thành phố</th>
+                                    <th>Tình trạng</th>
+                                    <th>Thao tác</th>
                                 </tr>
                                 </thead>
                                 <tbody id="show-camera-list">
@@ -88,7 +87,7 @@
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Add Street</h5>
+                                <h5 class="modal-title">Thêm đường</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -96,20 +95,20 @@
                             <form>
                                 <div class="modal-body">
                                     <div class="form-group">
-                                        <label for="txtName">Name</label>
+                                        <label for="txtName">Tên</label>
                                         <input type="text" class="form-control" id="txtName" />
                                     </div>
                                     <div class="form-group">
-                                        <label for="txtDistrict">District</label>
+                                        <label for="txtDistrict">Quận</label>
                                         <input type="text" class="form-control" id="txtDistrict" />
                                     </div>
                                     <div class="form-group">
-                                        <label for="txtCity">City</label>
+                                        <label for="txtCity">Thành phố</label>
                                         <input type="text" class="form-control" id="txtCity" />
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" id="save-btn">Save</button>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                                        <button type="button" class="btn btn-primary" id="save-btn">Lưu</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng
                                         </button>
                                     </div>
                                 </div>
@@ -125,7 +124,7 @@
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Edit Street</h5>
+                            <h5 class="modal-title">Chỉnh sửa đường</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -137,23 +136,23 @@
                                     <input type="text" class="form-control" id="edtId" readonly>
                                 </div>
                                 <div class="form-group">
-                                    <label for="edtName">Name</label>
+                                    <label for="edtName">Tên</label>
                                     <input type="text" class="form-control" id="edtName"/>
                                 </div>
                                 <div class="form-group">
-                                    <label for="edtDistrict">District</label>
+                                    <label for="edtDistrict">Quận</label>
                                     <input type="text" class="form-control" id="edtDistrict"/>
                                 </div>
                                 <div class="form-group">
-                                    <label for="edtCity">City</label>
+                                    <label for="edtCity">Thành phố</label>
                                     <input type="text" class="form-control" id="edtCity"/>
                                 </div>
                                 <div class="form-group">
-                                    <input id="edtActive" type="checkbox" data-on="Active" data-off="Deactive"  data-toggle="toggle" data-width="100">
+                                    <input id="edtActive" type="checkbox" data-on="Đang hoạt động" data-off="Ngừng hoạt động"  data-toggle="toggle" data-width="200">
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary" id="edit-btn">Save</button>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                                    <button type="button" class="btn btn-primary" id="edit-btn">Lưu</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng
                                     </button>
                                 </div>
                             </div>

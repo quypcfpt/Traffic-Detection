@@ -62,7 +62,7 @@ public interface ApiInterface {
     Call<Response<MultipleBookmarkModel>> getBookMakByAccountId(@Path("id") int accountId);
 
     @DELETE("api/bookmark/{id}")
-    Call<Response<String>> deleteBookmarkWithId(@Path("id") int accountId);
+    Call<Response<String>> deleteBookmarkWithId(@Path("id") int bookmarkId);
 
     @GET("api/bookmark")
     Call<Response<MultipleBookmarkModel>> getAllBookmarks();

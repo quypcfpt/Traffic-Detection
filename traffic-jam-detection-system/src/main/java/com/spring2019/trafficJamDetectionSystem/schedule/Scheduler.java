@@ -33,9 +33,6 @@ public class Scheduler {
     CameraService cameraService;
 
     @Autowired
-    StreetService streetService;
-
-    @Autowired
     BookmarkService bookmarkService;
 
     @Autowired

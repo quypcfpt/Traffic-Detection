@@ -40,11 +40,11 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return "List";
+                return "Đường";
             case 1:
-                return "Direction";
+                return "Giao Thông";
             case 2:
-                return "Account";
+                return "Tài khoản";
         }
         return null;
     }

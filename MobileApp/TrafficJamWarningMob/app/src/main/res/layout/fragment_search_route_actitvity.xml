@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="5mm"
-            android:text="Origin"
+            android:text="Điểm đi"
             android:paddingTop="10dp"
             android:paddingLeft="10dp" />
 
@@ -29,13 +29,13 @@
             android:layout_height="wrap_content"
             android:id="@+id/cbGPS"
             android:checked="false"
-            android:text="Use your current location as origin"
+            android:text="Dùng vị trí hiện tại"
             android:paddingLeft="10dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="5mm"
-            android:text="Destination"
+            android:text="Điểm đến"
             android:paddingTop="10dp"
             android:paddingLeft="10dp" />
 
@@ -49,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
-            android:text="Check traffic " />
+            android:text="Kiểm tra giao thông" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -68,7 +68,7 @@
                 android:id="@+id/btnViewMap"
                 android:visibility="gone"
                 android:textAlignment="center"
-                android:text="View Map"
+                android:text="Xem bản đồ"
                 android:layout_marginTop="15px"
                 android:layout_alignParentRight="true"
                 />
