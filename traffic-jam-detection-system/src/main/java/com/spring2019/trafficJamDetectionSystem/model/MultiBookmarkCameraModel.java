@@ -5,8 +5,6 @@ import com.google.gson.annotations.Expose;
 import java.util.List;
 
 public class MultiBookmarkCameraModel {
-
-
     @Expose
     private int bookmarkId;
     @Expose

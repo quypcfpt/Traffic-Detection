@@ -74,7 +74,6 @@ public class BookmarkControllerImpl extends AbstractController implements Bookma
     public String getBookMarkByAccountID(Integer accountID) {
         Response<List<BookmarkModel>> response = new Response<List<BookmarkModel>>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
         try {
-            MultipleBookmarkModel data = new MultipleBookmarkModel();
             LOGGER.info("Get bookmark of user ID: " + accountID);
             List<BookmarkModel> models = new ArrayList<BookmarkModel>();
             List<Bookmark> bookmarkList = bookmarkService.getBookMarkByAccountId(accountID);
