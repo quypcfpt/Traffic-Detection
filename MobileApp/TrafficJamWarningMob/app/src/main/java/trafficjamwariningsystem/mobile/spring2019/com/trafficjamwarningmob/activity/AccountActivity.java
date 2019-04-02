@@ -79,10 +79,8 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
         progressBar = (ProgressBar) v.findViewById(R.id.progress);
         progressBar1 = (ProgressBar) v.findViewById(R.id.progress1);
         txtSignInErr = (TextView) v.findViewById(R.id.txtSignInError);
-        mLayoutManager = new LinearLayoutManager(v.getContext());
         txtSignInErr.setVisibility(View.GONE);
         txtSignUp.setPaintFlags(txtSignUp.getPaintFlags()| Paint.UNDERLINE_TEXT_FLAG);
-        recyclerView.setLayoutManager(mLayoutManager);
         isLogin = false;
         isLogout = false;
 
@@ -203,7 +201,7 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
 
                 @Override
                 public void onFailure(Call<Response<AccountModel>> call, Throwable t) {
-                    Log.e("ERROR", t.getMessage());
+//                    Log.e("ERROR", t.getMessage());
                 }
             });
             Log.d("Check Is Login : ", isLogin + "");
@@ -228,9 +226,11 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
                     recyclerView.setVisibility(View.GONE);
                     emptyView.setVisibility(View.GONE);
                     Response<List<BookmarkModel>> message = response.body();
-                    List<BookmarkModel> models = message.getData();
+                    final List<BookmarkModel> models = message.getData();
                     if (!models.isEmpty()) {
-                        adapter = new BookmarkAdapter(models, getContext());
+                        mLayoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+                        adapter = new BookmarkAdapter(models,getActivity().getApplicationContext());
+                        recyclerView.setLayoutManager(mLayoutManager);
                         recyclerView.setAdapter(adapter);
                         emptyView.setVisibility(View.GONE);
                         recyclerView.setVisibility(View.VISIBLE);
@@ -244,7 +244,7 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
 
                 @Override
                 public void onFailure(Call<Response<List<BookmarkModel>>> call, Throwable t) {
-
+                    Log.e("EROR",t.getMessage());
                 }
             });
             recyclerView.setVisibility(View.VISIBLE);
