@@ -156,18 +156,17 @@ public class BookmarkAdapter extends RecyclerView.Adapter<RecycleViewBookmarkHol
             username = parts[1];
             password = parts[2];
             apiInterface = ApiClient.getClient().create(ApiInterface.class);
-            Call<Response<MultipleBookmarkModel>> responseCall = apiInterface.getBookMakByAccountId(id);
-            responseCall.enqueue(new Callback<Response<MultipleBookmarkModel>>() {
+            Call<Response<List<BookmarkModel>>> responseCall = apiInterface.getBookMakByAccountId(id);
+            responseCall.enqueue(new Callback<Response<List<BookmarkModel>>>() {
                 @Override
-                public void onResponse(Call<Response<MultipleBookmarkModel>> call, retrofit2.Response<Response<MultipleBookmarkModel>> response) {
-                    Response<MultipleBookmarkModel> message = response.body();
-                    MultipleBookmarkModel data = message.getData();
-                    List<BookmarkModel> models = data.getBookmarkModelList();
+                public void onResponse(Call<Response<List<BookmarkModel>>> call, retrofit2.Response<Response<List<BookmarkModel>>> response) {
+                    Response<List<BookmarkModel>> message = response.body();
+                    List<BookmarkModel> models = message.getData();
                     updateData(models);
                 }
 
                 @Override
-                public void onFailure(Call<Response<MultipleBookmarkModel>> call, Throwable t) {
+                public void onFailure(Call<Response<List<BookmarkModel>>> call, Throwable t) {
 
                 }
             });

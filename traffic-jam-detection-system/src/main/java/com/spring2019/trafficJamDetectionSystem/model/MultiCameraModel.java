@@ -7,13 +7,13 @@ import java.util.List;
 public class MultiCameraModel {
 
     @Expose
-    List<CameraModel> cameraList;
+    private List<CameraModel> cameraList;
     @Expose
-    int totalPage;
+    private int totalPage;
     @Expose
-    long totalRecord;
+    private long totalRecord;
     @Expose
-    int currentPage;
+    private int currentPage;
 
     public MultiCameraModel() {
     }

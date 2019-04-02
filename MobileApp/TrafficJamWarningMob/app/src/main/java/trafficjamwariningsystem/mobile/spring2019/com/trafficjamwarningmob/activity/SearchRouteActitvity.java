@@ -427,15 +427,15 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
             Toast.makeText(getActivity(), "ERROR: Can not check existed bookmark", Toast.LENGTH_SHORT).show();
             return;
         }
-        Call<Response<MultipleBookmarkModel>> responseCall = apiInterface.getBookMakByAccountId(userId);
-        responseCall.enqueue(new Callback<Response<MultipleBookmarkModel>>() {
+        Call<Response<List<BookmarkModel>>> responseCall = apiInterface.getBookMakByAccountId(userId);
+        responseCall.enqueue(new Callback<Response<List<BookmarkModel>>>() {
             @Override
-            public void onResponse(Call<Response<MultipleBookmarkModel>> call, retrofit2.Response<Response<MultipleBookmarkModel>> response) {
-                Response<MultipleBookmarkModel> res = response.body();
-                MultipleBookmarkModel bookmarkList = res.getData();
+            public void onResponse(Call<Response<List<BookmarkModel>>> call, retrofit2.Response<Response<List<BookmarkModel>>> response) {
+                Response<List<BookmarkModel>> res = response.body();
+                List<BookmarkModel> bookmarkList = res.getData();
                 String strOri = ori_coordinate.latitude + "," + ori_coordinate.longitude;
                 String strDes = des_coordinate.latitude + "," + des_coordinate.longitude;
-                for (BookmarkModel x : bookmarkList.getBookmarkModelList()) {
+                for (BookmarkModel x : bookmarkList) {
                     if (x.getOri_coordinate().equals(strOri) && x.getDes_coordinate().equals(strDes)) {
                         saveBookmark.setVisibility(View.VISIBLE);
                         saveBookmark.setText("Added bookmark");
@@ -452,7 +452,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
             }
 
             @Override
-            public void onFailure(Call<Response<MultipleBookmarkModel>> call, Throwable t) {
+            public void onFailure(Call<Response<List<BookmarkModel>>> call, Throwable t) {
                 Log.d("Failure", t.getMessage());
             }
         });

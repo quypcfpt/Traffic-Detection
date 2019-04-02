@@ -41,6 +41,7 @@ import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api.A
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api.ApiInterface;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.AccountModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.BookmarkModel;
+import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.CameraModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.MultipleBookmarkModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.Response;
 
@@ -219,16 +220,15 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
             accountUsername.setText(account.getUsername());
             int accountID = account.getId();
             apiInterface = ApiClient.getClient().create(ApiInterface.class);
-            Call<Response<MultipleBookmarkModel>> responseCall = apiInterface.getBookMakByAccountId(accountID);
+            Call<Response<List<BookmarkModel>>> responseCall = apiInterface.getBookMakByAccountId(accountID);
 
-            responseCall.enqueue(new Callback<Response<MultipleBookmarkModel>>() {
+            responseCall.enqueue(new Callback<Response<List<BookmarkModel>>>() {
                 @Override
-                public void onResponse(Call<Response<MultipleBookmarkModel>> call, retrofit2.Response<Response<MultipleBookmarkModel>> response) {
+                public void onResponse(Call<Response<List<BookmarkModel>>> call, retrofit2.Response<Response<List<BookmarkModel>>> response) {
                     recyclerView.setVisibility(View.GONE);
                     emptyView.setVisibility(View.GONE);
-                    Response<MultipleBookmarkModel> message = response.body();
-                    MultipleBookmarkModel data = message.getData();
-                    final List<BookmarkModel> models = data.getBookmarkModelList();
+                    Response<List<BookmarkModel>> message = response.body();
+                    List<BookmarkModel> models = message.getData();
                     if (!models.isEmpty()) {
                         adapter = new BookmarkAdapter(models, getContext());
                         recyclerView.setAdapter(adapter);
@@ -243,7 +243,7 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
                 }
 
                 @Override
-                public void onFailure(Call<Response<MultipleBookmarkModel>> call, Throwable t) {
+                public void onFailure(Call<Response<List<BookmarkModel>>> call, Throwable t) {
 
                 }
             });

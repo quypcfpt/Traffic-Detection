@@ -7,13 +7,13 @@ import java.util.List;
 public class MultiStreetModel {
 
     @Expose
-    List<StreetModel> streetList;
+    private List<StreetModel> streetList;
     @Expose
-    int totalPage;
+    private int totalPage;
     @Expose
-    long totalRecord;
+    private long totalRecord;
     @Expose
-    int currentPage;
+    private int currentPage;
 
     public MultiStreetModel() {
     }

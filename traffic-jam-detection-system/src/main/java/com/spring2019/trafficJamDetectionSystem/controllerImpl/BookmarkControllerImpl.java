@@ -72,7 +72,7 @@ public class BookmarkControllerImpl extends AbstractController implements Bookma
 
     @Override
     public String getBookMarkByAccountID(Integer accountID) {
-        Response<MultipleBookmarkModel> response = new Response<MultipleBookmarkModel>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
+        Response<List<BookmarkModel>> response = new Response<List<BookmarkModel>>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
         try {
             MultipleBookmarkModel data = new MultipleBookmarkModel();
             LOGGER.info("Get bookmark of user ID: " + accountID);
@@ -81,8 +81,7 @@ public class BookmarkControllerImpl extends AbstractController implements Bookma
             for(Bookmark item : bookmarkList){
             models.add(bookmarkTransformer.entityToModel(item));
             }
-            data.setBookmarkModelList(models);
-            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
+            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, models);
 
             LOGGER.info("End get bookmark of user ID: " + accountID);
         } catch (Exception e) {
