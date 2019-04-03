@@ -67,11 +67,12 @@ public class CameraAdapter extends RecyclerView.Adapter<RecycleViewCameraHolder>
     @Override
     public void onBindViewHolder(@NonNull RecycleViewCameraHolder myViewHolder, int position) {
         final CameraModel models = dataSet.get(position);
-        myViewHolder.txtName.setEllipsize(TextUtils.TruncateAt.END);
-        myViewHolder.txtName.setMaxWidth(200);
-        myViewHolder.txtName.setMaxLines(1);
+
         myViewHolder.txtName.setText(models.getDescription());
         if(models.getDistance()!= 0){
+            myViewHolder.txtName.setEllipsize(TextUtils.TruncateAt.END);
+            myViewHolder.txtName.setMaxWidth(250);
+            myViewHolder.txtName.setMaxLines(1);
             myViewHolder.txtDistance.setVisibility(View.VISIBLE);
             myViewHolder.txtDistance.setText(models.getDistance()+"");
         }else{
