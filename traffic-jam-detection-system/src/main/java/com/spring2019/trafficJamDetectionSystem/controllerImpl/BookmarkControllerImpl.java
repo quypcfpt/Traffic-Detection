@@ -24,31 +24,7 @@ public class BookmarkControllerImpl extends AbstractController implements Bookma
     @Autowired
     BookmarkTransformer bookmarkTransformer;
 
-    @Override
-    public String getAllBookmarks() {
-        Response<MultipleBookmarkModel> response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
-        try {
-            LOGGER.info("Getting all bookmarks...");
-            List<Bookmark> bookmarkList = bookmarkService.getAllBookmarks();
-            MultipleBookmarkModel data = new MultipleBookmarkModel();
-            List<BookmarkModel> bookmarkModelList = new ArrayList<>();
-            for (Bookmark x : bookmarkList) {
-                bookmarkModelList.add(bookmarkTransformer.entityToModel(x));
-            }
-            List<BookmarkModel> testArr = bookmarkModelList;
-            if(testArr.isEmpty()){
-                data.setBookmarkModelList(new ArrayList<BookmarkModel>());
-            }else
-                data.setBookmarkModelList(testArr);
-            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
-            LOGGER.info("All bookmarks are loaded!");
-        }catch (Exception e){
-            response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
-            LOGGER.error(e.getMessage());
 
-        }
-        return gson.toJson(response);
-    }
 
     @Override
     public String createBookmark(MultiBookmarkCameraModel multiBookmarkCameraModel) {
