@@ -214,8 +214,8 @@ $('#dataTable').on('click', '.btn', function () {
 
     $('#edtId').val(id);
     $('#edtDescription').val(description);
-    $('#edtLongitude').val(spit[0]);
-    $('#edtLatitude').val(spit[1]);
+    $('#edtLongitude').val(spit[1]);
+    $('#edtLatitude').val(spit[0]);
     $('#edtOrder').val(order);
 
 
