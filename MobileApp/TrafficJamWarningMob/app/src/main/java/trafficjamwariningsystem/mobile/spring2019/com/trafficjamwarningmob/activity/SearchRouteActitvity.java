@@ -293,6 +293,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
             @Override
             public void onFailure(Call<Response<MultiCameraModel>> call, Throwable t) {
                 Log.d("Failure", t.getMessage());
+                Toast.makeText(getActivity(), "LỖI: Không kiểm tra được giao thông", Toast.LENGTH_SHORT).show();
                 ori_coordinate = null;
                 des_coordinate = null;
             }
@@ -315,7 +316,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
                     REQUEST_ID_ACCESS_COURSE_FINE_LOCATION);
 
         } else {
-            Toast.makeText(getActivity(), "GPS Access: Ready", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Quyền GPS: Sẵn sàng", Toast.LENGTH_SHORT).show();
             cbGPS.setChecked(true);
         }
     }
@@ -329,10 +330,10 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED
                         && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                     CheckBox cbGPS = (CheckBox) getActivity().findViewById(R.id.cbGPS);
-                    Toast.makeText(getActivity(), "GPS Access: Ready", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Quyền GPS: Sẵn sàng", Toast.LENGTH_SHORT).show();
                     cbGPS.setChecked(true);
                 } else {
-                    Toast.makeText(getActivity(), "You need to permit GPS Access", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Bạn cần cấp quyền GPS.", Toast.LENGTH_SHORT).show();
                     cbGPS.setChecked(false);
                 }
                 break;
@@ -342,12 +343,12 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
     private void checkLocationService() {
         locationProvider = getBestEnabledLocationProvider();
         if (locationProvider.equals("passive")) {
-            Toast.makeText(getActivity(), "You need to turn on GPS service and try again.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Bạn cần bật dịch vụ GPS và thử lại.", Toast.LENGTH_SHORT).show();
             return;
         }
         try {
             pb.setVisibility(View.VISIBLE);
-            Toast.makeText(getActivity(), "Locating your position...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Đang xác định vị trí...", Toast.LENGTH_SHORT).show();
             locationManager.requestLocationUpdates(locationProvider, 0, 0, this);
         } catch (SecurityException e) {
             e.printStackTrace();
@@ -400,7 +401,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        Toast.makeText(getActivity(), "Located your position", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Đã xác định vị trí hiện tại của bạn.", Toast.LENGTH_SHORT).show();
         RequestParams params = getParams(newLocation.latitude + ", " + newLocation.longitude, des.getText().toString());
         searchCamera(params);
     }
@@ -424,10 +425,10 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
         }
         Integer userId = getUserId();
         if (userId == null) {
-            Toast.makeText(getActivity(), "ERROR: Can not check existed bookmark", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "LỖI: Không thể kiểm tra bookmark", Toast.LENGTH_SHORT).show();
             return;
         }
-        Call<Response<List<BookmarkModel>>> responseCall = apiInterface.getBookMakByAccountId(userId);
+        Call<Response<List<BookmarkModel>>> responseCall = apiInterface.getBookMarkByAccountId(userId);
         responseCall.enqueue(new Callback<Response<List<BookmarkModel>>>() {
             @Override
             public void onResponse(Call<Response<List<BookmarkModel>>> call, retrofit2.Response<Response<List<BookmarkModel>>> response) {
@@ -438,7 +439,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
                 for (BookmarkModel x : bookmarkList) {
                     if (x.getOri_coordinate().equals(strOri) && x.getDes_coordinate().equals(strDes)) {
                         saveBookmark.setVisibility(View.VISIBLE);
-                        saveBookmark.setText("Added bookmark");
+                        saveBookmark.setText("Bookmark đã có");
                         saveBookmark.setClickable(false);
                         viewMap.setVisibility(View.VISIBLE);
                         return;
@@ -446,7 +447,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
 
                 }
                 saveBookmark.setVisibility(View.VISIBLE);
-                saveBookmark.setText("+ Add to bookmark");
+                saveBookmark.setText("+ Thêm bookmark");
                 saveBookmark.setClickable(true);
                 viewMap.setVisibility(View.VISIBLE);
             }
@@ -454,6 +455,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
             @Override
             public void onFailure(Call<Response<List<BookmarkModel>>> call, Throwable t) {
                 Log.d("Failure", t.getMessage());
+                Toast.makeText(getActivity(), "LỖI: Không thể kiểm tra bookmark", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -462,7 +464,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
         BookmarkModel newBookmarkModel = new BookmarkModel();
         Integer userId = getUserId();
         if (userId == null) {
-            Toast.makeText(getActivity(), "ERROR: Can not add bookmark", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "LỖI: Không thể thêm bookmark", Toast.LENGTH_SHORT).show();
             return;
         }
         newBookmarkModel.setAccountId(userId);
@@ -470,42 +472,30 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
         newBookmarkModel.setDestination(des.getText().toString());
         newBookmarkModel.setOri_coordinate(ori_coordinate.latitude + "," + ori_coordinate.longitude);
         newBookmarkModel.setDes_coordinate(des_coordinate.latitude + "," + des_coordinate.longitude);
-        Call<Response<BookmarkModel>> responseCall = apiInterface.createBookmark(newBookmarkModel);
-        responseCall.enqueue(new Callback<Response<BookmarkModel>>() {
+        MultiBookmarkCameraModel multiBookmarkCameraModel = new MultiBookmarkCameraModel();
+        multiBookmarkCameraModel.setBookmark(newBookmarkModel);
+        multiBookmarkCameraModel.setCameraList(onRouteCamera);
+        Call<Response<String>> responseCall = apiInterface.createBookmark(multiBookmarkCameraModel);
+        responseCall.enqueue(new Callback<Response<String>>() {
             @Override
-            public void onResponse(Call<Response<BookmarkModel>> call, retrofit2.Response<Response<BookmarkModel>> response) {
-                Response<BookmarkModel> res = response.body();
-                BookmarkModel resModel = res.getData();
-                if (resModel != null) {
-                    Toast.makeText(getActivity(), "Added a new bookmark", Toast.LENGTH_SHORT).show();
+            public void onResponse(Call<Response<String>> call, retrofit2.Response<Response<String>> response) {
+                Response<String> res = response.body();
+                String isSuccess = res.getData();
+                if (isSuccess.equals("1")) {
+                    Toast.makeText(getActivity(), "Đã thêm mới bookmark", Toast.LENGTH_SHORT).show();
                     saveBookmark.setVisibility(View.VISIBLE);
-                    saveBookmark.setText("Added bookmark");
+                    saveBookmark.setText("Bookmark đã có");
                     saveBookmark.setClickable(false);
                     viewMap.setVisibility(View.VISIBLE);
-                    Log.d("BOOKMARK INFO", resModel.getId() +"");
-                    MultiBookmarkCameraModel multiBookmarkCameraModel = new MultiBookmarkCameraModel();
-                    multiBookmarkCameraModel.setBookmarkId(resModel.getId());
-                    multiBookmarkCameraModel.setCameraList(onRouteCamera);
-                    Call<Response> responseCall = apiInterface.saveBookmarkCamera(multiBookmarkCameraModel);
-                    responseCall.enqueue(new Callback<Response>() {
-                        @Override
-                        public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
-                            Response res = response.body();
-                            if(res.getData() != null){
-                                Log.d("BOOK_CAM_RES INFO", res.getData() +"");
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<Response> call, Throwable t) {
-                            Log.d("Failure", t.getMessage());
-                        }
-                    });
+//                    Log.d("BOOKMARK INFO", resModel.getId() +"");
+                }else if(isSuccess.equals("0")){
+                    Toast.makeText(getActivity(), "LỖI: Không thể thêm bookmark", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<Response<BookmarkModel>> call, Throwable t) {
+            public void onFailure(Call<Response<String>> call, Throwable t) {
+                Toast.makeText(getActivity(), "LỖI: Không thể thêm bookmark", Toast.LENGTH_SHORT).show();
                 Log.d("Failure", t.getMessage());
             }
         });
@@ -535,7 +525,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
         if (ori_coordinate == null && des_coordinate == null) {
             return;
         }
-        saveBookmark.setText("Login to add bookmark");
+        saveBookmark.setText("Đăng nhập để thêm bookmark");
         saveBookmark.setVisibility(View.VISIBLE);
         saveBookmark.setClickable(true);
         viewMap.setVisibility(View.VISIBLE);

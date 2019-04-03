@@ -51,16 +51,23 @@ public class BookmarkControllerImpl extends AbstractController implements Bookma
     }
 
     @Override
-    public String createBookmark(BookmarkModel newBookmarkModel) {
-        Response response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
+    public String createBookmark(MultiBookmarkCameraModel multiBookmarkCameraModel) {
+        Response<String> response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
         try {
-            LOGGER.info("Creating new bookmark...");
-            Bookmark newBookmarkEntity = bookmarkTransformer.modelToEntity(newBookmarkModel);
+            LOGGER.info("Creating new bookmark with info: " + multiBookmarkCameraModel.getBookmark());
+            Bookmark newBookmarkEntity = bookmarkTransformer.modelToEntity(multiBookmarkCameraModel.getBookmark());
             newBookmarkEntity = bookmarkService.createBookmark(newBookmarkEntity);
-            BookmarkModel resBookmark = new BookmarkModel();
-            resBookmark.setId(newBookmarkEntity.getId());
-            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, resBookmark);
-            LOGGER.info("A new bookmark is created: " + newBookmarkEntity.getId());
+            if(newBookmarkEntity != null){
+                multiBookmarkCameraModel.getBookmark().setId(newBookmarkEntity.getId());
+                if(saveBookmarkCamera(multiBookmarkCameraModel)){
+                    response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, "1");
+                    LOGGER.info("A new bookmark is created: " + newBookmarkEntity.getId());
+                }
+            }else{
+                response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, "0");
+                LOGGER.info("Error creating bookmark");
+            }
+
         }catch (Exception e){
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
             LOGGER.error(e.getMessage());
@@ -78,11 +85,11 @@ public class BookmarkControllerImpl extends AbstractController implements Bookma
             List<BookmarkModel> models = new ArrayList<BookmarkModel>();
             List<Bookmark> bookmarkList = bookmarkService.getBookMarkByAccountId(accountID);
             for(Bookmark item : bookmarkList){
-            models.add(bookmarkTransformer.entityToModel(item));
+                models.add(bookmarkTransformer.entityToModel(item));
             }
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, models);
 
-            LOGGER.info("End get bookmark of user ID: " + accountID);
+            LOGGER.info("End get bookmark, size: " + bookmarkList.size());
         } catch (Exception e) {
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
             LOGGER.error(e.getMessage());
@@ -109,25 +116,25 @@ public class BookmarkControllerImpl extends AbstractController implements Bookma
 
     }
 
-    @Override
-    public String saveBookmarkCamera(MultiBookmarkCameraModel multiBookmarkCameraModel) {
-        Response response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
+
+    public boolean saveBookmarkCamera(MultiBookmarkCameraModel multiBookmarkCameraModel) {
+
         try {
             LOGGER.info("Start save Bookmark Camera");
             BookmarkModel bookmarkModel = new BookmarkModel();
-            bookmarkModel.setId(multiBookmarkCameraModel.getBookmarkId());
+            bookmarkModel.setId(multiBookmarkCameraModel.getBookmark().getId());
             for (CameraModel x : multiBookmarkCameraModel.getCameraList()) {
                 BookmarkCameraModel bookmarkCameraModel = new BookmarkCameraModel();
                 bookmarkCameraModel.setBookmarkModel(bookmarkModel);
                 bookmarkCameraModel.setCameraModel(x);
-                bookmarkService.saveBookmarkCamera(bookmarkTransformer.bookmarkCameraModeltoEntity(bookmarkCameraModel));
+                if(bookmarkService.saveBookmarkCamera(bookmarkTransformer.bookmarkCameraModeltoEntity(bookmarkCameraModel)) == null){
+                    return false;
+                }
             }
-            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, true);
             LOGGER.info("End save Bookmark Camera: "+ bookmarkModel.getId());
         }catch (Exception e){
-            response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
             LOGGER.error(e.getMessage());
         }
-        return gson.toJson(response);
+        return true;
     }
 }

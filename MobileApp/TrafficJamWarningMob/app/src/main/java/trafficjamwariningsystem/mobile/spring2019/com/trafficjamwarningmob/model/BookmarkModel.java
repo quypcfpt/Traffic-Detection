@@ -2,7 +2,9 @@ package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.mode
 
 import com.google.gson.annotations.Expose;
 
-public class BookmarkModel {
+import java.io.Serializable;
+
+public class BookmarkModel implements Serializable {
     @Expose
     private int id;
     @Expose
