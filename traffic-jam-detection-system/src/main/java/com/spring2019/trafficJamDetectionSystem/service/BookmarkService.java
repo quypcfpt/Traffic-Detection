@@ -13,8 +13,6 @@ public interface BookmarkService {
 
     public Integer removeBookMarkById(Integer id);
 
-    public List<Bookmark> getAllBookmarks();
-
     public Bookmark createBookmark(Bookmark newBookmark);
 
     public List<String> getAccountByCameraId(int cameraId);

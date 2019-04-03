@@ -24,8 +24,6 @@ public class BookmarkControllerImpl extends AbstractController implements Bookma
     @Autowired
     BookmarkTransformer bookmarkTransformer;
 
-
-
     @Override
     public String createBookmark(MultiBookmarkCameraModel multiBookmarkCameraModel) {
         Response<String> response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);

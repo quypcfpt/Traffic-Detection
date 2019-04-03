@@ -35,11 +35,6 @@ public class BookmarkServiceImpl implements BookmarkService {
     }
 
     @Override
-    public List<Bookmark> getAllBookmarks() {
-        return bookmarkRepository.findAll();
-    }
-
-    @Override
     public Bookmark createBookmark(Bookmark newBookmark) {
         return bookmarkRepository.save(newBookmark);
     }
