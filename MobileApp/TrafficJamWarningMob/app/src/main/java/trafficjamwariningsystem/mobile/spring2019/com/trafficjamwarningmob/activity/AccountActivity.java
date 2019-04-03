@@ -244,7 +244,7 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
 
                 @Override
                 public void onFailure(Call<Response<List<BookmarkModel>>> call, Throwable t) {
-                    Log.e("EROR",t.getMessage());
+//                    Log.e("EROR",t.getMessage());
                 }
             });
             recyclerView.setVisibility(View.VISIBLE);
