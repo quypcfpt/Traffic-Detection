@@ -98,7 +98,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/txtEmpty"
                 android:visibility="gone"
-                android:text="No result found"
+                android:text="Không tìm thấy kết quả"
                 android:paddingLeft="10px"
                 android:textSize="50px"
                 />

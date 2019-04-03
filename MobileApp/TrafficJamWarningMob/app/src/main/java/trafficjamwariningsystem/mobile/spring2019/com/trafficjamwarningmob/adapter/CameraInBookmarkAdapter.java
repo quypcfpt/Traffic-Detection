@@ -41,7 +41,7 @@ public class CameraInBookmarkAdapter extends RecyclerView.Adapter<RecycleViewCam
         myViewHolder.txtName.setMaxLines(1);
         myViewHolder.txtName.setText(models.getDescription() + " - " + models.getStreet().getName());
         myViewHolder.txtDistrict.setVisibility(View.GONE);
-        myViewHolder.info.setImageResource(models.getObserverStatus() == 1 ? R.mipmap.green : R.mipmap.red);
+        myViewHolder.info.setImageResource(models.getObserverStatus() == 0 ? R.mipmap.green : models.getObserverStatus()==1 ? R.mipmap.red : R.mipmap.yellow );
         myViewHolder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int position) {

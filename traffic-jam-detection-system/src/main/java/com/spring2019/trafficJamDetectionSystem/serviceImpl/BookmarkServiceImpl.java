@@ -60,7 +60,9 @@ public class BookmarkServiceImpl implements BookmarkService {
     public void removeBookMarkCameraWithBookMarkID(Bookmark bookMarkId) {
         bookmarkCameraRepository.deleteBookmarkCamerasByBookmarkByBookmarkId(bookMarkId);
     }
-    public void saveBookmarkCamera(BookmarkCamera bookmarkCamera) {
-        bookmarkCameraRepository.save(bookmarkCamera);
+
+    @Override
+    public BookmarkCamera saveBookmarkCamera(BookmarkCamera bookmarkCamera) {
+        return bookmarkCameraRepository.save(bookmarkCamera);
     }
 }

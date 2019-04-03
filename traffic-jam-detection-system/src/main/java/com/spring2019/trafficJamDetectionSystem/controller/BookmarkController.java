@@ -12,7 +12,7 @@ public interface BookmarkController {
     public String getAllBookmarks();
 
     @PostMapping(CoreConstant.API_BOOKMARK)
-    public String createBookmark(@RequestBody BookmarkModel newBookmarkModel);
+    public String createBookmark(@RequestBody MultiBookmarkCameraModel multiBookmarkCameraModel);
 
     @GetMapping(CoreConstant.API_BOOKMARK + "/{id}")
     public String getBookMarkByAccountID(@PathVariable("id") Integer id);
@@ -20,6 +20,4 @@ public interface BookmarkController {
     @DeleteMapping(CoreConstant.API_BOOKMARK + "/{id}")
     public String deleteBookmarkById(@PathVariable("id") Integer id);
 
-    @PostMapping(CoreConstant.API_BOOKMARK + "/camera")
-    public String saveBookmarkCamera(@RequestBody MultiBookmarkCameraModel multiBookmarkCameraModel);
 }

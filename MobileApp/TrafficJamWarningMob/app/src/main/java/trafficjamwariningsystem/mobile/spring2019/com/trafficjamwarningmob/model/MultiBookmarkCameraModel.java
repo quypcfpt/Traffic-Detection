@@ -7,16 +7,16 @@ import java.util.List;
 public class MultiBookmarkCameraModel {
 
     @Expose
-    private int bookmarkId;
+    private BookmarkModel bookmark;
     @Expose
     private List<CameraModel> cameraList;
 
-    public int getBookmarkId() {
-        return bookmarkId;
+    public BookmarkModel getBookmark() {
+        return bookmark;
     }
 
-    public void setBookmarkId(int bookmarkId) {
-        this.bookmarkId = bookmarkId;
+    public void setBookmark(BookmarkModel bookmark) {
+        this.bookmark = bookmark;
     }
 
     public List<CameraModel> getCameraList() {

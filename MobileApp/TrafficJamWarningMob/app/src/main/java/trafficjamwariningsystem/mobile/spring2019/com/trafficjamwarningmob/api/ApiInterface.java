@@ -59,7 +59,7 @@ public interface ApiInterface {
 
     //Bookmark
     @GET("api/bookmark/{id}")
-    Call<Response<List<BookmarkModel>>> getBookMakByAccountId(@Path("id") int accountId);
+    Call<Response<List<BookmarkModel>>> getBookMarkByAccountId(@Path("id") int accountId);
 
     @DELETE("api/bookmark/{id}")
     Call<Response<String>> deleteBookmarkWithId(@Path("id") int bookmarkId);
@@ -68,8 +68,6 @@ public interface ApiInterface {
     Call<Response<MultipleBookmarkModel>> getAllBookmarks();
 
     @POST("api/bookmark")
-    Call<Response<BookmarkModel>> createBookmark(@Body BookmarkModel newBookmarkModel);
+    Call<Response<String>> createBookmark(@Body MultiBookmarkCameraModel multiBookmarkCameraModel);
 
-    @POST("api/bookmark/camera")
-    Call<Response> saveBookmarkCamera(@Body MultiBookmarkCameraModel multiBookmarkCameraModel);
 }

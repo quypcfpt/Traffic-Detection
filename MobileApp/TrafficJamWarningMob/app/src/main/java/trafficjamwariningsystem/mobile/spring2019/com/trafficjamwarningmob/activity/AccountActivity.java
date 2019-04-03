@@ -218,7 +218,7 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
             accountUsername.setText(account.getUsername());
             int accountID = account.getId();
             apiInterface = ApiClient.getClient().create(ApiInterface.class);
-            Call<Response<List<BookmarkModel>>> responseCall = apiInterface.getBookMakByAccountId(accountID);
+            Call<Response<List<BookmarkModel>>> responseCall = apiInterface.getBookMarkByAccountId(accountID);
 
             responseCall.enqueue(new Callback<Response<List<BookmarkModel>>>() {
                 @Override

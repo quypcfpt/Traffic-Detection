@@ -156,7 +156,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<RecycleViewBookmarkHol
             username = parts[1];
             password = parts[2];
             apiInterface = ApiClient.getClient().create(ApiInterface.class);
-            Call<Response<List<BookmarkModel>>> responseCall = apiInterface.getBookMakByAccountId(id);
+            Call<Response<List<BookmarkModel>>> responseCall = apiInterface.getBookMarkByAccountId(id);
             responseCall.enqueue(new Callback<Response<List<BookmarkModel>>>() {
                 @Override
                 public void onResponse(Call<Response<List<BookmarkModel>>> call, retrofit2.Response<Response<List<BookmarkModel>>> response) {

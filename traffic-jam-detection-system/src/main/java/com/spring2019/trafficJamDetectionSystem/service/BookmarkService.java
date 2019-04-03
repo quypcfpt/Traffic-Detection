@@ -21,5 +21,5 @@ public interface BookmarkService {
 
     public void removeBookMarkCameraWithBookMarkID(Bookmark bookMark);
 
-    public void saveBookmarkCamera(BookmarkCamera bookmarkCamera);
+    public BookmarkCamera saveBookmarkCamera(BookmarkCamera bookmarkCamera);
 }

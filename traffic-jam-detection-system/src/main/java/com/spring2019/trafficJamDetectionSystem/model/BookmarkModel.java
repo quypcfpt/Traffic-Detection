@@ -66,4 +66,16 @@ public class BookmarkModel {
     public void setDes_coordinate(String des_coordinate) {
         this.des_coordinate = des_coordinate;
     }
+
+    @Override
+    public String toString() {
+        return "BookmarkModel{" +
+                "id=" + id +
+                ", accountId=" + accountId +
+                ", origin='" + origin + '\'' +
+                ", destination='" + destination + '\'' +
+                ", ori_coordinate='" + ori_coordinate + '\'' +
+                ", des_coordinate='" + des_coordinate + '\'' +
+                '}';
+    }
 }
