@@ -244,7 +244,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             for(CameraModel x : searchCameras){
                 Double lat = Double.parseDouble(x.getPosition().split(",")[0]);
                 Double longi = Double.parseDouble(x.getPosition().split(",")[1]);
-                MarkerOptions marker = new MarkerOptions().position(new LatLng(lat, longi)).title(x.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker));
+                MarkerOptions marker = null;
+                if(x.getObserverStatus() == 0) {
+                    marker = new MarkerOptions().position(new LatLng(lat, longi)).title(x.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker_green));
+                }else if(x.getObserverStatus() == 1) {
+                    marker = new MarkerOptions().position(new LatLng(lat, longi)).title(x.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker_red));
+                }else{
+                    marker = new MarkerOptions().position(new LatLng(lat, longi)).title(x.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker_yellow));
+                }
                 mMap.addMarker(marker);
             }
             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
