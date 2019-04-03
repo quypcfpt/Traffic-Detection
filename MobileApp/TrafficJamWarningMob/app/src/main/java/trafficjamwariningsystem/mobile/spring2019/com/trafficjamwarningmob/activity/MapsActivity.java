@@ -452,19 +452,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        postion.add(new PositionModel(10.842553, 106.642668));
 
         //Test for anthor street
-//        postion.add(new PositionModel(10.843921, 106.639865));
-//        postion.add(new PositionModel(10.843005, 106.639326));
-//        postion.add(new PositionModel(10.841694, 106.638478));
-//        postion.add(new PositionModel(10.840671, 106.637792));
-//        postion.add(new PositionModel(10.838750, 106.636894));
-//        postion.add(new PositionModel(10.836207, 106.635722));
-        //Test for anthor street backward
-        postion.add(new PositionModel(10.836207, 106.635722));
-        postion.add(new PositionModel(10.838750, 106.636894));
-        postion.add(new PositionModel(10.840671, 106.637792));
-        postion.add(new PositionModel(10.841694, 106.638478));
-        postion.add(new PositionModel(10.843005, 106.639326));
         postion.add(new PositionModel(10.843921, 106.639865));
+        postion.add(new PositionModel(10.843005, 106.639326));
+        postion.add(new PositionModel(10.841694, 106.638478));
+        postion.add(new PositionModel(10.840671, 106.637792));
+        postion.add(new PositionModel(10.838750, 106.636894));
+        postion.add(new PositionModel(10.836207, 106.635722));
+        //Test for anthor street backward
+//        postion.add(new PositionModel(10.836207, 106.635722));
+//        postion.add(new PositionModel(10.838750, 106.636894));
+//        postion.add(new PositionModel(10.840671, 106.637792));
+//        postion.add(new PositionModel(10.841694, 106.638478));
+//        postion.add(new PositionModel(10.843005, 106.639326));
+//        postion.add(new PositionModel(10.843921, 106.639865));
 
 
 
