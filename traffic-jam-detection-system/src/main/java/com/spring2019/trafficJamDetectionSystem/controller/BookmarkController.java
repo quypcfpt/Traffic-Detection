@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin
 public interface BookmarkController {
-    @GetMapping(CoreConstant.API_BOOKMARK)
-    public String getAllBookmarks();
-
+    
     @PostMapping(CoreConstant.API_BOOKMARK)
     public String createBookmark(@RequestBody MultiBookmarkCameraModel multiBookmarkCameraModel);
 
