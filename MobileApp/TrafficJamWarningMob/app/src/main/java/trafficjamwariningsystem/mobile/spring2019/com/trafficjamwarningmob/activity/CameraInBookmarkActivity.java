@@ -7,8 +7,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.PolyUtil;
@@ -43,7 +46,11 @@ public class CameraInBookmarkActivity extends AppCompatActivity {
     private TextView lbHeader;
     private LatLng ori;
     private LatLng des;
+    private String strOri;
+    private String strDes;
     private ImageButton btnBack;
+    private ProgressBar progress;
+    private Button btnViewMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +59,11 @@ public class CameraInBookmarkActivity extends AppCompatActivity {
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
         lbHeader = findViewById(R.id.lbHeader);
         recyclerView = findViewById(R.id.listCamera);
+        recyclerView.setVisibility(View.GONE);
+        progress = findViewById(R.id.progress);
+        progress.setVisibility(View.VISIBLE);
+        btnViewMap = findViewById(R.id.btnViewMap);
+        btnViewMap.setVisibility(View.GONE);
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
         btnBack = findViewById(R.id.btnBack);
@@ -62,8 +74,8 @@ public class CameraInBookmarkActivity extends AppCompatActivity {
             }
         });
         Intent intent = getIntent();
-        String strOri = intent.getStringExtra("ORI");
-        String strDes = intent.getStringExtra("DES");
+        strOri = intent.getStringExtra("ORI");
+        strDes = intent.getStringExtra("DES");
         String header = intent.getStringExtra("HEADER");
         lbHeader.setText(header);
         RequestParams params = getParams(strOri, strDes);
@@ -115,11 +127,18 @@ public class CameraInBookmarkActivity extends AppCompatActivity {
                     }
                 }
             }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d("Failure", throwable.getMessage());
+                progress.setVisibility(View.GONE);
+                Toast.makeText(CameraInBookmarkActivity.this, "LỖI: Kiểm tra kết nối Internet", Toast.LENGTH_SHORT).show();
+            }
         });
 
     }
 
-    private void getOnRouteCamera(final List<LatLng> points) {
+    private void getOnRouteCamera(final ArrayList<LatLng> points) {
         ori = points.get(0);
         des = points.get(points.size() - 1);
         Log.d("ori", ori + "");
@@ -133,7 +152,7 @@ public class CameraInBookmarkActivity extends AppCompatActivity {
                 MultiCameraModel multiCameraModel = res.getData();
                 if (multiCameraModel != null) {
                     ArrayList<CameraModel> cameras = (ArrayList) multiCameraModel.getCameraList();
-                    ArrayList<CameraModel> onRouteCameras = new ArrayList<>();
+                    final ArrayList<CameraModel> onRouteCameras = new ArrayList<>();
                     for (CameraModel x : cameras) {
                         String[] xPosArr = x.getPosition().split(",");
                         LatLng xPos = new LatLng(Double.parseDouble(xPosArr[0]), Double.parseDouble(xPosArr[1]));
@@ -143,6 +162,22 @@ public class CameraInBookmarkActivity extends AppCompatActivity {
                     }
                     if (!onRouteCameras.isEmpty()) {
                         adapter = new CameraInBookmarkAdapter(onRouteCameras, getApplicationContext());
+                        progress.setVisibility(View.GONE);
+                        btnViewMap.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(CameraInBookmarkActivity.this, MapsActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putParcelableArrayList("POINTS", points);
+                                bundle.putSerializable("CAMERAS", onRouteCameras);
+                                bundle.putString("ORI", lbHeader.getText().toString().split(" - ")[0]);
+                                bundle.putString("DES", lbHeader.getText().toString().split(" - ")[1]);
+                                intent.putExtras(bundle);
+                                startActivity(intent);
+                            }
+                        });
+                        btnViewMap.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.VISIBLE);
                         recyclerView.setAdapter(adapter);
                     }
                 }
@@ -151,6 +186,8 @@ public class CameraInBookmarkActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Response<MultiCameraModel>> call, Throwable t) {
                 Log.d("Failure", t.getMessage());
+                progress.setVisibility(View.GONE);
+                Toast.makeText(CameraInBookmarkActivity.this, "LỖI: Không tải được danh sách camera", Toast.LENGTH_SHORT).show();
             }
         });
     }
