@@ -246,6 +246,13 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
                     }
                 }
             }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d("Failure", throwable.getMessage());
+                pb.setVisibility(View.GONE);
+                Toast.makeText(getContext(), "LỖI: Kiểm tra kết nối Internet", Toast.LENGTH_SHORT).show();
+            }
         });
 
     }

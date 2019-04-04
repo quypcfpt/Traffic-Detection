@@ -21,7 +21,7 @@
             android:id="@+id/txtOri"
             android:layout_width="match_parent"
             android:layout_height="7mm"
-
+            android:hint="Địa chỉ, đường, quận"
             />
 
         <CheckBox
@@ -42,7 +42,8 @@
         <EditText
             android:id="@+id/txtDes"
             android:layout_width="match_parent"
-            android:layout_height="7mm" />
+            android:layout_height="7mm"
+            android:hint="Địa chỉ, đường, quận"/>
 
         <Button
             android:id="@+id/btnSearchCamera"
