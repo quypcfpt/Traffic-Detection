@@ -19,6 +19,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -74,7 +75,7 @@ public class Scheduler {
                     if (accountList.size() > 0) {
                         for (String account : accountList) {
                             sendNotification(msg, account);
-                            LOGGER.info("Notification to user "+account +": " + msg);
+                            LOGGER.info("Notification to user " + account + ": " + msg);
                         }
                     }
                 }
@@ -92,7 +93,7 @@ public class Scheduler {
 
         JSONObject notification = new JSONObject();
         notification.put("title", "Traffic Notification");
-        notification.put("body", msg);
+        notification.put("body", convertToUTF8(msg));
 
         body.put("notification", notification);
 
@@ -109,5 +110,11 @@ public class Scheduler {
 //        } catch (ExecutionException e) {
 //            e.printStackTrace();
 //        }
+    }
+
+    private String convertToUTF8(String s) {
+        String out = null;
+        out = new String(s.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
+        return out;
     }
 }
