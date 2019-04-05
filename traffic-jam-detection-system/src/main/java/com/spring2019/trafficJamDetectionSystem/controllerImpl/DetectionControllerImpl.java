@@ -51,9 +51,12 @@ public class DetectionControllerImpl extends AbstractController implements Detec
             cameraModel.setTime(ts.toString());
 
             Camera camera = cameraTransformer.modelToEntity(cameraModel);
-            Camera Newcamera = cameraService.getCameraById(camera.getId());
-            Newcamera.setObservedStatus(camera.getObservedStatus());
-            cameraService.updateCamera(Newcamera);
+            Camera newCamera = cameraService.getCameraById(camera.getId());
+            newCamera.setObservedStatus(camera.getObservedStatus());
+            newCamera.setTime(ts);
+            newCamera.setImageUrl(camera.getImageUrl());
+
+            cameraService.updateCamera(newCamera);
 
             detectResultData.put(detectionResult.getCameraId(), detectionResult);
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS);
