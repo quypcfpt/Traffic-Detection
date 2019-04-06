@@ -128,6 +128,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ArrayList<CameraModel> searchCameras;
     private String oriStr = "";
     private String desStr = "";
+    private ArrayList<LatLng> onRoutePoints;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -285,8 +286,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private String getStreetNameAtLocation(LatLng location) {
-
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        Geocoder geocoder = new Geocoder(this,Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(location.latitude, location.longitude, 3);
 //            List<Address> addresses = geocoder.getFromLocation(10.852706, 106.629692, 3);
@@ -340,6 +340,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 final List<CameraModel> multiCameraModel = res.getData();
                 cameraModels = res.getData();
+
                     final List<CameraModel> cameraList =  new ArrayList<>();
                     for(CameraModel item  : cameraModels) {
                         LatLng position = getCameraLocation(item.getPosition());
@@ -375,49 +376,64 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             busyStatusCount += 1;
                         }
                     }
-//                    if(busyStatusCount >0 && !strAdd.equals(oldStreet)){
-                        if(busyStatusCount >0){
-                        oldStreet = strAdd;
-                        final int finalBusyStatusCount = busyStatusCount;
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                AlertDialog.Builder builder=new AlertDialog.Builder(MapsActivity.this);
-                                builder.setCancelable(false);
-                                builder.setTitle("Road Status");
-                                builder.setMessage("The Road "+strAdd+" has "+ finalBusyStatusCount +" locations is busy .Click Show to get more infomation");
-                                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                    }
-                                });
-                                builder.setPositiveButton("Show", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent intent = new Intent(MapsActivity.this,ListCameraActivity.class);
-                                        Bundle bundle = new Bundle();
-                                        String listCamJsonObj = new Gson().toJson(cameraList);
-                                        bundle.putString("LIST",listCamJsonObj);
-                                        bundle.putString("STREET_NAME",cameraModels.get(0).getStreet().getName());
-                                        bundle.putString("STREET_ID",cameraModels.get(0).getStreet().getId()+"");
-                                        intent.putExtras(bundle);
-                                        startActivity(intent);
-                                    }
-                                });
-                                final AlertDialog alert = builder.create();
-                                alert.show();
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if(alert.isShowing()){
-                                            alert.dismiss();
-                                        }
-                                    }
-                                },1000*3);//show message box
+                    if(!cameraList.isEmpty()){
+                        RequestParams params = getParams(newPostion.latitude+","+newPostion.longitude,cameraList.get(cameraList.size()-1).getPosition());
+                        getRoutePoints(params);
+                        for (CameraModel x : cameraList) {
+                            LatLng locationCamera = getCameraLocation(x.getPosition());
+                            MarkerOptions marker = null;
+                            if (x.getObserverStatus() == 0) {
+                                marker = new MarkerOptions().position(new LatLng(locationCamera.latitude, locationCamera.longitude)).title(x.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker_green));
+                            } else if (x.getObserverStatus() == 1) {
+                                marker = new MarkerOptions().position(new LatLng(locationCamera.latitude, locationCamera.longitude)).title(x.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker_red));
+                            } else {
+                                marker = new MarkerOptions().position(new LatLng(locationCamera.latitude, locationCamera.longitude)).title(x.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker_yellow));
                             }
-                        },1000/2);
+                            mMap.addMarker(marker);
+                        }
                     }
+                        if (busyStatusCount > 0 && !strAdd.equals(oldStreet)) {
+                            oldStreet = strAdd;
+                            final int finalBusyStatusCount = busyStatusCount;
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+                                    builder.setCancelable(false);
+                                    builder.setTitle("Road Status");
+                                    builder.setMessage("The Road " + strAdd + " has " + finalBusyStatusCount + " locations is busy .Click Show to get more infomation");
+                                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                                    builder.setPositiveButton("Show", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Intent intent = new Intent(MapsActivity.this, ListCameraActivity.class);
+                                            Bundle bundle = new Bundle();
+                                            String listCamJsonObj = new Gson().toJson(cameraList);
+                                            bundle.putString("LIST", listCamJsonObj);
+                                            bundle.putString("STREET_NAME", cameraModels.get(0).getStreet().getName());
+                                            bundle.putString("STREET_ID", cameraModels.get(0).getStreet().getId() + "");
+                                            intent.putExtras(bundle);
+                                            startActivity(intent);
+                                        }
+                                    });
+                                    final AlertDialog alert = builder.create();
+                                    alert.show();
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (alert.isShowing()) {
+                                                alert.dismiss();
+                                            }
+                                        }
+                                    }, 1000 * 3);//show message box
+                                }
+                            }, 1000 / 2);
+                        }
                 }
             }
             @Override
@@ -435,20 +451,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
     public void testGPS() {
         final List<PositionModel> postion = new ArrayList<>();
-//        postion.add(new PositionModel(10.852706, 106.629692));
-//        postion.add(new PositionModel(10.852358, 106.627646));
-//        postion.add(new PositionModel(10.852291, 106.626731));
-//        postion.add(new PositionModel(10.851073, 106.628148));
-//        postion.add(new PositionModel(10.850242, 106.631050));
-//        postion.add(new PositionModel(10.850094, 106.631375));
-//        postion.add(new PositionModel(10.849502, 106.632250));
+        postion.add(new PositionModel(10.852706, 106.629692));
+        postion.add(new PositionModel(10.852358, 106.627646));
+        postion.add(new PositionModel(10.852291, 106.626731));
+        postion.add(new PositionModel(10.850984, 106.628128));
+        postion.add(new PositionModel(10.850233, 106.631208));
+        postion.add(new PositionModel(10.850004, 106.631572));
+        postion.add(new PositionModel(10.849502, 106.632250));
        //position change to QT road
         postion.add(new PositionModel(10.842553, 106.642668));
         postion.add(new PositionModel(10.841229, 106.644644));
         postion.add(new PositionModel(10.840535, 106.645538));
-        postion.add(new PositionModel(10.839354, 106.646986));
+        postion.add(new PositionModel(10.839451, 106.646859));
         postion.add(new PositionModel(10.838978, 106.648116));
         postion.add(new PositionModel(10.838717, 106.649182));
+        postion.add(new PositionModel(10.838420, 106.650428));
+        postion.add(new PositionModel(10.838154, 106.651474));
 
     // position move backward
 //        postion.add(new PositionModel(10.838717, 106.649182));
@@ -459,12 +477,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        postion.add(new PositionModel(10.842553, 106.642668));
 
         //Test for anthor street
-        postion.add(new PositionModel(10.843921, 106.639865));
-        postion.add(new PositionModel(10.843005, 106.639326));
-        postion.add(new PositionModel(10.841694, 106.638478));
-        postion.add(new PositionModel(10.840671, 106.637792));
-        postion.add(new PositionModel(10.838750, 106.636894));
-        postion.add(new PositionModel(10.836207, 106.635722));
+//        postion.add(new PositionModel(10.843921, 106.639865));
+//        postion.add(new PositionModel(10.843005, 106.639326));
+//        postion.add(new PositionModel(10.841694, 106.638478));
+//        postion.add(new PositionModel(10.840671, 106.637792));
+//        postion.add(new PositionModel(10.838750, 106.636894));
+//        postion.add(new PositionModel(10.836207, 106.635722));
         //Test for anthor street backward
 //        postion.add(new PositionModel(10.836207, 106.635722));
 //        postion.add(new PositionModel(10.838750, 106.636894));
@@ -511,9 +529,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     //************
                     newPostion = new LatLng(postion.get(counter).getLatitude(), postion.get(counter).getLongtitude());
                     moveCamera(new LatLng(postion.get(counter).getLatitude(), postion.get(counter).getLongtitude()), ZOOMVALUE);
-                    MarkerOptions options = new MarkerOptions().position(new LatLng(postion.get(counter).getLatitude(), postion.get(counter).getLongtitude())).title("Your Here");
-                    mMap.addMarker(options);
+                    mMap.addMarker(new MarkerOptions().position(newPostion).title("You're here")).showInfoWindow();
                     String streetName = getStreetNameAtLocation(newPostion);
+                    //--- code here
+                    //--get list camera with streetName
+                    //--get list camera on the way
+                    //--draw route on map
                     Log.d("DEMOGPS", "Street Name :" + streetName + " latitude : " + postion.get(count).getLatitude());
                     if (!streetName.equals("")) {
                         currenPostion=newPostion.latitude+","+newPostion.longitude;
@@ -536,45 +557,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMyLocationChange(Location location) {
         Log.d("DEMOGPS", "Street Name :" + location.getLatitude() + " latitude : " + location.getLongitude());
     }
-
-    //Do draw route
-    private String getDirectionURL(LatLng ori , LatLng dest){
-
-        RequestParams params = getParams(ori,dest,"driving");
-        HttpUtils.getByUrl("https://maps.googleapis.com/maps/api/directions/json",params,new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                List<List<HashMap<String, String>>> routes = null;
-                try {
-                    DirectionsJSONParser parser = new DirectionsJSONParser();
-                    routes = parser.parse(response);
-                    Log.d("GGMAP",routes.toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-                Log.d("GGMAP",responseString.toString());
-            }
-        });
-        return "https://maps.googleapis.com/maps/api/directions/json" +
-                "?origin=10.838751,%20106.648976" +
-                "&destination=10.852706,%20106.629692" +
-                "&mode=driving" +
-                "&key=AIzaSyAsQvoX3tvrOxlSA0Xv77ptHcTK9tGm5yA";
-    }
-
-
-
-    private RequestParams getParams(LatLng ori, LatLng des,String mode) {
+    private RequestParams getParams(String ori, String des) {
         RequestParams params = new RequestParams();
-        params.add("origin", ori.latitude+","+ori.longitude);
-        params.add("destination", des.latitude+","+des.longitude);
-        params.add("mode", mode);
+        params.add("origin", ori);
+        params.add("destination", des);
         params.add("key", getResources().getString(R.string.google_maps_key));
         return params;
     }
@@ -596,4 +582,67 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             LatLng result = new LatLng(Double.parseDouble(parts[0]),Double.parseDouble(parts[1]));
             return result;
         }
+
+
+    public void getRoutePoints(RequestParams params) {
+        HttpUtils.getByUrl("https://maps.googleapis.com/maps/api/directions/json", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                List<List<HashMap<String, String>>> routes = null;
+                try {
+                    DirectionsJSONParser parser = new DirectionsJSONParser();
+                    routes = parser.parse(response);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (routes != null) {
+                    ArrayList<LatLng> points = new ArrayList<>();
+                    // Traversing through all the routes
+                    for (int i = 0; i < routes.size(); i++) {
+
+                        // Fetching i-th route
+                        List<HashMap<String, String>> path = routes.get(i);
+
+                        // Fetching all the points in i-th route
+                        for (int j = 0; j < path.size(); j++) {
+                            HashMap<String, String> point = path.get(j);
+                            double lat = Double.parseDouble(point.get("lat"));
+                            double lng = Double.parseDouble(point.get("lng"));
+                            LatLng position = new LatLng(lat, lng);
+//                            position.
+                            points.add(position);
+                        }
+
+                    }
+                    if(points.isEmpty()){
+                        Toast.makeText(MapsActivity.this, "Cannot get RoutePoints", Toast.LENGTH_SHORT).show();
+                    } else {
+                        PolylineOptions lineOptions = new PolylineOptions();
+                        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                        for (LatLng x : points) {
+                            builder.include(x);
+                        }
+                        lineOptions.addAll(points);
+                        lineOptions.width(15);
+                        lineOptions.color(Color.BLUE);
+                        Polyline directionPolyline = mMap.addPolyline(lineOptions);
+                        directionPolyline.setStartCap(new RoundCap());
+                        directionPolyline.setEndCap(new RoundCap());
+                        directionPolyline.setJointType(JointType.ROUND);
+                        directionPolyline.setPattern(null);
+                        //bound route
+                        LatLngBounds bounds = builder.build();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d("Failure", throwable.getMessage());
+                Toast.makeText(getApplicationContext(), "LỖI: Kiểm tra kết nối Internet", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
 }
