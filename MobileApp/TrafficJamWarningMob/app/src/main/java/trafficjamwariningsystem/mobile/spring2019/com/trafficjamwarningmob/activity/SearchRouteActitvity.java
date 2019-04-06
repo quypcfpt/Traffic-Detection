@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -84,7 +85,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
     private ArrayList<LatLng> onRoutePoints;
     private String oriStr = "";
     private String desStr = "";
-
+    private LinearLayout viewHeader;
 
 
     @Override
@@ -104,6 +105,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
         final Button searchCamera = rootView.findViewById(R.id.btnSearchCamera);
         saveBookmark = rootView.findViewById(R.id.btnSaveBookmark);
         viewMap = rootView.findViewById(R.id.btnViewMap);
+        viewHeader = rootView.findViewById(R.id.viewHeader);
         empty = rootView.findViewById(R.id.txtEmpty);
         pb = rootView.findViewById(R.id.pbSearching);
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
@@ -135,12 +137,16 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
                 if(cbGPS.isChecked()){
                     if (!des.getText().toString().trim().isEmpty()) {
                         checkLocationService();
+                    }else{
+                        Toast.makeText(getActivity(), "Điểm đến chưa được nhập.", Toast.LENGTH_SHORT).show();
                     }
                 }else {
                     if(!ori.getText().toString().trim().isEmpty() && !des.getText().toString().trim().isEmpty()) {
                         pb.setVisibility(View.VISIBLE);
                         RequestParams params = getParams(ori.getText().toString(), des.getText().toString());
                         searchCamera(params);
+                    }else{
+                        Toast.makeText(getActivity(), "Điểm đi hoặc điểm đến chưa được nhập.", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -189,6 +195,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
         recyclerView.setVisibility(View.GONE);
         empty.setVisibility(View.GONE);
         viewMap.setVisibility(View.GONE);
+        viewHeader.setVisibility(View.GONE);
         ori_coordinate = null;
         des_coordinate = null;
         oriStr = "";
@@ -293,6 +300,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
                         recyclerView.setAdapter(adapter);
                         empty.setVisibility(View.GONE);
                         recyclerView.setVisibility(View.VISIBLE);
+                        viewHeader.setVisibility(View.VISIBLE);
                     }
                 }
             }
@@ -310,6 +318,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
     private void onEmptyResult() {
         empty.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
+        viewHeader.setVisibility(View.GONE);
         saveBookmark.setVisibility(View.GONE);
         viewMap.setVisibility(View.GONE);
     }
@@ -384,15 +393,21 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
                 String feature = "";
                 String subadmin = "";
                 for (int i = 0; i < addresses.size(); i++) {
+                    Log.d("STREET ADDRESS", addresses.get(i).getSubThoroughfare() + " " + addresses.get(i).getThoroughfare() + " " + addresses.get(i).getSubAdminArea());
+                    Log.d("FEATURE", addresses.get(i).getFeatureName());
+                }
+                for (int i = 0; i < addresses.size(); i++) {
                     subthorough = addresses.get(i).getSubThoroughfare();
                     thorough = addresses.get(i).getThoroughfare();
                     feature = addresses.get(i).getFeatureName();
                     subadmin = addresses.get(i).getSubAdminArea();
                     if (subthorough != null && thorough != null && subadmin != null) {
-                        strAdd = subthorough + " " + thorough + " " + subadmin;
-                        break;
+                        if(!subthorough.trim().equals("#")){
+                            strAdd = subthorough + " " + thorough + " " + subadmin;
+                            break;
+                        }
                     } else if (feature != null && thorough != null && subadmin != null) {
-                        strAdd = feature + " " + thorough + " " + subadmin;
+                        strAdd = feature + " " + subadmin;
                         break;
                     }
                 }
@@ -475,8 +490,8 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
             return;
         }
         newBookmarkModel.setAccountId(userId);
-        newBookmarkModel.setOrigin(ori.getText().toString());
-        newBookmarkModel.setDestination(des.getText().toString());
+        newBookmarkModel.setOrigin(oriStr);
+        newBookmarkModel.setDestination(desStr);
         newBookmarkModel.setOri_coordinate(ori_coordinate.latitude + "," + ori_coordinate.longitude);
         newBookmarkModel.setDes_coordinate(des_coordinate.latitude + "," + des_coordinate.longitude);
         MultiBookmarkCameraModel multiBookmarkCameraModel = new MultiBookmarkCameraModel();
@@ -494,7 +509,6 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
                     saveBookmark.setText("Bookmark đã có");
                     saveBookmark.setClickable(false);
                     viewMap.setVisibility(View.VISIBLE);
-//                    Log.d("BOOKMARK INFO", resModel.getId() +"");
                 }else if(isSuccess.equals("0")){
                     Toast.makeText(getActivity(), "LỖI: Không thể thêm bookmark", Toast.LENGTH_SHORT).show();
                 }

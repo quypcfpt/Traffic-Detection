@@ -54,14 +54,14 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/btnSaveBookmark"
-                android:visibility="gone"
-                android:layout_marginTop="15px"/>
+                android:visibility="gone" />
 
             <Button
                 android:layout_width="wrap_content"
@@ -70,7 +70,6 @@
                 android:visibility="gone"
                 android:textAlignment="center"
                 android:text="Xem bản đồ"
-                android:layout_marginTop="15px"
                 android:layout_alignParentRight="true"
                 />
         </RelativeLayout>
@@ -85,6 +84,29 @@
             android:visibility="gone"
             />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/viewHeader"
+            android:visibility="gone"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:text="Camera"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="20dp"
+                android:layout_gravity="end"
+                android:gravity="end"
+                android:text="Trạng Thái"
+                android:textStyle="bold" />
+        </LinearLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -92,7 +114,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/listResult"
                 android:layout_width="match_parent"
-                android:layout_height="1200px" />
+                android:layout_height="match_parent" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -100,8 +122,8 @@
                 android:id="@+id/txtEmpty"
                 android:visibility="gone"
                 android:text="Không tìm thấy kết quả"
-                android:paddingLeft="10px"
-                android:textSize="50px"
+                android:padding="10dp"
+                android:textSize="25dp"
                 />
         </RelativeLayout>
 

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -46,6 +47,7 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
     private String txtSearch;
     private RelativeLayout view;
     private TextView txtError;
+    private LinearLayout viewHeader;
 
 
     @Override
@@ -61,6 +63,7 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
         btnSearch = (Button) v.findViewById(R.id.searchBtn);
         btnSearch.setBackgroundResource(R.mipmap.search);
         view = (RelativeLayout) v.findViewById(R.id.listview);
+        viewHeader = v.findViewById(R.id.viewHeader);
         txtError = (TextView) v.findViewById(R.id.txtError);
         editText.clearFocus();
         onFirstLoad();
@@ -85,12 +88,14 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
                 streetModelList = multiStreetModel.getStreetList();
                 if (!streetModelList.isEmpty()) {
                     view.setVisibility(View.VISIBLE);
+                    viewHeader.setVisibility(View.VISIBLE);
                     txtError.setVisibility(View.GONE);
                     adapter = new StreetAdapter(streetModelList, getContext());
                     recyclerView.setAdapter(adapter);
                 } else {
                     txtError.setVisibility(View.VISIBLE);
                     view.setVisibility(View.GONE);
+                    viewHeader.setVisibility(View.GONE);
                 }
             }
 
@@ -123,6 +128,7 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
                                 }
                                 if (streetModelList != null) {
                                     view.setVisibility(View.VISIBLE);
+                                    viewHeader.setVisibility(View.VISIBLE);
                                     txtError.setVisibility(View.GONE);
                                     adapter = new StreetAdapter(streetModelList, getContext());
                                     mLayoutManager = new LinearLayoutManager(getContext());
@@ -131,6 +137,7 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
                                     progressBar.setVisibility(View.GONE);
                                 } else {
                                     view.setVisibility(View.VISIBLE);
+                                    viewHeader.setVisibility(View.VISIBLE);
                                     txtError.setVisibility(View.GONE);
                                     Toast.makeText(getContext(), "Nothing to load more", Toast.LENGTH_SHORT).show();
                                     progressBar.setVisibility(View.GONE);
@@ -169,6 +176,7 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
                                 }
                                 if (streetModelList != null) {
                                     view.setVisibility(View.VISIBLE);
+                                    viewHeader.setVisibility(View.VISIBLE);
                                     txtError.setVisibility(View.GONE);
                                     adapter = new StreetAdapter(streetModelList, getContext());
                                     recyclerView.setAdapter(adapter);
@@ -248,6 +256,7 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
                         txtError.setText(txtSearch + " cannot found .");
                         txtError.setVisibility(View.VISIBLE);
                         view.setVisibility(View.GONE);
+                        viewHeader.setVisibility(View.GONE);
                     }
                 }
 
