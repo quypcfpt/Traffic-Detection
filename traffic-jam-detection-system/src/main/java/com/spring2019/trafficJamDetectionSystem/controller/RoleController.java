@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin
 public interface RoleController  {
+
+    // Load role
     @GetMapping(CoreConstant.API_ROLE)
     public String loadAllRole();
 }

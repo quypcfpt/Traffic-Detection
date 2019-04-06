@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin
 public interface DetectionController {
+
+    // Receive result data from camera
     @PostMapping(CoreConstant.API_DETECTION)
     public String detectResult(@RequestParam String detectResultString);
 }

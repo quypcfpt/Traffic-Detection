@@ -20,10 +20,7 @@ import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.Response;
 
 public interface ApiInterface {
-    //Street
-    @GET("api/street/{district}")
-    Call<Response<MultiStreetModel>> getStreets(@Path("district") String district);
-
+    
     @GET("api/street")
     Call<Response<MultiStreetModel>> getAllStreets(@Query("sortBy") String sortBy, @Query("size") int size);
 

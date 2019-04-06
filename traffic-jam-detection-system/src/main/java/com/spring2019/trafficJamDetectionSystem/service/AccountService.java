@@ -11,9 +11,10 @@ import java.util.List;
 @Service
 public interface AccountService {
     Account getAccountByUsername(String username, String password);
+
     boolean createNewAccount(Account entity);
-    Page<Account> getAllAccount(Pageable pageable);
+
     Account getAccountByUsernameAndIsAdmin(String username, String password);
+
     void updateAccount(Account account);
-    List<Account> getAllAccount();
 }

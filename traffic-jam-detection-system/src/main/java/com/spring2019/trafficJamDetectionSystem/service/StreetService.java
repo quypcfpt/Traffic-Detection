@@ -10,7 +10,6 @@ import java.util.List;
 
 @Service
 public interface StreetService {
-    Page<Street> getStreetByDistrict(String district, Pageable pageable);
 
     List<Street> getAllStreet();
 

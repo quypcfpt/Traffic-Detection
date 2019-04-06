@@ -13,20 +13,21 @@ import java.util.Optional;
 
 @Service
 public class AccountServiceImpl implements AccountService {
+
     @Autowired
     AccountRepository accountRepository;
 
     @Override
-    public Account getAccountByUsername(String username,String password) {
-        Account account=accountRepository.findByUsernameAndPassword(username,password);
+    public Account getAccountByUsername(String username, String password) {
+        Account account = accountRepository.findByUsernameAndPassword(username, password);
         return account;
     }
 
     @Override
     public boolean createNewAccount(Account entity) {
-        Optional<Account> account=accountRepository.findByUsername(entity.getUsername());
+        Optional<Account> account = accountRepository.findByUsername(entity.getUsername());
         boolean isExistedUsername = account.isPresent();
-        if(!isExistedUsername){
+        if (!isExistedUsername) {
             entity.setRoleId(2);
             accountRepository.save(entity);
             return true;
@@ -39,18 +40,13 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<Account> getAllAccount() {
-        return accountRepository.findAll();
-    }
-
-
-    @Override
     public void updateAccount(Account account) {
         accountRepository.save(account);
     }
+
     @Override
-    public Account getAccountByUsernameAndIsAdmin(String username,String password) {
-        Account account=accountRepository.findByUsernameAndPasswordAndRoleId(username,password,1);
+    public Account getAccountByUsernameAndIsAdmin(String username, String password) {
+        Account account = accountRepository.findByUsernameAndPasswordAndRoleId(username, password, 1);
         return account;
     }
 }
