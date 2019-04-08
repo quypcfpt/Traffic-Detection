@@ -98,13 +98,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private boolean MY_REQUEST_CHECK = false;
-    private static final float ZOOMVALUE = 15f;
+    private static final float ZOOMVALUE = 16f;
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSON_REQUEST_CODE = 1234;
-    private static final long INTERVAL = 1000 * 10;
-    private static final long FASTEST_INTERVAL = 1000 * 5;
-    private LocationRequest mLocationRequest;
 
     //
     ApiInterface apiInterface;
@@ -392,48 +389,48 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             mMap.addMarker(marker);
                         }
                     }
-                        if (busyStatusCount > 0 && !strAdd.equals(oldStreet)) {
-                            oldStreet = strAdd;
-                            final int finalBusyStatusCount = busyStatusCount;
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
-                                    builder.setCancelable(false);
-                                    builder.setTitle("Road Status");
-                                    builder.setMessage("The Road " + strAdd + " has " + finalBusyStatusCount + " locations is busy .Click Show to get more infomation");
-                                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.cancel();
-                                        }
-                                    });
-                                    builder.setPositiveButton("Show", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            Intent intent = new Intent(MapsActivity.this, ListCameraActivity.class);
-                                            Bundle bundle = new Bundle();
-                                            String listCamJsonObj = new Gson().toJson(cameraList);
-                                            bundle.putString("LIST", listCamJsonObj);
-                                            bundle.putString("STREET_NAME", cameraModels.get(0).getStreet().getName());
-                                            bundle.putString("STREET_ID", cameraModels.get(0).getStreet().getId() + "");
-                                            intent.putExtras(bundle);
-                                            startActivity(intent);
-                                        }
-                                    });
-                                    final AlertDialog alert = builder.create();
-                                    alert.show();
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (alert.isShowing()) {
-                                                alert.dismiss();
-                                            }
-                                        }
-                                    }, 1000 * 3);//show message box
-                                }
-                            }, 1000 / 2);
-                        }
+//                        if (busyStatusCount > 0 && !strAdd.equals(oldStreet)) {
+//                            oldStreet = strAdd;
+//                            final int finalBusyStatusCount = busyStatusCount;
+//                            new Handler().postDelayed(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+//                                    builder.setCancelable(false);
+//                                    builder.setTitle("Road Status");
+//                                    builder.setMessage("The Road " + strAdd + " has " + finalBusyStatusCount + " locations is busy .Click Show to get more infomation");
+//                                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                                        @Override
+//                                        public void onClick(DialogInterface dialog, int which) {
+//                                            dialog.cancel();
+//                                        }
+//                                    });
+//                                    builder.setPositiveButton("Show", new DialogInterface.OnClickListener() {
+//                                        @Override
+//                                        public void onClick(DialogInterface dialog, int which) {
+//                                            Intent intent = new Intent(MapsActivity.this, ListCameraActivity.class);
+//                                            Bundle bundle = new Bundle();
+//                                            String listCamJsonObj = new Gson().toJson(cameraList);
+//                                            bundle.putString("LIST", listCamJsonObj);
+//                                            bundle.putString("STREET_NAME", cameraModels.get(0).getStreet().getName());
+//                                            bundle.putString("STREET_ID", cameraModels.get(0).getStreet().getId() + "");
+//                                            intent.putExtras(bundle);
+//                                            startActivity(intent);
+//                                        }
+//                                    });
+//                                    final AlertDialog alert = builder.create();
+//                                    alert.show();
+//                                    new Handler().postDelayed(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            if (alert.isShowing()) {
+//                                                alert.dismiss();
+//                                            }
+//                                        }
+//                                    }, 1000 * 3);//show message box
+//                                }
+//                            }, 1000 / 2);
+//                        }
                 }
             }
             @Override
@@ -451,9 +448,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
     public void testGPS() {
         final List<PositionModel> postion = new ArrayList<>();
-        postion.add(new PositionModel(10.852706, 106.629692));
-        postion.add(new PositionModel(10.852358, 106.627646));
-        postion.add(new PositionModel(10.852291, 106.626731));
+//        postion.add(new PositionModel(10.852706, 106.629692));
+//        postion.add(new PositionModel(10.852358, 106.627646));
+//        postion.add(new PositionModel(10.852291, 106.626731));
         postion.add(new PositionModel(10.850984, 106.628128));
         postion.add(new PositionModel(10.850233, 106.631208));
         postion.add(new PositionModel(10.850004, 106.631572));
@@ -505,7 +502,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final Handler handler = new Handler();
         handler.post(new Runnable() {
             int counter = 0;
-            int delay = 5000;
+            int delay = 1000*10;
             @Override
             public void run() {
                 boolean wasPlacedInQue = false;
