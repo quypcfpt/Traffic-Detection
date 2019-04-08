@@ -12,16 +12,19 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/portal")
 public interface AdminController {
 
+    // Return admin login view
     @GetMapping("/login")
     public ModelAndView openLogin(HttpSession session);
 
-
+    // Return admin camera page view
     @GetMapping("/camera")
     public ModelAndView openIndex(HttpSession session);
 
+    // Return admin street page view
     @GetMapping("/street")
     public ModelAndView openStreet(HttpSession session);
 
+    // Return admin logout view
     @GetMapping("/logout")
     public ModelAndView logout(HttpSession session);
 }

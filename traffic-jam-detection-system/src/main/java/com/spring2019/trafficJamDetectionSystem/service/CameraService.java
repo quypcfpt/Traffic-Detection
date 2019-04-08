@@ -19,8 +19,6 @@ public interface CameraService {
 
     public List<Camera> getAllCameras();
 
-    public Page<Camera> getCamerasByStreet(Integer streetId, Pageable pageable);
-
     public List<Camera> getCamerasByStreetAndIsActive(Integer street);
 
     public List<Camera>  getCameraByStreetNameAndIsActive(String streetName);

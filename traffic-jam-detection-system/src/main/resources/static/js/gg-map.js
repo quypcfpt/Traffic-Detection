@@ -1,5 +1,5 @@
 var map;
-var marker;
+var markers = [];
 
 function initMap() {
 
@@ -23,18 +23,22 @@ $('#search-btn').click(function () {
     var latLng = new google.maps.LatLng(lat, lng); //Makes a latlng
     map.panTo(latLng); //Make map global
     map.setZoom(16);
-    marker = new google.maps.Marker({position: latLng});
-    marker.setMap(map);
+    placeMarker(latLng);
 })
 
 function placeMarker(location) {
-    if (marker != null) {
-        marker.setMap(null);
-    }
-    marker = new google.maps.Marker({
+    clearMarkers();
+    var marker = new google.maps.Marker({
         position: location,
         map: map
     });
+    markers.push(marker);
+}
+
+function clearMarkers() {
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
+    }
 }
 
 $('#dataTable').on('click', '.a-tag', function () {

@@ -8,13 +8,16 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin
 public interface BookmarkController {
-    
+
+    // Create new bookmark
     @PostMapping(CoreConstant.API_BOOKMARK)
     public String createBookmark(@RequestBody MultiBookmarkCameraModel multiBookmarkCameraModel);
 
+    // Get bookmark by Id
     @GetMapping(CoreConstant.API_BOOKMARK + "/{id}")
     public String getBookMarkByAccountID(@PathVariable("id") Integer id);
 
+    // Delete bookmark
     @DeleteMapping(CoreConstant.API_BOOKMARK + "/{id}")
     public String deleteBookmarkById(@PathVariable("id") Integer id);
 
