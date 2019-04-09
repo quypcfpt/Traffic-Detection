@@ -92,22 +92,22 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <form>
+                            <form id="add-street-form">
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <label for="txtName">Tên</label>
-                                        <input type="text" class="form-control" id="txtName" />
+                                        <input type="text" class="form-control" id="txtName" required/>
                                     </div>
                                     <div class="form-group">
                                         <label for="txtDistrict">Quận</label>
-                                        <input type="text" class="form-control" id="txtDistrict" />
+                                        <input type="text" class="form-control" id="txtDistrict" required/>
                                     </div>
                                     <div class="form-group">
                                         <label for="txtCity">Thành phố</label>
-                                        <input type="text" class="form-control" id="txtCity" />
+                                        <input type="text" class="form-control" id="txtCity" required/>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" id="save-btn">Lưu</button>
+                                        <button type="submit" class="btn btn-primary" id="save-btn">Lưu</button>
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng
                                         </button>
                                     </div>
@@ -129,7 +129,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form>
+                        <form id="edt-street-form">
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label for="edtId">Id</label>
@@ -137,21 +137,21 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="edtName">Tên</label>
-                                    <input type="text" class="form-control" id="edtName"/>
+                                    <input type="text" class="form-control" id="edtName" required/>
                                 </div>
                                 <div class="form-group">
                                     <label for="edtDistrict">Quận</label>
-                                    <input type="text" class="form-control" id="edtDistrict"/>
+                                    <input type="text" class="form-control" id="edtDistrict" required/>
                                 </div>
                                 <div class="form-group">
                                     <label for="edtCity">Thành phố</label>
-                                    <input type="text" class="form-control" id="edtCity"/>
+                                    <input type="text" class="form-control" id="edtCity" required/>
                                 </div>
                                 <div class="form-group">
                                     <input id="edtActive" type="checkbox" data-on="Đang hoạt động" data-off="Ngừng hoạt động"  data-toggle="toggle" data-width="200">
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary" id="edit-btn">Lưu</button>
+                                    <button type="submit" class="btn btn-primary">Lưu</button>
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng
                                     </button>
                                 </div>

@@ -57,8 +57,8 @@ $('#add-camera-btn').click(function () {
     }
 });
 
-$('#save-btn').click(function () {
-
+$('#add-camera-form').submit(function (e) {
+    e.preventDefault();
     var street = {
         id: $('#txtStreet').val(),
     }
@@ -99,8 +99,8 @@ $('#save-btn').click(function () {
     });
 });
 
-$('#edit-btn').click(function () {
-
+$('#edt-camera-form').submit(function (e) {
+    e.preventDefault();
     var street = {
         id: $('#edtStreet').val(),
     }

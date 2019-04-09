@@ -92,11 +92,11 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <form>
+                            <form id="add-camera-form">
                                 <div class="modal-body">
                                     <div class="form-group">
                                         <label for="txtDescription">Mô tả</label>
-                                        <textarea type="text" class="form-control" id="txtDescription"
+                                        <textarea type="text" class="form-control" id="txtDescription" required
                                                   placeholder="1234 Main St"></textarea>
                                     </div>
                                     <div class="form-row">
@@ -107,17 +107,17 @@
                                         </div>
                                         <div class="form-group col-md-3">
                                             <label for="txtOrder">Thứ tự</label>
-                                            <input type="number" class="form-control" id="txtOrder">
+                                            <input type="number" class="form-control" id="txtOrder" required>
                                         </div>
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group col-md-5">
                                             <label for="txtLatitude">Vĩ độ</label>
-                                            <input type="number" class="form-control" id="txtLatitude">
+                                            <input type="number" step="any" class="form-control" id="txtLatitude" required>
                                         </div>
                                         <div class="form-group col-md-5">
                                             <label for="txtLongitude">Kinh độ</label>
-                                            <input type="number" class="form-control" id="txtLongitude">
+                                            <input type="number" step="any" class="form-control" id="txtLongitude" required>
                                         </div>
                                         <div class="form-group col-md-2">
                                             <label for="search-btn">Bản đồ</label>
@@ -130,7 +130,7 @@
                                         <div id="map" class="form-control" style="height: 500px; width: 100%"></div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" id="save-btn">Lưu</button>
+                                        <button type="submit" class="btn btn-primary">Lưu</button>
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng
                                         </button>
                                     </div>
@@ -152,7 +152,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form>
+                        <form id="edt-camera-form">
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label for="edtId">Id</label>
@@ -161,7 +161,7 @@
                                 <div class="form-group">
                                     <label for="edtDescription">Mô tả</label>
                                     <textarea type="text" class="form-control" id="edtDescription"
-                                              placeholder="1234 Main St"></textarea>
+                                              placeholder="1234 Main St" required></textarea>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-9">
@@ -171,25 +171,26 @@
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="edtOrder">Thứ tự</label>
-                                        <input type="number" class="form-control" id="edtOrder">
+                                        <input type="number" class="form-control" id="edtOrder" required>
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
                                         <label for="edtLatitude">Vĩ độ</label>
-                                        <input type="number" class="form-control" id="edtLatitude">
+                                        <input type="number" step="any" class="form-control" id="edtLatitude" required>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="edtLongitude">Kinh độ</label>
-                                        <input type="number" class="form-control" id="edtLongitude">
+                                        <input type="number" step="any" class="form-control" id="edtLongitude" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input id="edtActive" type="checkbox" data-on="Đang hoạt động" data-off="Ngừng hoạt động"
+                                    <input id="edtActive" type="checkbox" data-on="Đang hoạt động"
+                                           data-off="Ngừng hoạt động"
                                            data-toggle="toggle" data-width="200">
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary" id="edit-btn">Lưu</button>
+                                    <button type="submit" class="btn btn-primary">Lưu</button>
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng
                                     </button>
                                 </div>

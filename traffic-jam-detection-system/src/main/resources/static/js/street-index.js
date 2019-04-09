@@ -26,8 +26,8 @@ function onLoadStreetView() {
 
 $(onLoadStreetView());
 
-$('#save-btn').click(function () {
-
+$('#add-street-form').submit(function (e) {
+    e.preventDefault();
     var streetModel = {
         name: $('#txtName').val(),
         district: $('#txtDistrict').val(),
@@ -66,8 +66,8 @@ $('#save-btn').click(function () {
     });
 });
 
-$('#edit-btn').click(function () {
-
+$('#edt-street-formform').submit(function (e) {
+    e.preventDefault();
     var streetModel = {
         id: $('#edtId').val(),
         name: $('#edtName').val(),
