@@ -1,5 +1,6 @@
 package com.spring2019.trafficJamDetectionSystem.service;
 
+import com.spring2019.trafficJamDetectionSystem.entity.Bookmark;
 import com.spring2019.trafficJamDetectionSystem.entity.Camera;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +14,7 @@ public interface CameraService {
 
     public Page<Camera> getAllCameras(Pageable pageable);
 
-    public void createCamera(Camera camera);
+    public Camera createCamera(Camera camera);
 
     public void updateCamera(Camera camera);
 
@@ -22,6 +23,8 @@ public interface CameraService {
     public List<Camera> getCamerasByStreetAndIsActive(Integer street);
 
     public List<Camera>  getCameraByStreetNameAndIsActive(String streetName);
+
+    public boolean checkCameraOnroute(Bookmark bookmark, Camera camera);
 
 
 }

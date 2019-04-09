@@ -11,6 +11,8 @@ import java.util.List;
 public interface BookmarkService {
     public List<Bookmark> getBookMarkByAccountId(Integer accountID);
 
+    public List<Bookmark> getAllBookmarks();
+
     public Integer removeBookMarkById(Integer id);
 
     public Bookmark createBookmark(Bookmark newBookmark);

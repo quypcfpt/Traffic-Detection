@@ -45,7 +45,6 @@ public class BookmarkControllerImpl extends AbstractController implements Bookma
         }catch (Exception e){
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
             LOGGER.error(e.getMessage());
-
         }
         return gson.toJson(response);
 
@@ -92,7 +91,6 @@ public class BookmarkControllerImpl extends AbstractController implements Bookma
 
 
     public boolean saveBookmarkCamera(MultiBookmarkCameraModel multiBookmarkCameraModel) {
-
         try {
             LOGGER.info("Start save Bookmark Camera");
             BookmarkModel bookmarkModel = new BookmarkModel();

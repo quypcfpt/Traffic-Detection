@@ -24,5 +24,5 @@ public class CoreConstant {
     public static final int STATUS_CAMERA_CLEAR=0;
     public static final int STATUS_CAMERA_JAM=1;
 
-    public static final String FIREBASE_TOPIC = "Traffic_Jam_Notification";
+    public static final String GOOGLE_MAP_API_KEY="AIzaSyAsQvoX3tvrOxlSA0Xv77ptHcTK9tGm5yA";
 }

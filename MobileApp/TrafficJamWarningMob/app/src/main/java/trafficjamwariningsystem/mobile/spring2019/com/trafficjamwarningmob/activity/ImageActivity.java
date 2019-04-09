@@ -48,7 +48,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
         cameraId.setText(cameraID + "");
         cameraStatus.setImageResource(status == 0 ? R.mipmap.green : status ==1 ? R.mipmap.red : R.mipmap.yellow);
         txtStatus.setText(status == 0 ? "Bình Thường" : status ==1 ? "Kẹt" : "Đông");
-        Call<Response<CameraModel>> responseCall = apiInterface.loadCameraById(1);
+        Call<Response<CameraModel>> responseCall = apiInterface.loadCameraById(cameraID);
         responseCall.enqueue(new Callback<Response<CameraModel>>() {
             @Override
             public void onResponse(Call<Response<CameraModel>> call, retrofit2.Response<Response<CameraModel>> response) {
