@@ -46,12 +46,14 @@
             android:text="Xem bản đồ"
             android:id="@+id/btnViewMap"
             android:layout_margin="5dp"
+            android:visibility="gone"
             />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/viewHeader">
+            android:id="@+id/viewHeader"
+            android:visibility="gone">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -72,7 +74,8 @@
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/listCamera" />
+            android:id="@+id/listCamera"
+            android:visibility="gone"/>
 
         <ProgressBar
             android:id="@+id/progress"

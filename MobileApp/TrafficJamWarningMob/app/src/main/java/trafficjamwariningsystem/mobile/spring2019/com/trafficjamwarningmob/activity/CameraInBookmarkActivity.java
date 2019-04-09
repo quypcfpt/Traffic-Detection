@@ -9,12 +9,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.PolyUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
@@ -31,6 +31,7 @@ import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.R;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.adapter.CameraInBookmarkAdapter;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api.ApiClient;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api.ApiInterface;
+import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.BookmarkModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.CameraModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.MultiCameraModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.Response;
@@ -44,13 +45,15 @@ public class CameraInBookmarkActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private LinearLayoutManager mLayoutManager;
     private TextView lbHeader;
-    private LatLng ori;
-    private LatLng des;
+    private int bookmarkId;
+    private String ori;
+    private String des;
     private String strOri;
     private String strDes;
     private ImageButton btnBack;
     private ProgressBar progress;
     private Button btnViewMap;
+    private LinearLayout viewHeader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +62,10 @@ public class CameraInBookmarkActivity extends AppCompatActivity {
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
         lbHeader = findViewById(R.id.lbHeader);
         recyclerView = findViewById(R.id.listCamera);
-        recyclerView.setVisibility(View.GONE);
         progress = findViewById(R.id.progress);
         progress.setVisibility(View.VISIBLE);
         btnViewMap = findViewById(R.id.btnViewMap);
-        btnViewMap.setVisibility(View.GONE);
+        viewHeader = findViewById(R.id.viewHeader);
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
         btnBack = findViewById(R.id.btnBack);
@@ -74,14 +76,16 @@ public class CameraInBookmarkActivity extends AppCompatActivity {
             }
         });
         Intent intent = getIntent();
-        strOri = intent.getStringExtra("ORI");
-        strDes = intent.getStringExtra("DES");
-        String header = intent.getStringExtra("HEADER");
-        lbHeader.setText(header);
-        RequestParams params = getParams(strOri, strDes);
-        searchCamera(params);
+        bookmarkId = intent.getIntExtra("ID", -1);
+        strOri = intent.getStringExtra("ORI_STR");
+        strDes = intent.getStringExtra("DES_STR");
+        ori = intent.getStringExtra("ORI");
+        des = intent.getStringExtra("DES");
+        lbHeader.setText(strOri + " - " + strDes);
+        getBookmarkData();
     }
 
+    //get param for direction api request
     private RequestParams getParams(String ori, String des) {
         RequestParams params = new RequestParams();
         params.add("origin", ori);
@@ -90,7 +94,9 @@ public class CameraInBookmarkActivity extends AppCompatActivity {
         return params;
     }
 
-    public void searchCamera(RequestParams params) {
+    //get bookmark data for view
+    public void getBookmarkData() {
+        RequestParams params = getParams(ori, des);
         HttpUtils.getByUrl("https://maps.googleapis.com/maps/api/directions/json", params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -123,7 +129,7 @@ public class CameraInBookmarkActivity extends AppCompatActivity {
                     }
 
                     if (!points.isEmpty()) {
-                        getOnRouteCamera(points);
+                        getCameraListAndInitMapButton(points);
                     }
                 }
             }
@@ -138,53 +144,43 @@ public class CameraInBookmarkActivity extends AppCompatActivity {
 
     }
 
-    private void getOnRouteCamera(final ArrayList<LatLng> points) {
-        ori = points.get(0);
-        des = points.get(points.size() - 1);
-        Log.d("ori", ori + "");
-        Log.d("des", des + "");
+    //get camera list in bookmark and change view
+    private void getCameraListAndInitMapButton(final ArrayList<LatLng> points) {
+        Log.d("ori", strOri + "");
+        Log.d("des", strDes + "");
 
-        Call<Response<MultiCameraModel>> responseCall = apiInterface.loadAllCameras("id");
-        responseCall.enqueue(new Callback<Response<MultiCameraModel>>() {
+        Call<Response<List<CameraModel>>> responseCall = apiInterface.getCameraInBookmark(bookmarkId);
+        responseCall.enqueue(new Callback<Response<List<CameraModel>>>() {
             @Override
-            public void onResponse(Call<Response<MultiCameraModel>> call, retrofit2.Response<Response<MultiCameraModel>> response) {
-                Response<MultiCameraModel> res = response.body();
-                MultiCameraModel multiCameraModel = res.getData();
-                if (multiCameraModel != null) {
-                    ArrayList<CameraModel> cameras = (ArrayList) multiCameraModel.getCameraList();
-                    final ArrayList<CameraModel> onRouteCameras = new ArrayList<>();
-                    for (CameraModel x : cameras) {
-                        String[] xPosArr = x.getPosition().split(",");
-                        LatLng xPos = new LatLng(Double.parseDouble(xPosArr[0]), Double.parseDouble(xPosArr[1]));
-                        if (PolyUtil.isLocationOnPath(xPos, points, false, 10)) {
-                            onRouteCameras.add(x);
+            public void onResponse(Call<Response<List<CameraModel>>> call, retrofit2.Response<Response<List<CameraModel>>> response) {
+                Response<List<CameraModel>> res = response.body();
+                final ArrayList<CameraModel> inBookmarkCameras = (ArrayList) res.getData();
+
+                if (!inBookmarkCameras.isEmpty()) {
+                    adapter = new CameraInBookmarkAdapter(inBookmarkCameras, getApplicationContext());
+                    progress.setVisibility(View.GONE);
+                    btnViewMap.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(CameraInBookmarkActivity.this, MapsActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putParcelableArrayList("POINTS", points);
+                            bundle.putSerializable("CAMERAS", inBookmarkCameras);
+                            bundle.putString("ORI", lbHeader.getText().toString().split(" - ")[0]);
+                            bundle.putString("DES", lbHeader.getText().toString().split(" - ")[1]);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
                         }
-                    }
-                    if (!onRouteCameras.isEmpty()) {
-                        adapter = new CameraInBookmarkAdapter(onRouteCameras, getApplicationContext());
-                        progress.setVisibility(View.GONE);
-                        btnViewMap.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(CameraInBookmarkActivity.this, MapsActivity.class);
-                                Bundle bundle = new Bundle();
-                                bundle.putParcelableArrayList("POINTS", points);
-                                bundle.putSerializable("CAMERAS", onRouteCameras);
-                                bundle.putString("ORI", lbHeader.getText().toString().split(" - ")[0]);
-                                bundle.putString("DES", lbHeader.getText().toString().split(" - ")[1]);
-                                intent.putExtras(bundle);
-                                startActivity(intent);
-                            }
-                        });
-                        btnViewMap.setVisibility(View.VISIBLE);
-                        recyclerView.setVisibility(View.VISIBLE);
-                        recyclerView.setAdapter(adapter);
-                    }
+                    });
+                    viewHeader.setVisibility(View.VISIBLE);
+                    btnViewMap.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    recyclerView.setAdapter(adapter);
                 }
             }
 
             @Override
-            public void onFailure(Call<Response<MultiCameraModel>> call, Throwable t) {
+            public void onFailure(Call<Response<List<CameraModel>>> call, Throwable t) {
                 Log.d("Failure", t.getMessage());
                 progress.setVisibility(View.GONE);
                 Toast.makeText(CameraInBookmarkActivity.this, "LỖI: Không tải được danh sách camera", Toast.LENGTH_SHORT).show();

@@ -21,4 +21,6 @@ public interface BookmarkController {
     @DeleteMapping(CoreConstant.API_BOOKMARK + "/{id}")
     public String deleteBookmarkById(@PathVariable("id") Integer id);
 
+    @GetMapping(CoreConstant.API_BOOKMARK + "/{id}/camera")
+    public String getCameraInBookmark(@PathVariable("id") Integer id);
 }

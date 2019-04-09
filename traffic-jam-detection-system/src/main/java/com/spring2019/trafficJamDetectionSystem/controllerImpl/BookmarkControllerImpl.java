@@ -3,9 +3,11 @@ package com.spring2019.trafficJamDetectionSystem.controllerImpl;
 import com.spring2019.trafficJamDetectionSystem.common.CoreConstant;
 import com.spring2019.trafficJamDetectionSystem.controller.BookmarkController;
 import com.spring2019.trafficJamDetectionSystem.entity.Bookmark;
+import com.spring2019.trafficJamDetectionSystem.entity.BookmarkCamera;
 import com.spring2019.trafficJamDetectionSystem.model.*;
 import com.spring2019.trafficJamDetectionSystem.service.BookmarkService;
 import com.spring2019.trafficJamDetectionSystem.transformer.BookmarkTransformer;
+import com.spring2019.trafficJamDetectionSystem.transformer.CameraTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,10 @@ public class BookmarkControllerImpl extends AbstractController implements Bookma
     @Autowired
     BookmarkTransformer bookmarkTransformer;
 
+    @Autowired
+    CameraTransformer cameraTransformer;
+
+    //save bookmark and camera list from recieved model
     @Override
     public String createBookmark(MultiBookmarkCameraModel multiBookmarkCameraModel) {
         Response<String> response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
@@ -51,6 +57,7 @@ public class BookmarkControllerImpl extends AbstractController implements Bookma
 
     }
 
+    //get bookmark list by account id
     @Override
     public String getBookMarkByAccountID(Integer accountID) {
         Response<List<BookmarkModel>> response = new Response<List<BookmarkModel>>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
@@ -90,7 +97,7 @@ public class BookmarkControllerImpl extends AbstractController implements Bookma
 
     }
 
-
+    //save bookmark with each camera from received model
     public boolean saveBookmarkCamera(MultiBookmarkCameraModel multiBookmarkCameraModel) {
 
         try {
@@ -110,5 +117,25 @@ public class BookmarkControllerImpl extends AbstractController implements Bookma
             LOGGER.error(e.getMessage());
         }
         return true;
+    }
+
+    //get camera list by bookmark id
+    @Override
+    public String getCameraInBookmark(Integer id) {
+        Response<List<CameraModel>> response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
+        try {
+            LOGGER.info("Start get camera in bookmark id: " + id);
+            List<BookmarkCamera> list = bookmarkService.getCameraInBookmark(id);
+            List<CameraModel> cameraList = new ArrayList<>();
+            for (BookmarkCamera x : list) {
+                cameraList.add(cameraTransformer.entityToModel(x.getCameraByCameraId()));
+            }
+            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, cameraList);
+            LOGGER.info("End get camera in bookmark id: " + id);
+        } catch (Exception e) {
+            response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
+            LOGGER.error(e.getMessage());
+        }
+        return gson.toJson(response);
     }
 }

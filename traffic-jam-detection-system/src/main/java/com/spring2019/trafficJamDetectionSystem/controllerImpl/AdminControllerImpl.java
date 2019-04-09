@@ -12,6 +12,8 @@ import javax.servlet.http.HttpSession;
 public class AdminControllerImpl extends AbstractController implements AdminController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminControllerImpl.class);
+
+    //process login page request
     @Override
     public ModelAndView openLogin(HttpSession session) {
         String username = (String) session.getAttribute("username");
@@ -32,6 +34,7 @@ public class AdminControllerImpl extends AbstractController implements AdminCont
         }
     }
 
+    //process street page request
     @Override
     public ModelAndView openStreet(HttpSession session) {
         String username = (String) session.getAttribute("username");
@@ -42,6 +45,7 @@ public class AdminControllerImpl extends AbstractController implements AdminCont
         }
     }
 
+    //process log out request
     public ModelAndView logout(HttpSession session) {
         session.removeAttribute("username");
         LOGGER.info("Admin account logged out");
