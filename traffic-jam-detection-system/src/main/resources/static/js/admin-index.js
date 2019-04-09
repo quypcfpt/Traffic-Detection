@@ -66,7 +66,7 @@ $('#save-btn').click(function () {
     var cameraModel = {
         description: $('#txtDescription').val(),
         street: street,
-        position: $('#txtLongitude').val() + "," + $('#txtLatitude').val(),
+        position: $('#txtLatitude').val() + ", " + $('#txtLongitude').val(),
         order: $('#txtOrder').val()
     }
 
@@ -109,7 +109,7 @@ $('#edit-btn').click(function () {
         id: $('#edtId').val(),
         description: $('#edtDescription').val(),
         street: street,
-        position: $('#edtLongitude').val() + ", " + $('#edtLatitude').val(),
+        position: $('#edtLatitude').val() + ", " + $('#edtLongitude').val(),
         order: $('#edtOrder').val(),
         isActive: $('#edtActive').prop('checked')
     }
