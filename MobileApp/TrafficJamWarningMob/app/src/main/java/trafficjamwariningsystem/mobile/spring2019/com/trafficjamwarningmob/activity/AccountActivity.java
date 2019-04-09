@@ -18,7 +18,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -41,8 +40,6 @@ import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api.A
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api.ApiInterface;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.AccountModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.BookmarkModel;
-import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.CameraModel;
-import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.MultipleBookmarkModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.Response;
 
 
@@ -86,6 +83,7 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
 
         String fileName = "accountInfo";
         File file = getContext().getFileStreamPath(fileName);
+        //check internal file to do funtion auto login
         if (file.exists()) {
             recyclerView.setVisibility(View.GONE);
             progressBar1.setVisibility(View.VISIBLE);
@@ -100,6 +98,7 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
         return v;
     }
 
+    // Update View when access Account Activity
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -115,6 +114,7 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
         logOutbtn.setOnClickListener(this);
     }
 
+    // Set View fo application
     private void initialView(boolean isLogin) {
         if (isLogin) {
             signInLayout.setVisibility(View.GONE);
@@ -158,7 +158,7 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
                 FirebaseMessaging.getInstance().unsubscribeFromTopic(accountModel.getUsername());
 
                 edtPassword.setText("");
-                fileExist("accountInfo");
+                deleteFileExisted("accountInfo");
                 signInLayout.setVisibility(View.VISIBLE);
                 accountLayout.setVisibility(View.GONE);
                 isLogin = false;
@@ -166,6 +166,7 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
         }
     }
 
+    // Check login by username and password
     private void checkLogin(String userName, String passowrd) {
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
         JSONObject acountModel = new JSONObject();
@@ -210,6 +211,7 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
         }
     }
 
+    // Load Account info and list bookmark of account
     private void loadAccountInfo(AccountModel account) {
         if (account != null) {
 
@@ -253,9 +255,10 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
         }
     }
 
+    // do save id- username - password when login access
     public void saveAccountInfoInternal(AccountModel account) {
         String fileName = "accountInfo";
-        fileExist(fileName);
+        deleteFileExisted(fileName);
         try {
             outputStream = getContext().openFileOutput(fileName, Context.MODE_PRIVATE);
             outputStream.write((account.getId() + "-").getBytes());
@@ -269,7 +272,8 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
         }
     }
 
-    public void fileExist(String fname) {
+    //do delete file internal
+    public void deleteFileExisted(String fname) {
         String yourFilePath = getContext().getFilesDir() + "/" + "hello.txt";
         Log.d("localFile : ", yourFilePath);
         File file = getContext().getFileStreamPath(fname);
@@ -280,6 +284,7 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
         checkLogin(accountModel.getUsername(), accountModel.getPassword());
     }
 
+    // read internal file to get username , userId , password
     private AccountModel readInternal() {
         try {
             AccountModel accountModel = new AccountModel();

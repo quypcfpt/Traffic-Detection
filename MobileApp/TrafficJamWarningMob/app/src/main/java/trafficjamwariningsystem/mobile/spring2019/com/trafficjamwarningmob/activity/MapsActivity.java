@@ -376,6 +376,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     if(!cameraList.isEmpty()){
                         RequestParams params = getParams(newPostion.latitude+","+newPostion.longitude,cameraList.get(cameraList.size()-1).getPosition());
                         getRoutePoints(params);
+                        Log.d("Camera : " , cameraList.toString());
+                        Collections.sort(cameraList);
+                        Log.d("CameraSort : " , cameraList.toString());
                         for (CameraModel x : cameraList) {
                             LatLng locationCamera = getCameraLocation(x.getPosition());
                             MarkerOptions marker = null;
@@ -387,6 +390,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 marker = new MarkerOptions().position(new LatLng(locationCamera.latitude, locationCamera.longitude)).title(x.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker_yellow));
                             }
                             mMap.addMarker(marker);
+
+
                         }
                     }
 //                        if (busyStatusCount > 0 && !strAdd.equals(oldStreet)) {
