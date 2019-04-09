@@ -49,22 +49,6 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
         btnBack.setOnClickListener(this);
         cameraStatus = (ImageView) findViewById(R.id.cameraStatus);
         final String imagePath = "https://d1ix0byejyn2u7.cloudfront.net/drive/images/uploads/headers/ws_cropper/1_0x0_790x520_0x520_traffic_jams.jpg";
-        cameraId.setText(cameraID + "");
-        cameraStatus.setImageResource(status == 0 ? R.mipmap.green : status ==1 ? R.mipmap.red : R.mipmap.yellow);
-        txtStatus.setText(status == 0 ? "Bình Thường" : status ==1 ? "Kẹt" : "Đông");
-        Call<Response<CameraModel>> responseCall = apiInterface.loadCameraById(cameraID);
-        responseCall.enqueue(new Callback<Response<CameraModel>>() {
-            @Override
-            public void onResponse(Call<Response<CameraModel>> call, retrofit2.Response<Response<CameraModel>> response) {
-                Response<CameraModel> res = response.body();
-                final CameraModel model = res.getData();
-                Picasso.get().load(model.getImgUrl()).fit().placeholder(R.mipmap.image).into(imageRoad);
-                imageTime.setText(model.getTime() + "");
-            }
-
-            @Override
-            public void onFailure(Call<Response<CameraModel>> call, Throwable t) {
-                Log.d("Failure", t.getMessage());
         Bundle bundle =getIntent().getExtras();
         String listCamJsonObj = bundle.getString("CAMINFO");
         CameraModel camResult = new CameraModel();
