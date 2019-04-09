@@ -2,6 +2,7 @@ package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.adap
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -12,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -69,7 +72,7 @@ public class CameraAdapter extends RecyclerView.Adapter<RecycleViewCameraHolder>
         final CameraModel models = dataSet.get(position);
 
         myViewHolder.txtName.setText(models.getDescription());
-        if(models.getDistance()!= 0){
+        if(models.getDistance()!= null){
             myViewHolder.txtName.setEllipsize(TextUtils.TruncateAt.END);
             myViewHolder.txtName.setMaxWidth(250);
             myViewHolder.txtName.setMaxLines(1);
@@ -86,9 +89,10 @@ public class CameraAdapter extends RecyclerView.Adapter<RecycleViewCameraHolder>
                 Context context = view.getContext();
                 Toast.makeText(mContext, "" + models.getId(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(context, ImageActivity.class);
-                intent.putExtra("CAMERA_ID", models.getId() + "");
-                intent.putExtra("CAMERA_STATUS", models.getObserverStatus() + "");
-                intent.putExtra("CAMERA_NAME", models.getDescription() + "");
+                Bundle bundle = new Bundle();
+                String listCamJsonObj = new Gson().toJson(models);
+                bundle.putString("CAMINFO", listCamJsonObj);
+                intent.putExtras(bundle);
                 context.startActivity(intent);
             }
         });
@@ -99,6 +103,8 @@ public class CameraAdapter extends RecyclerView.Adapter<RecycleViewCameraHolder>
     public int getItemCount() {
         return dataSet.size();
     }
+
+
 
 
 }

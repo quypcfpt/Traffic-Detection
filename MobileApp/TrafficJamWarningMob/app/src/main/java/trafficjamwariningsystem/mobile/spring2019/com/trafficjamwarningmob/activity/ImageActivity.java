@@ -9,7 +9,15 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,9 +39,6 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
         Intent intent = getIntent();
-        final int cameraID = Integer.parseInt(intent.getStringExtra("CAMERA_ID"));
-        final int status = Integer.parseInt(intent.getStringExtra("CAMERA_STATUS"));
-        String cameraName = intent.getStringExtra("CAMERA_NAME");
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
         txtStatus=(TextView) findViewById(R.id.txtStatusView);
         labelTextView = (TextView) findViewById(R.id.labelTextView);
@@ -43,7 +48,6 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
         btnBack = (ImageButton) findViewById(R.id.btnBack);
         btnBack.setOnClickListener(this);
         cameraStatus = (ImageView) findViewById(R.id.cameraStatus);
-        labelTextView.setText(cameraName);
         final String imagePath = "https://d1ix0byejyn2u7.cloudfront.net/drive/images/uploads/headers/ws_cropper/1_0x0_790x520_0x520_traffic_jams.jpg";
         cameraId.setText(cameraID + "");
         cameraStatus.setImageResource(status == 0 ? R.mipmap.green : status ==1 ? R.mipmap.red : R.mipmap.yellow);
@@ -61,8 +65,23 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onFailure(Call<Response<CameraModel>> call, Throwable t) {
                 Log.d("Failure", t.getMessage());
+        Bundle bundle =getIntent().getExtras();
+        String listCamJsonObj = bundle.getString("CAMINFO");
+        CameraModel camResult = new CameraModel();
+        if(listCamJsonObj !=null){
+            Log.d("JSON",listCamJsonObj);
+            try {
+                camResult = parseJsonintoList(listCamJsonObj);
+                labelTextView.setText(camResult.getDescription());
+                cameraId.setText(camResult.getId() + "");
+                cameraStatus.setImageResource(camResult.getObserverStatus() == 0 ? R.mipmap.green : camResult.getObserverStatus() ==1 ? R.mipmap.red : R.mipmap.yellow);
+                txtStatus.setText(camResult.getObserverStatus() == 0 ? "Bình Thường" : camResult.getObserverStatus() ==1 ? "Kẹt" : "Đông");
+                Picasso.get().load(camResult.getImgUrl()).fit().placeholder(R.mipmap.image).into(imageRoad);
+                imageTime.setText(camResult.getTime() + "");
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        });
+        }
     }
 
     @Override
@@ -72,5 +91,17 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
                 ImageActivity.this.finish();
                 break;
         }
+    }
+
+    public CameraModel parseJsonintoList(String jsonObject) throws JSONException {
+        JSONObject jsonObj = new JSONObject(jsonObject);
+        int id = jsonObj.getInt("id");
+        String description = jsonObj.getString("description");
+        int observerStatus = jsonObj.getInt("observerStatus");
+        String position = jsonObj.getString("position");
+        String imgUrl = jsonObj.getString("imgUrl");
+        String timeImage = jsonObj.getString("time");
+        CameraModel resultObj = new CameraModel(id,description,position,observerStatus,imgUrl,timeImage);
+        return resultObj;
     }
 }

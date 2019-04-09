@@ -7,7 +7,7 @@ import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
 
-public class CameraModel implements Serializable {
+public class CameraModel implements Serializable , Comparable<CameraModel> {
     @Expose
     private int id;
 
@@ -64,15 +64,23 @@ public class CameraModel implements Serializable {
         this.observerStatus = observerStatus;
         this.distance = distance;
     }
+    public CameraModel(int id, String description, String position,int observerStatus, String imgUrl, String time) {
+        this.id = id;
+        this.description = description;
+        this.position = position;
+        this.observerStatus = observerStatus;
+        this.imgUrl = imgUrl;
+        this.time = time;
+    }
 
 
-    private float distance;
+    private Float distance;
 
-    public float getDistance() {
+    public Float getDistance() {
         return distance;
     }
 
-    public void setDistance(float distance) {
+    public void setDistance(Float distance) {
         this.distance = distance;
     }
 
@@ -153,5 +161,19 @@ public class CameraModel implements Serializable {
 
 
 
+    @Override
+    public int compareTo(CameraModel o) {
+        if(getDistance() == null || o.getDistance() == null){
+            return 0 ;
+        }
+        return getDistance().compareTo(o.getDistance());
+    }
 
+    @Override
+    public String toString() {
+        return "CameraModel{" +
+                "id=" + id +
+                ", distance=" + distance +
+                '}';
+    }
 }
