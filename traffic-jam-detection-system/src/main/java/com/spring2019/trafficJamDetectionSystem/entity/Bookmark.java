@@ -14,6 +14,7 @@ public class Bookmark {
     private String oriCoordinate;
     private String desCoordinate;
     private Account accountByAccountId;
+    private String route_points;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -74,6 +75,16 @@ public class Bookmark {
 
     public void setDes_coordinate(String des_coordinate) {
         this.des_coordinate = des_coordinate;
+    }
+
+    public String getRoute_points() {
+        return route_points;
+    }
+
+    @Basic
+    @Column(name = "route_points", nullable = true, length = 2147483647)
+    public void setRoute_points(String route_points) {
+        this.route_points = route_points;
     }
 
     @Override

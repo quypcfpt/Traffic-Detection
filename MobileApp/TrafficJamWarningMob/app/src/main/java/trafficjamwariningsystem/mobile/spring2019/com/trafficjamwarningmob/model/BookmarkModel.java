@@ -17,6 +17,8 @@ public class BookmarkModel implements Serializable {
     private String ori_coordinate;
     @Expose
     private String des_coordinate;
+    @Expose
+    private String route_points;
 
     public BookmarkModel() {
     }
@@ -69,4 +71,11 @@ public class BookmarkModel implements Serializable {
         this.des_coordinate = des_coordinate;
     }
 
+    public String getRoute_points() {
+        return route_points;
+    }
+
+    public void setRoute_points(String route_points) {
+        this.route_points = route_points;
+    }
 }

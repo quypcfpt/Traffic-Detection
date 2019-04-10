@@ -95,11 +95,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<RecycleViewBookmarkHol
             @Override
             public void onClick(View view, int position) {
                 Intent intent = new Intent(view.getContext(), CameraInBookmarkActivity.class);
-                intent.putExtra("ORI_STR", models.getOrigin());
-                intent.putExtra("ORI", models.getOri_coordinate());
-                intent.putExtra("DES_STR", models.getDestination());
-                intent.putExtra("DES", models.getDes_coordinate());
-                intent.putExtra("ID", models.getId());
+                intent.putExtra("bookmark", models);
                 view.getContext().startActivity(intent);
             }
         });

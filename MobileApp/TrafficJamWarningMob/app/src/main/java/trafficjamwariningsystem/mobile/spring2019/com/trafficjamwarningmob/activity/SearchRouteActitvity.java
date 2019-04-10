@@ -508,6 +508,15 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
         newBookmarkModel.setDestination(des.getText().toString().trim());
         newBookmarkModel.setOri_coordinate(ori_coordinate.latitude + "," + ori_coordinate.longitude);
         newBookmarkModel.setDes_coordinate(des_coordinate.latitude + "," + des_coordinate.longitude);
+        String route_points = "";
+        for(int i = 0; i < onRoutePoints.size() - 1; i++){
+            if(i == onRoutePoints.size() - 1){
+                route_points += onRoutePoints.get(i).latitude + "," + onRoutePoints.get(i).longitude;
+            }else{
+                route_points += onRoutePoints.get(i).latitude + "," + onRoutePoints.get(i).longitude + "-";
+            }
+        }
+        newBookmarkModel.setRoute_points(route_points);
         MultiBookmarkCameraModel multiBookmarkCameraModel = new MultiBookmarkCameraModel();
         multiBookmarkCameraModel.setBookmark(newBookmarkModel);
         multiBookmarkCameraModel.setCameraList(onRouteCamera);

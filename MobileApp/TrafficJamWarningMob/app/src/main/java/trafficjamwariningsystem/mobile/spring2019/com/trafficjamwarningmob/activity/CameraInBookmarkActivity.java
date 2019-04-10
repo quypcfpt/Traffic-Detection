@@ -45,11 +45,7 @@ public class CameraInBookmarkActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private LinearLayoutManager mLayoutManager;
     private TextView lbHeader;
-    private int bookmarkId;
-    private String ori;
-    private String des;
-    private String strOri;
-    private String strDes;
+    private BookmarkModel bookmark;
     private ImageButton btnBack;
     private ProgressBar progress;
     private Button btnViewMap;
@@ -76,80 +72,24 @@ public class CameraInBookmarkActivity extends AppCompatActivity {
             }
         });
         Intent intent = getIntent();
-        bookmarkId = intent.getIntExtra("ID", -1);
-        strOri = intent.getStringExtra("ORI_STR");
-        strDes = intent.getStringExtra("DES_STR");
-        ori = intent.getStringExtra("ORI");
-        des = intent.getStringExtra("DES");
-        lbHeader.setText(strOri + " - " + strDes);
-        getBookmarkData();
-    }
-
-    //get param for direction api request
-    private RequestParams getParams(String ori, String des) {
-        RequestParams params = new RequestParams();
-        params.add("origin", ori);
-        params.add("destination", des);
-        params.add("key", getResources().getString(R.string.google_maps_key));
-        return params;
-    }
-
-    //get bookmark data for view
-    public void getBookmarkData() {
-        RequestParams params = getParams(ori, des);
-        HttpUtils.getByUrl("https://maps.googleapis.com/maps/api/directions/json", params, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-
-                List<List<HashMap<String, String>>> routes = null;
-                try {
-                    DirectionsJSONParser parser = new DirectionsJSONParser();
-                    routes = parser.parse(response);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                if (routes != null) {
-                    ArrayList<LatLng> points = new ArrayList<>();
-                    // Traversing through all the routes
-                    for (int i = 0; i < routes.size(); i++) {
-
-                        // Fetching i-th route
-                        List<HashMap<String, String>> path = routes.get(i);
-
-                        // Fetching all the points in i-th route
-                        for (int j = 0; j < path.size(); j++) {
-                            HashMap<String, String> point = path.get(j);
-                            double lat = Double.parseDouble(point.get("lat"));
-                            double lng = Double.parseDouble(point.get("lng"));
-                            LatLng position = new LatLng(lat, lng);
-                            points.add(position);
-                        }
-
-                    }
-
-                    if (!points.isEmpty()) {
-                        getCameraListAndInitMapButton(points);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                Log.d("Failure", throwable.getMessage());
-                progress.setVisibility(View.GONE);
-                Toast.makeText(CameraInBookmarkActivity.this, "LỖI: Kiểm tra kết nối Internet", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        bookmark = (BookmarkModel) intent.getSerializableExtra("bookmark");
+        lbHeader.setText(bookmark.getOrigin() + " - " + bookmark.getDestination());
+        String[] pointArr = bookmark.getRoute_points().split("-");
+        ArrayList<LatLng> points = new ArrayList<>();
+        for(int i = 0; i < pointArr.length; i++){
+            Double lat = Double.parseDouble(pointArr[i].split(",")[0]);
+            Double lon = Double.parseDouble(pointArr[i].split(",")[1]);
+            points.add(new LatLng(lat, lon));
+        }
+        getCameraListAndInitMapButton(points);
     }
 
     //get camera list in bookmark and change view
     private void getCameraListAndInitMapButton(final ArrayList<LatLng> points) {
-        Log.d("ori", strOri + "");
-        Log.d("des", strDes + "");
+        Log.d("ori", bookmark.getOri_coordinate() + "");
+        Log.d("des", bookmark.getDes_coordinate() + "");
 
-        Call<Response<List<CameraModel>>> responseCall = apiInterface.getCameraInBookmark(bookmarkId);
+        Call<Response<List<CameraModel>>> responseCall = apiInterface.getCameraInBookmark(bookmark.getId());
         responseCall.enqueue(new Callback<Response<List<CameraModel>>>() {
             @Override
             public void onResponse(Call<Response<List<CameraModel>>> call, retrofit2.Response<Response<List<CameraModel>>> response) {

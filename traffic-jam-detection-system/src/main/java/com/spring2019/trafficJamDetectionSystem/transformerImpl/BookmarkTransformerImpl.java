@@ -26,6 +26,7 @@ public class BookmarkTransformerImpl implements BookmarkTransformer {
         model.setDestination(entity.getDestination());
         model.setOri_coordinate(entity.getOri_coordinate());
         model.setDes_coordinate(entity.getDes_coordinate());
+        model.setRoute_points(entity.getRoute_points());
         return model;
     }
 
@@ -39,6 +40,7 @@ public class BookmarkTransformerImpl implements BookmarkTransformer {
         entity.setDestination(model.getDestination());
         entity.setOri_coordinate(model.getOri_coordinate());
         entity.setDes_coordinate(model.getDes_coordinate());
+        entity.setRoute_points(model.getRoute_points());
         return entity;
     }
 
