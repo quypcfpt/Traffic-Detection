@@ -64,9 +64,7 @@ public class CameraTransformerImpl implements CameraTransformer {
             Street street = new Street();
             street.setId(model.getStreet().getId());
             entity.setStreetByStreetId(street);
-            entity.setIsActive(model.isActive());
         }
-
         if (model.getImgUrl() != null) {
             entity.setImageUrl(model.getImgUrl());
         }
@@ -74,6 +72,8 @@ public class CameraTransformerImpl implements CameraTransformer {
         if (model.getTime() != null) {
             entity.setTime(Timestamp.valueOf(model.getTime()));
         }
+
+        entity.setIsActive(model.isActive());
         return entity;
 
 

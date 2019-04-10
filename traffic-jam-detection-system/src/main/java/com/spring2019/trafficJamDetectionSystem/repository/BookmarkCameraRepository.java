@@ -20,8 +20,12 @@ public interface BookmarkCameraRepository extends JpaRepository<BookmarkCamera, 
 
 
     List<BookmarkCamera> findByCameraByCameraId(Camera camera);
+
     @Transactional
     Integer deleteBookmarkCamerasByBookmarkByBookmarkId(Bookmark bookMarkId);
+
+    @Transactional
+    void deleteBookmarkCameraByCameraByCameraId(Camera camera);
 
     List<BookmarkCamera> findBookmarkCamerasByBookmarkByBookmarkId(Bookmark bookmark);
 }

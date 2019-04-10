@@ -7,6 +7,7 @@ import com.spring2019.trafficJamDetectionSystem.entity.Street;
 import com.spring2019.trafficJamDetectionSystem.model.MultiStreetModel;
 import com.spring2019.trafficJamDetectionSystem.model.Response;
 import com.spring2019.trafficJamDetectionSystem.model.StreetModel;
+import com.spring2019.trafficJamDetectionSystem.service.BookmarkService;
 import com.spring2019.trafficJamDetectionSystem.service.CameraService;
 import com.spring2019.trafficJamDetectionSystem.service.StreetService;
 import com.spring2019.trafficJamDetectionSystem.transformer.CameraTransformer;
@@ -41,6 +42,9 @@ public class StreetControllerImpl extends AbstractController implements StreetCo
 
     @Autowired
     CameraTransformer cameraTransformer;
+
+    @Autowired
+    BookmarkService bookmarkService;
 
     @Override
     public String loadAllStreet(Integer page, Integer size, String sort, String sortBy) {
@@ -159,9 +163,11 @@ public class StreetControllerImpl extends AbstractController implements StreetCo
             streetService.updateStreet(streetEntity);
             if(!streetModel.getIsActive()){
                 ArrayList<Camera> cameras = (ArrayList)cameraService.getCamerasByStreetAndIsActive(streetModel.getId());
-                for (Camera x : cameras) {
-                    x.setIsActive(false);
-                    cameraService.updateCamera(x);
+                for (Camera camera : cameras) {
+                    camera.setIsActive(false);
+                    bookmarkService.deleteBookmarkByCamera(camera);
+                    cameraService.updateCamera(camera);
+
                 }
             }
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, streetModel);

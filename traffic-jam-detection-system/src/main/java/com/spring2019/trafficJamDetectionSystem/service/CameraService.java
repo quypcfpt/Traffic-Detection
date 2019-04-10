@@ -10,6 +10,9 @@ import java.util.List;
 
 @Service
 public interface CameraService {
+
+    public Camera getActiveCameraById(int id);
+
     public Camera getCameraById(int id);
 
     public Page<Camera> getAllCameras(Pageable pageable);
@@ -22,7 +25,7 @@ public interface CameraService {
 
     public List<Camera> getCamerasByStreetAndIsActive(Integer street);
 
-    public List<Camera>  getCameraByStreetNameAndIsActive(String streetName);
+    public List<Camera> getCameraByStreetNameAndIsActive(String streetName);
 
     public boolean checkCameraOnroute(Bookmark bookmark, Camera camera);
 

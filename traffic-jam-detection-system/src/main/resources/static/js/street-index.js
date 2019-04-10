@@ -66,7 +66,7 @@ $('#add-street-form').submit(function (e) {
     });
 });
 
-$('#edt-street-formform').submit(function (e) {
+$('#edt-street-form').submit(function (e) {
     e.preventDefault();
     var streetModel = {
         id: $('#edtId').val(),

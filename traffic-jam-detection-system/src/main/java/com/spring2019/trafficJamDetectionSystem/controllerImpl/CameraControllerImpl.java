@@ -148,6 +148,7 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
             Camera camera = cameraService.createCamera(cameraEntity);
 
             List<Bookmark> bookmarks = bookmarkService.getAllBookmarks();
+
             for (Bookmark bookmark : bookmarks) {
                 if (cameraService.checkCameraOnroute(bookmark, cameraEntity)) {
                     BookmarkCamera bookmarkCamera = new BookmarkCamera();
@@ -172,7 +173,44 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
         try {
             CameraModel cameraModel = gson.fromJson(cameraModelString, CameraModel.class);
             Camera cameraEntity = cameraTransformer.modelToEntity(cameraModel);
+
+            List<Bookmark> bookmarks = bookmarkService.getAllBookmarks();
+
+            Camera oldCamera = cameraService.getCameraById(cameraModel.getId());
+
+            cameraEntity.setObservedStatus(oldCamera.getObservedStatus());
+            cameraEntity.setTime(oldCamera.getTime());
+            cameraEntity.setResource(oldCamera.getResource());
+            cameraEntity.setImageUrl(oldCamera.getImageUrl());
             cameraService.updateCamera(cameraEntity);
+
+            if (oldCamera.getIsActive()) {
+                if (cameraEntity.getPosition() != oldCamera.getPosition()) {
+                    bookmarkService.deleteBookmarkByCamera(oldCamera);
+
+                    for (Bookmark bookmark : bookmarks) {
+                        if (cameraService.checkCameraOnroute(bookmark, cameraEntity)) {
+                            BookmarkCamera bookmarkCamera = new BookmarkCamera();
+                            bookmarkCamera.setBookmarkByBookmarkId(bookmark);
+                            bookmarkCamera.setCameraByCameraId(cameraEntity);
+
+                            bookmarkService.saveBookmarkCamera(bookmarkCamera);
+                        }
+                    }
+                } else if (cameraModel.isActive() == false) {
+                    bookmarkService.deleteBookmarkByCamera(oldCamera);
+                }
+            } else {
+                for (Bookmark bookmark : bookmarks) {
+                    if (cameraService.checkCameraOnroute(bookmark, cameraEntity)) {
+                        BookmarkCamera bookmarkCamera = new BookmarkCamera();
+                        bookmarkCamera.setBookmarkByBookmarkId(bookmark);
+                        bookmarkCamera.setCameraByCameraId(cameraEntity);
+
+                        bookmarkService.saveBookmarkCamera(bookmarkCamera);
+                    }
+                }
+            }
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, true);
             LOGGER.info("Camera updated: " + cameraModelString);
         } catch (Exception e) {
