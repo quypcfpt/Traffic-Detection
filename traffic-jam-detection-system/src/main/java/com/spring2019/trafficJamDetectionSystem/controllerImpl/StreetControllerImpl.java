@@ -129,6 +129,7 @@ public class StreetControllerImpl extends AbstractController implements StreetCo
 
     }
 
+    //create a street from received json string
     @Override
     public String createStreet(String streetModelString) {
         Response response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
@@ -147,7 +148,7 @@ public class StreetControllerImpl extends AbstractController implements StreetCo
     }
 
 
-
+    //update a street from received json string
     @Override
     public String updateStreet(String streetModelString) {
 

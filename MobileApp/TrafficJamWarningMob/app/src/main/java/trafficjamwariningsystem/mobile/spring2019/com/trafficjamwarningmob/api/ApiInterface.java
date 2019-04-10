@@ -64,4 +64,6 @@ public interface ApiInterface {
     @POST("api/bookmark")
     Call<Response<String>> createBookmark(@Body MultiBookmarkCameraModel multiBookmarkCameraModel);
 
+    @GET("api/bookmark/{id}/camera")
+    Call<Response<List<CameraModel>>> getCameraInBookmark(@Path("id") int bookmarkId);
 }

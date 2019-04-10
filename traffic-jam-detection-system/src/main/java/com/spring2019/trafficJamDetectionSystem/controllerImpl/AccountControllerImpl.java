@@ -86,6 +86,7 @@ public class AccountControllerImpl extends AbstractController implements Account
         return gson.toJson(response);
     }
 
+    //check login of admin from web
     @Override
     public String checkAdminLogin(String accountModel, HttpSession session) {
         Response response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);

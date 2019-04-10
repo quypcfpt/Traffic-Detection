@@ -49,7 +49,6 @@ import cz.msebera.android.httpclient.Header;
 import retrofit2.Call;
 import retrofit2.Callback;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.R;
-import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.adapter.CameraAdapter;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.adapter.CameraInBookmarkAdapter;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api.ApiClient;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api.ApiInterface;
@@ -57,7 +56,6 @@ import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.CameraModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.MultiBookmarkCameraModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.MultiCameraModel;
-import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.MultipleBookmarkModel;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.Response;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.utils.DirectionsJSONParser;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.utils.HttpUtils;
@@ -65,7 +63,6 @@ import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.utils
 public class SearchRouteActitvity extends Fragment implements LocationListener {
 
     ApiInterface apiInterface;
-    Boolean locationPermission = false;
     LocationManager locationManager;
     String locationProvider = "";
     public static final int REQUEST_ID_ACCESS_COURSE_FINE_LOCATION = 3;
@@ -117,6 +114,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
 
             @Override
             public void onPageSelected(int i) {
+                //change button when Direction tab is selected and last camera result is appearing
                 if(i == 1 && empty.getVisibility() == View.GONE){
                     if(fileExist()) {
                         checkExistedBookmark();
@@ -190,6 +188,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
 
     }
 
+    //reset content of view when click check traffic button
     private void resetSearchInfo(){
         saveBookmark.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
@@ -204,6 +203,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
             onRouteCamera.clear();
     }
 
+    //get param for directon api request
     private RequestParams getParams(String ori, String des) {
         RequestParams params = new RequestParams();
         params.add("origin", ori);
@@ -212,6 +212,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
         return params;
     }
 
+    //search camera on route from requested origin and destination
     public void searchCamera(RequestParams params) {
         HttpUtils.getByUrl("https://maps.googleapis.com/maps/api/directions/json", params, new JsonHttpResponseHandler() {
             @Override
@@ -239,7 +240,6 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
                             double lat = Double.parseDouble(point.get("lat"));
                             double lng = Double.parseDouble(point.get("lng"));
                             LatLng position = new LatLng(lat, lng);
-//                            position.
                             points.add(position);
                         }
 
@@ -264,6 +264,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
 
     }
 
+    //request all active camera and check which is on provided polyline then show result
     private void getOnRouteCamera(final List<LatLng> points) {
         ori_coordinate = points.get(0);
         des_coordinate = points.get(points.size() - 1);
@@ -282,6 +283,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
                     for (CameraModel x : cameras) {
                         String[] xPosArr = x.getPosition().split(",");
                         LatLng xPos = new LatLng(Double.parseDouble(xPosArr[0]), Double.parseDouble(xPosArr[1]));
+                        //check camera on route
                         if (PolyUtil.isLocationOnPath(xPos, points, false, 10)) {
                             onRouteCamera.add(x);
                         }
@@ -315,6 +317,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
         });
     }
 
+    //change view content when camera result is empty
     private void onEmptyResult() {
         empty.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
@@ -323,6 +326,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
         viewMap.setVisibility(View.GONE);
     }
 
+    //check location access permission of user's device when use current location
     private void checkLocationAccessPermission() {
         int accessCoarsePermission = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION);
         int accessFinePermission = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION);
@@ -337,6 +341,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
         }
     }
 
+    //process checkbox view from location access permission response of user
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -356,6 +361,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
         }
     }
 
+    //get location provider and request current location of user's device
     private void checkLocationService() {
         locationProvider = getBestEnabledLocationProvider();
         if (locationProvider.equals("passive")) {
@@ -365,12 +371,13 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
         try {
             pb.setVisibility(View.VISIBLE);
             Toast.makeText(getActivity(), "Đang xác định vị trí...", Toast.LENGTH_SHORT).show();
-            locationManager.requestLocationUpdates(locationProvider, 0, 0, this);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
         } catch (SecurityException e) {
             e.printStackTrace();
         }
     }
 
+    //get location provider of user's device
     private String getBestEnabledLocationProvider() {
         String bestProvider;
         Criteria criteria = new Criteria();
@@ -378,6 +385,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
         return bestProvider;
     }
 
+    //fill origin input and search camera with located current location and inputed destination
     @Override
     public void onLocationChanged(Location location) {
         LatLng newLocation = new LatLng(location.getLatitude(), location.getLongitude());
@@ -392,10 +400,6 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
                 String thorough = "";
                 String feature = "";
                 String subadmin = "";
-                for (int i = 0; i < addresses.size(); i++) {
-                    Log.d("STREET ADDRESS", addresses.get(i).getSubThoroughfare() + " " + addresses.get(i).getThoroughfare() + " " + addresses.get(i).getSubAdminArea());
-                    Log.d("FEATURE", addresses.get(i).getFeatureName());
-                }
                 for (int i = 0; i < addresses.size(); i++) {
                     subthorough = addresses.get(i).getSubThoroughfare();
                     thorough = addresses.get(i).getThoroughfare();
@@ -440,6 +444,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
     public void onProviderDisabled(String provider) {
     }
 
+    //check searched camera list is whether a bookmark and change bookmark button
     public void checkExistedBookmark(){
 
         if (ori_coordinate == null && des_coordinate == null ) {
@@ -482,6 +487,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
         });
     }
 
+    //add new bookmark and camera list in it
     public void createBookmark() {
         BookmarkModel newBookmarkModel = new BookmarkModel();
         Integer userId = getUserId();
@@ -489,11 +495,28 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
             Toast.makeText(getActivity(), "LỖI: Không thể thêm bookmark", Toast.LENGTH_SHORT).show();
             return;
         }
+        if(ori.getText().toString().trim().equals("")){
+            Toast.makeText(getActivity(), "Nhập điểm đi để lưu.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(des.getText().toString().trim().equals("")){
+            Toast.makeText(getActivity(), "Nhập điểm đến để lưu.", Toast.LENGTH_SHORT).show();
+            return;
+        }
         newBookmarkModel.setAccountId(userId);
-        newBookmarkModel.setOrigin(oriStr);
-        newBookmarkModel.setDestination(desStr);
+        newBookmarkModel.setOrigin(ori.getText().toString().trim());
+        newBookmarkModel.setDestination(des.getText().toString().trim());
         newBookmarkModel.setOri_coordinate(ori_coordinate.latitude + "," + ori_coordinate.longitude);
         newBookmarkModel.setDes_coordinate(des_coordinate.latitude + "," + des_coordinate.longitude);
+        String route_points = "";
+        for(int i = 0; i < onRoutePoints.size() - 1; i++){
+            if(i == onRoutePoints.size() - 1){
+                route_points += onRoutePoints.get(i).latitude + "," + onRoutePoints.get(i).longitude;
+            }else{
+                route_points += onRoutePoints.get(i).latitude + "," + onRoutePoints.get(i).longitude + "-";
+            }
+        }
+        newBookmarkModel.setRoute_points(route_points);
         MultiBookmarkCameraModel multiBookmarkCameraModel = new MultiBookmarkCameraModel();
         multiBookmarkCameraModel.setBookmark(newBookmarkModel);
         multiBookmarkCameraModel.setCameraList(onRouteCamera);
@@ -522,6 +545,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
         });
     }
 
+    //get user id from internal storage of user's device
     public Integer getUserId() {
         Integer userId = null;
         try {
@@ -542,6 +566,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
         return userId;
     }
 
+    //change view and content of bookmark button
     public void requestLogin() {
         if (ori_coordinate == null && des_coordinate == null) {
             return;
@@ -553,6 +578,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
 
     }
 
+    //check file existed or not
     public boolean fileExist() {
         File file = getContext().getFileStreamPath("accountInfo");
         return file.exists();

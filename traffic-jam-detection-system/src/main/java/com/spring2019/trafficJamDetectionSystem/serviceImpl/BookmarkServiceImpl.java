@@ -81,4 +81,10 @@ public class BookmarkServiceImpl implements BookmarkService {
     public BookmarkCamera saveBookmarkCamera(BookmarkCamera bookmarkCamera) {
         return bookmarkCameraRepository.save(bookmarkCamera);
     }
+
+    public List<BookmarkCamera> getCameraInBookmark(int id){
+        Bookmark bookmark = new Bookmark();
+        bookmark.setId(id);
+        return bookmarkCameraRepository.findBookmarkCamerasByBookmarkByBookmarkId(bookmark);
+    }
 }
