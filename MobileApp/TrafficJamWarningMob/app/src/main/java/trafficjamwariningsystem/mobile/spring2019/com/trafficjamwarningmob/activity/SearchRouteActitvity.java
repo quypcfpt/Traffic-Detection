@@ -389,47 +389,50 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         LatLng newLocation = new LatLng(location.getLatitude(), location.getLongitude());
+        Log.d("NEW LOCATION", newLocation.latitude + "," + newLocation.longitude);
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
         locationManager.removeUpdates(this);
         try {
             List<Address> addresses = geocoder.getFromLocation(newLocation.latitude, newLocation.longitude, 5);
+            addresses = null;
+            getGeoApiAddress(newLocation);
             if (addresses != null) {
-                Address add = addresses.get(0);
                 String strAdd = "";
                 String subthorough = "";
                 String thorough = "";
-                String feature = "";
                 String subadmin = "";
+                for (int i = 0; i < addresses.size(); i++) {
+                    Log.d("STREET PART", addresses.get(i).getSubThoroughfare() + " " + addresses.get(i).getThoroughfare() + " " + addresses.get(i).getSubAdminArea());
+                    Log.d("STREET ADDRESS", addresses.get(i).getAddressLine(0));
+                }
                 for (int i = 0; i < addresses.size(); i++) {
                     subthorough = addresses.get(i).getSubThoroughfare();
                     thorough = addresses.get(i).getThoroughfare();
-                    feature = addresses.get(i).getFeatureName();
                     subadmin = addresses.get(i).getSubAdminArea();
                     if (subthorough != null && thorough != null && subadmin != null) {
                         if(!subthorough.trim().equals("#")){
                             strAdd = subthorough + " " + thorough + " " + subadmin;
                             break;
                         }
-                    } else if (feature != null && thorough != null && subadmin != null) {
-                        strAdd = feature + " " + subadmin;
-                        break;
+                    }else{
+                        if(strAdd.equals("") && !addresses.get(i).getAddressLine(0).contains("Unnamed Road")){
+                            strAdd = addresses.get(i).getAddressLine(0);
+                            strAdd = getShortAddress(strAdd);
+                        }
                     }
                 }
-                if (strAdd.equals("")) {
-                    strAdd = addresses.get(0).getAddressLine(0);
-                }
+                Toast.makeText(getActivity(), "Đã xác định vị trí hiện tại của bạn.", Toast.LENGTH_SHORT).show();
                 ori.setText(strAdd);
                 des.requestFocus();
-                Log.d("STREET ADDRESS", addresses.get(0).getAddressLine(0));
+                RequestParams params = getParams(newLocation.latitude + ", " + newLocation.longitude, des.getText().toString());
+                searchCamera(params);
             } else {
                 Log.d("street", "null address");
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+            getGeoApiAddress(newLocation);
         }
-        Toast.makeText(getActivity(), "Đã xác định vị trí hiện tại của bạn.", Toast.LENGTH_SHORT).show();
-        RequestParams params = getParams(newLocation.latitude + ", " + newLocation.longitude, des.getText().toString());
-        searchCamera(params);
     }
 
     @Override
@@ -583,6 +586,56 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
         File file = getContext().getFileStreamPath("accountInfo");
         return file.exists();
     }
+
+    private String getShortAddress(String add){
+        int pos = add.indexOf(", Hồ Chí Minh");
+        if(pos < 0){
+            add = add.substring(0, add.indexOf(", Vietnam"));
+        }else{
+            add = add.substring(0, pos);
+        }
+        return add;
+    }
+
+    private void getGeoApiAddress(final LatLng location){
+        String latlng = location.latitude + "," + location.longitude;
+        HttpUtils.getByUrl("https://maps.googleapis.com/maps/api/geocode/json", getGeoParams(latlng), new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    String add = response.getJSONArray("results").getJSONObject(0).get("formatted_address") + "";
+                    Log.d("GEO_API ADDRESS", add);
+                    if(add != null){
+                        if(!add.equals("")){
+                            add = getShortAddress(add);
+                        }
+                        Toast.makeText(getActivity(), "Đã xác định vị trí hiện tại của bạn.", Toast.LENGTH_SHORT).show();
+                        ori.setText(add);
+                        des.requestFocus();
+                        RequestParams params = getParams(location.latitude + ", " + location.longitude, des.getText().toString());
+                        searchCamera(params);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d("Failure", throwable.getMessage());
+                pb.setVisibility(View.GONE);
+                Toast.makeText(getContext(), "LỖI: Kiểm tra kết nối Internet", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private RequestParams getGeoParams(String latlng) {
+        RequestParams params = new RequestParams();
+        params.add("latlng", latlng);
+        params.add("key", getResources().getString(R.string.google_maps_key));
+        return params;
+    }
+
 
 }
 
