@@ -394,8 +394,6 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
         locationManager.removeUpdates(this);
         try {
             List<Address> addresses = geocoder.getFromLocation(newLocation.latitude, newLocation.longitude, 5);
-            addresses = null;
-            getGeoApiAddress(newLocation);
             if (addresses != null) {
                 String strAdd = "";
                 String subthorough = "";
