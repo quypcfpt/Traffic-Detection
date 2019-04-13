@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.R;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.adapter.SectionsPagerAdapter;
 
@@ -27,6 +29,7 @@ public class MainTabActivity extends AppCompatActivity implements View.OnClickLi
 
     private ViewPager mViewPager;
     private LinearLayout buttonToMap;
+    static public final String TOPIC="TJWS";
     static public final String[] PERMISSION  = {Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION};
     static public final int REQUEST_CODE=1;
     @Override
@@ -34,7 +37,7 @@ public class MainTabActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
 
 
-        //  FirebaseMessaging.getInstance().subscribeToTopic(TOPIC);
+          FirebaseMessaging.getInstance().subscribeToTopic(TOPIC);
 
         setContentView(R.layout.activity_main_tab);
         verifyPermission();

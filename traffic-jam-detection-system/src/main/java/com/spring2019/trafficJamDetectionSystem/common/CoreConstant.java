@@ -25,4 +25,5 @@ public class CoreConstant {
     public static final int STATUS_CAMERA_JAM=1;
 
     public static final String GOOGLE_MAP_API_KEY="AIzaSyAsQvoX3tvrOxlSA0Xv77ptHcTK9tGm5yA";
+    public static final String FIREBASE_GENERAL_TOPIC="TJWS";
 }

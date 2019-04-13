@@ -57,7 +57,7 @@ num_detections = detection_graph.get_tensor_by_name('num_detections:0')
 video_path = {}
 headers = {'Content-type': 'application/json'}
 url='http://localhost:8080/api/camera'
-params={'page':1,'size':2}
+params={'page':1,'size':3}
 r=requests.get(url, params=params, headers=headers)
 
 jsonValueResult=json.loads(r.text)
@@ -147,14 +147,19 @@ class DetectMutilThread (threading.Thread):
         video = cv2.VideoCapture(self.video_url)
         fps = int(video.get(cv2.CAP_PROP_FPS))
         count = 0
-        
+        pathList=[]
+        joinPath = ', '
         while True:
             frame, image = video.read()
-            
             path = './capture/' + self.name + "_" + str(count) + '.jpg'
-            if count%(10*fps) == 0 :
+            imgURLs = ''
+            if (count%(10*fps) == 0) & (count != 0):
                 print("**********")
                 print('Processing...' + self.name + ' in frame ' + str(count))
+                cv2.imwrite(path, image)
+                new_filelink = client.upload(filepath=path, multipart=False)
+                print("link : ", new_filelink.url)
+                pathList.append(new_filelink.url)
                 height, width, channels = image.shape
                 image_expanded = np.expand_dims(image, axis=0)
 
@@ -173,8 +178,6 @@ class DetectMutilThread (threading.Thread):
                     min_score_thresh=0.50)
                 threshold = 0.5
                 objectLine1 = []
-                objectLine2 = []
-                objectLine3 = []
                 
                 motorCountLine1=0
                 carCountLine1=0
@@ -203,10 +206,7 @@ class DetectMutilThread (threading.Thread):
                     object_dict['yValue'] =length_of_bounding_box(ymin , ymax)
                     object_dict['xValue'] =length_of_bounding_box(xmin , xmax)
                     objectLine1.append(object_dict)
-                    objectLine2.append(object_dict)
-                    objectLine3.append(object_dict)
-                    
-                
+
                 
                 for obj in objectLine1:
                     keys = iter(obj.values())
@@ -216,28 +216,17 @@ class DetectMutilThread (threading.Thread):
                     truckLabel="truck"
                     busLabel="bus"
                     
-                    if(yValue >=50 and yValue <=260 and xValue >= 100 and xValue <= 1200):
-                        if(typeVehicle.strip() == motorLabel):
-                                motorCountLine1+=1
-                        elif(typeVehicle.strip() == carLabel):
-                                carCountLine1+=1
-                        elif(typeVehicle.strip() == truckLabel):
-                                truckCountLine1+=1
-                        else:
-                                busCountLine1+=1
-
-
-
-                for obj2 in objectLine2:
-                        keys = iter(obj2.values())
-                        typeVehicle,yValue,xvalue=next(keys),next(keys),next(keys)
-                        motorLabel="motor"
-                        carLabel="car"
-                        truckLabel="truck"
-                        busLabel="bus"
-                        
-                    
-                        if(yValue >=290 and yValue <=460 and xValue >= 50 and xValue <= 1270):
+                    if(yValue >=30 and yValue <=270 and xValue >= 50 and xValue <= 1200):
+                                if(typeVehicle.strip() == motorLabel):
+                                        motorCountLine1+=1
+                                elif(typeVehicle.strip() == carLabel):
+                                        carCountLine1+=1
+                                elif(typeVehicle.strip() == truckLabel):
+                                        truckCountLine1+=1
+                                else:
+                                        busCountLine1+=1
+                                        
+                    if(yValue >=290 and yValue <=470 and xValue >= 50 and xValue <= 1270):
                                 if(typeVehicle.strip() == motorLabel):
                                         motorCountLine2+=1
                                 elif(typeVehicle.strip() == carLabel):
@@ -246,18 +235,8 @@ class DetectMutilThread (threading.Thread):
                                         truckCountLine2+=1
                                 else:
                                         busCountLine2+=1
-
-                
-                for obj3 in objectLine3:
-                        keys = iter(obj3.values())
-                        typeVehicle,yValue,xvalue=next(keys),next(keys),next(keys)
-                        motorLabel="motor"
-                        carLabel="car"
-                        truckLabel="truck"
-                        busLabel="bus"
-                        
-                    
-                        if(yValue >=490 and yValue <=660 and xValue >= 50 and xValue <= 1300):
+                                        
+                    if(yValue >=490 and yValue <=680 and xValue >= 50 and xValue <= 1300):
                                 if(typeVehicle.strip() == motorLabel):
                                         motorCountLine3+=1
                                 elif(typeVehicle.strip() == carLabel):
@@ -265,20 +244,23 @@ class DetectMutilThread (threading.Thread):
                                 elif(typeVehicle.strip() == truckLabel):
                                         truckCountLine3+=1
                                 else:
-                                        busCountLine3+=1                        
+                                        busCountLine3+=1 
 
-                image[50:260, 100:1200, 2]=255
-                image[290:460, 50:1270, 2]=255
-                image[490:660, 50:1300, 2]=255
+
+                                                 
+
+                image[30:270, 50:1200, 2]=255
+                image[290:470, 50:1270, 2]=255
+                image[490:680, 50:1300, 2]=255
 
                 for e in size_values:
                         delta = []
                         distList = []
-                        x = float(e.road) - ((float(e.motor)*motorCountLine1) + (float(e.car)*carCountLine1) + (float(e.car)*truckCountLine1) + (float(e.car)*busCountLine1))
+                        x = float(e.road) - ((float(e.motor)*motorCountLine1) + (float(e.car)*carCountLine1) + (float(e.truck)*truckCountLine1) + (float(e.bus)*busCountLine1))
                         delta.append(x)
-                        y = float(e.road) - ((float(e.motor)*motorCountLine2) + (float(e.car)*carCountLine2) + (float(e.car)*truckCountLine2) + (float(e.car)*busCountLine2))
+                        y = float(e.road) - ((float(e.motor)*motorCountLine2) + (float(e.car)*carCountLine2) + (float(e.truck)*truckCountLine2) + (float(e.bus)*busCountLine2))
                         delta.append(y)
-                        z = float(e.road) - ((float(e.motor)*motorCountLine3) + (float(e.car)*carCountLine3) + (float(e.car)*truckCountLine3) + (float(e.car)*busCountLine3))
+                        z = float(e.road) - ((float(e.motor)*motorCountLine3) + (float(e.car)*carCountLine3) + (float(e.truck)*truckCountLine3) + (float(e.bus)*busCountLine3))
                         delta.append(z)
 ##                        print("X,Y,Z is appended into delta: " + str(x) + " " + str(y) + " " + str(z) + " of " + self.name + " in frame_" + str(count))
 ##                        print("Current Delta: " + str(delta) + " of " + self.name + " in frame_" + str(count))
@@ -381,12 +363,23 @@ class DetectMutilThread (threading.Thread):
                                         else:
                                                 number_normal.append(countNormal)
                                                 print(self.name + " status after 10s: Normal")
-                               
+
+##                cv2.imwrite(path, image)
+##                new_filelink = client.upload(filepath=path, multipart=False)
+##                print("link : ", new_filelink.url)
+##                pathList.append(new_filelink.url)
+                        
+                        
+                        
             if ((count%(60*fps) == 0) & (count != 0)) :
-                    cv2.imwrite(path, image)
-                    new_filelink = client.upload(filepath=path, multipart=False)
+                    
                     print("********************")
                     print("********************")
+                    print(len(pathList))
+                    for i in range(0, len(pathList)):
+                        print("aaaaa" + str(pathList[i]))
+                    
+                    imgURLs = joinPath.join(pathList)
                     status = 0
                     if(len(number_crowed) > len(number_normal) and len(number_crowed) > len(number_busy)):
                             print(self.name + " result after 60s: Crowed")
@@ -400,10 +393,11 @@ class DetectMutilThread (threading.Thread):
                     number_normal.clear()
                     number_busy.clear()
                     number_crowed.clear()
+                    pathList.clear()
                     jsonData ={
                         "CameraId":self.name,
                         "statusId":status,
-                        "imageUrl":new_filelink.url
+                        "imageUrl":imgURLs
                 }
                     headers = {'Content-type': 'application/json'}
                     url='http://localhost:8080/api/detection'

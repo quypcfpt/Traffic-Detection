@@ -6,6 +6,7 @@ import com.spring2019.trafficJamDetectionSystem.entity.Camera;
 import com.spring2019.trafficJamDetectionSystem.model.CameraModel;
 import com.spring2019.trafficJamDetectionSystem.model.DetectionModel;
 import com.spring2019.trafficJamDetectionSystem.model.Response;
+import com.spring2019.trafficJamDetectionSystem.service.AndroidPushNotificationsService;
 import com.spring2019.trafficJamDetectionSystem.service.CameraService;
 import com.spring2019.trafficJamDetectionSystem.transformer.CameraTransformer;
 import org.slf4j.Logger;
@@ -28,9 +29,13 @@ public class DetectionControllerImpl extends AbstractController implements Detec
     @Autowired
     CameraTransformer cameraTransformer;
 
+    @Autowired
+    AndroidPushNotificationsService notificationsService;
+
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DetectionControllerImpl.class);
-    public static HashMap<Integer, DetectionModel> detectResultData=new HashMap<>();
+    public static HashMap<Integer, DetectionModel> detectResultData = new HashMap<>();
+
     @Override
     public String detectResult(String detectResultString) {
         Response response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
@@ -45,7 +50,7 @@ public class DetectionControllerImpl extends AbstractController implements Detec
             //Update Image  link and time
             cameraModel.setImgUrl(detectionResult.getImageUrl());
 
-            Date date= new Date();
+            Date date = new Date();
             long time = date.getTime();
             Timestamp ts = new Timestamp(time);
             cameraModel.setTime(ts.toString());
@@ -56,7 +61,8 @@ public class DetectionControllerImpl extends AbstractController implements Detec
             newCamera.setTime(ts);
             newCamera.setImageUrl(camera.getImageUrl());
 
-            cameraService.updateCamera(newCamera);
+            Camera temp = cameraService.updateCamera(newCamera);
+            notificationsService.sendData(temp.getStreetByStreetId().getId(),temp.getId());
 
             detectResultData.put(detectionResult.getCameraId(), detectionResult);
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS);

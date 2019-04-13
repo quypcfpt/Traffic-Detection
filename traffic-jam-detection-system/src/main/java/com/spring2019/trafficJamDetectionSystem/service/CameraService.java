@@ -19,7 +19,7 @@ public interface CameraService {
 
     public Camera createCamera(Camera camera);
 
-    public void updateCamera(Camera camera);
+    public Camera updateCamera(Camera camera);
 
     public List<Camera> getAllCameras();
 
