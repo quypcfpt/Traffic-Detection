@@ -1,7 +1,11 @@
 package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,6 +54,7 @@ public class CameraInBookmarkActivity extends AppCompatActivity {
     private ProgressBar progress;
     private Button btnViewMap;
     private LinearLayout viewHeader;
+    private BroadcastReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,5 +131,42 @@ public class CameraInBookmarkActivity extends AppCompatActivity {
                 Toast.makeText(CameraInBookmarkActivity.this, "LỖI: Không tải được danh sách camera", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        receiver = getReceiver();
+        LocalBroadcastManager.getInstance(CameraInBookmarkActivity.this).registerReceiver((receiver),
+                new IntentFilter("Camera")
+        );
+    }
+
+    private BroadcastReceiver getReceiver(){
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                try{
+                    int cameraId = intent.getIntExtra("CAMERA_ID", -1);
+                    int status = intent.getIntExtra("STATUS", -1);
+                    Log.d("BROADCAST","ON");
+                    Log.d("BROADCAST CAMERA",cameraId + "");
+                    Log.d("BROADCAST STATUS",status + "");
+                    if(recyclerView.getVisibility() == View.VISIBLE){
+                        List<CameraModel> list = adapter.getDataSet();
+                        for (int i = 0; i < list.size(); i++) {
+                            if(list.get(i).getId() == cameraId){
+                                list.get(i).setObserverStatus(status);
+                                adapter.notifyItemChanged(i);
+                                break;
+                            }
+                        }
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        return receiver;
     }
 }

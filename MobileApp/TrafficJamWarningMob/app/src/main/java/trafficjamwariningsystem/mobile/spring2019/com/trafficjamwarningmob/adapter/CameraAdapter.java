@@ -104,7 +104,7 @@ public class CameraAdapter extends RecyclerView.Adapter<RecycleViewCameraHolder>
         return dataSet.size();
     }
 
-
-
-
+    public List<CameraModel> getDataSet() {
+        return dataSet;
+    }
 }

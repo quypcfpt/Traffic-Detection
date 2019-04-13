@@ -1,7 +1,11 @@
 package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -36,6 +40,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
     ImageButton btnBack;
     ImageView cameraStatus, imageRoad;
     ApiInterface apiInterface;
+    BroadcastReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,5 +116,43 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
             }
         }
         return imgList;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        receiver = getReceiver();
+        LocalBroadcastManager.getInstance(ImageActivity.this).registerReceiver((receiver),
+                new IntentFilter("Camera")
+        );
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LocalBroadcastManager.getInstance(ImageActivity.this).unregisterReceiver((receiver));
+    }
+
+    private BroadcastReceiver getReceiver(){
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                try{
+                    int cameraId = intent.getIntExtra("CAMERA_ID", -1);
+                    int status = intent.getIntExtra("STATUS", -1);
+                    String time = intent.getStringExtra("TIME");
+                    String img = intent.getStringExtra("IMG");
+                    Log.d("BROADCAST","ON");
+                    Log.d("BROADCAST CAMERA",cameraId + "");
+                    Log.d("BROADCAST STATUS",status + "");
+                    Log.d("BROADCAST TIME",time + "");
+                    Log.d("BROADCAST IMG",img + "");
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        return receiver;
     }
 }

@@ -33,14 +33,16 @@ public class AndroidPushNotificationsServiceImpl implements AndroidPushNotificat
     }
 
     @Override
-    public void sendData(int streetId, int cameraId) {
+    public void sendData(int cameraId, int status, String time, String img) {
         JSONObject body = new JSONObject();
         body.put("to", "/topics/" + CoreConstant.FIREBASE_GENERAL_TOPIC);
         body.put("priority", "high");
 
         JSONObject data = new JSONObject();
-        data.put("street", streetId);
         data.put("camera", cameraId);
+        data.put("status", status);
+        data.put("time", time);
+        data.put("img", img);
         body.put("data", data);
 
         HttpEntity<String> request = new HttpEntity<>(body.toString());
