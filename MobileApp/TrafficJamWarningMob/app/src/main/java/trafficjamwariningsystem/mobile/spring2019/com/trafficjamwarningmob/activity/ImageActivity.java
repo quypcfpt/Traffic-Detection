@@ -3,6 +3,8 @@ package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.acti
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -22,6 +24,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.R;
+import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.adapter.ImageAdapter;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api.ApiClient;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api.ApiInterface;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.CameraModel;
@@ -43,9 +46,12 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
         txtStatus=(TextView) findViewById(R.id.txtStatusView);
         labelTextView = (TextView) findViewById(R.id.labelTextView);
         cameraId = (TextView) findViewById(R.id.cameraId);
-        imageRoad = (ImageView) findViewById(R.id.imageRoad);
+//        imageRoad = (ImageView) findViewById(R.id.imageRoad);
         imageTime = (TextView) findViewById(R.id.imageTime);
         btnBack = (ImageButton) findViewById(R.id.btnBack);
+        RecyclerView rv = findViewById(R.id.rv);
+        StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+        rv.setLayoutManager(sglm);
         btnBack.setOnClickListener(this);
         cameraStatus = (ImageView) findViewById(R.id.cameraStatus);
         final String imagePath = "https://d1ix0byejyn2u7.cloudfront.net/drive/images/uploads/headers/ws_cropper/1_0x0_790x520_0x520_traffic_jams.jpg";
@@ -60,8 +66,12 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
                 cameraId.setText(camResult.getId() + "");
                 cameraStatus.setImageResource(camResult.getObserverStatus() == 0 ? R.mipmap.green : camResult.getObserverStatus() ==1 ? R.mipmap.red : R.mipmap.yellow);
                 txtStatus.setText(camResult.getObserverStatus() == 0 ? "Bình Thường" : camResult.getObserverStatus() ==1 ? "Kẹt" : "Đông");
-                Picasso.get().load(camResult.getImgUrl()).fit().placeholder(R.mipmap.image).into(imageRoad);
+//                Picasso.get().load(camResult.getImgUrl()).fit().placeholder(R.mipmap.image).into(imageRoad);
+                List<String> imgList = parseStringToList(camResult.getImgUrl());
+                ImageAdapter imageAdapter = new ImageAdapter(this,imgList);
+                rv.setAdapter(imageAdapter);
                 imageTime.setText(camResult.getTime() + "");
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -87,5 +97,19 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
         String timeImage = jsonObj.getString("time");
         CameraModel resultObj = new CameraModel(id,description,position,observerStatus,imgUrl,timeImage);
         return resultObj;
+    }
+
+    private List<String> parseStringToList(String imgURL){
+        List<String> imgList = new ArrayList<>();
+        String[] parts = imgURL.split(",");
+        for(int i = 0 ; i<6;i++){
+            if(i<parts.length){
+                imgList.add(parts[i]);
+            }
+            else{
+                imgList.add("");
+            }
+        }
+        return imgList;
     }
 }
