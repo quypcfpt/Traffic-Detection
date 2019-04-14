@@ -30,7 +30,7 @@ public class DetectionControllerImpl extends AbstractController implements Detec
     CameraTransformer cameraTransformer;
 
     @Autowired
-    AndroidPushNotificationsService notificationsService;
+    AndroidPushNotificationsService androidPushNotificationsService;
 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DetectionControllerImpl.class);
@@ -62,7 +62,7 @@ public class DetectionControllerImpl extends AbstractController implements Detec
             newCamera.setImageUrl(camera.getImageUrl());
 
             Camera temp = cameraService.updateCamera(newCamera);
-            notificationsService.sendData(temp.getStreetByStreetId().getId(),temp.getId());
+            androidPushNotificationsService.sendData(temp.getStreetByStreetId().getId(),temp.getId());
 
             detectResultData.put(detectionResult.getCameraId(), detectionResult);
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS);

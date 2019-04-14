@@ -19,6 +19,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import javax.swing.text.StringContent;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
@@ -93,7 +94,7 @@ public class Scheduler {
 
         JSONObject notification = new JSONObject();
         notification.put("title", "Traffic Notification");
-        notification.put("body", convertToUTF8(msg));
+        notification.put("body", msg);
 
         body.put("notification", notification);
 
@@ -101,20 +102,5 @@ public class Scheduler {
 
         CompletableFuture<String> pushNotification = androidPushNotificationsService.sendNotification(request);
         CompletableFuture.allOf(pushNotification).join();
-
-//        try {
-//            String firebaseResponse = pushNotification.get();
-//            LOGGER.info(msg);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//        }
-    }
-
-    private String convertToUTF8(String s) {
-        String out = null;
-        out = new String(s.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
-        return out;
     }
 }
