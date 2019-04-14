@@ -1,8 +1,10 @@
 package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.activity;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Criteria;
@@ -14,6 +16,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -49,6 +52,7 @@ import cz.msebera.android.httpclient.Header;
 import retrofit2.Call;
 import retrofit2.Callback;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.R;
+import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.adapter.CameraAdapter;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.adapter.CameraInBookmarkAdapter;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api.ApiClient;
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.api.ApiInterface;
@@ -83,7 +87,7 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
     private String oriStr = "";
     private String desStr = "";
     private LinearLayout viewHeader;
-
+    private BroadcastReceiver receiver;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -634,6 +638,42 @@ public class SearchRouteActitvity extends Fragment implements LocationListener {
         return params;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        receiver = getReceiver();
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver((receiver),
+                new IntentFilter("Camera")
+        );
+    }
+
+    private BroadcastReceiver getReceiver(){
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                try{
+                    int cameraId = intent.getIntExtra("CAMERA_ID", -1);
+                    int status = intent.getIntExtra("STATUS", -1);
+                    Log.d("BROADCAST","ON");
+                    Log.d("BROADCAST CAMERA",cameraId + "");
+                    Log.d("BROADCAST STATUS",status + "");
+                    if(recyclerView.getVisibility() == View.VISIBLE){
+                        List<CameraModel> list = adapter.getDataSet();
+                        for (int i = 0; i < list.size(); i++) {
+                            if(list.get(i).getId() == cameraId){
+                                list.get(i).setObserverStatus(status);
+                                adapter.notifyItemChanged(i);
+                                break;
+                            }
+                        }
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        return receiver;
+    }
 
 }
 

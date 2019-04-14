@@ -96,5 +96,11 @@ public class ImageAdapter extends RecyclerView.Adapter<RecycleViewImageHolder> {
         return imgList.size();
     }
 
+    public List<String> getDataSet() {
+        return imgList;
+    }
 
+    public void setImgList(List<String> imgList) {
+        this.imgList = imgList;
+    }
 }

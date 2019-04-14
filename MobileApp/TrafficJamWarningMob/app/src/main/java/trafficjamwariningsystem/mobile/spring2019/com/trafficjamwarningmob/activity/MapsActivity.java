@@ -2,9 +2,11 @@ package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.acti
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,6 +23,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -126,6 +129,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String oriStr = "";
     private String desStr = "";
     private ArrayList<LatLng> onRoutePoints;
+    private Bundle bundle;
+    private BroadcastReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +138,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         mLayoutManager = new LinearLayoutManager(this);
         btnBack = (ImageButton) findViewById(R.id.btnBack);
-        Bundle bundle = getIntent().getExtras();
+        bundle = getIntent().getExtras();
         if(bundle != null){
             initMap();
             searchPoints = bundle.getParcelableArrayList("POINTS");
@@ -221,38 +226,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
 //            mMap.setOnMyLocationChangeListener(this);
         }else{
-
-            PolylineOptions lineOptions = new PolylineOptions();
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            for(LatLng x : searchPoints){
-                builder.include(x);
-            }
-            lineOptions.addAll(searchPoints);
-            lineOptions.width(15);
-            lineOptions.color(Color.BLUE);
-            Polyline directionPolyline = mMap.addPolyline(lineOptions);
-            directionPolyline.setStartCap(new RoundCap());
-            directionPolyline.setEndCap(new RoundCap());
-            directionPolyline.setJointType(JointType.ROUND);
-            directionPolyline.setPattern(null);
-            //bound route
-            LatLngBounds bounds = builder.build();
-            mMap.addMarker(new MarkerOptions().position(searchPoints.get(0)).title(oriStr)).showInfoWindow();
-            mMap.addMarker(new MarkerOptions().position(searchPoints.get(searchPoints.size() - 1)).title(desStr));
-            for(CameraModel x : searchCameras){
-                Double lat = Double.parseDouble(x.getPosition().split(",")[0]);
-                Double longi = Double.parseDouble(x.getPosition().split(",")[1]);
-                MarkerOptions marker = null;
-                if(x.getObserverStatus() == 0) {
-                    marker = new MarkerOptions().position(new LatLng(lat, longi)).title(x.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker_green));
-                }else if(x.getObserverStatus() == 1) {
-                    marker = new MarkerOptions().position(new LatLng(lat, longi)).title(x.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker_red));
-                }else{
-                    marker = new MarkerOptions().position(new LatLng(lat, longi)).title(x.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker_yellow));
-                }
-                mMap.addMarker(marker);
-            }
-            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+            drawMapFromBookmark();
         }
     }
 
@@ -646,5 +620,80 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+    }
+
+    private void drawMapFromBookmark(){
+        mMap.clear();
+        PolylineOptions lineOptions = new PolylineOptions();
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for(LatLng x : searchPoints){
+            builder.include(x);
+        }
+        lineOptions.addAll(searchPoints);
+        lineOptions.width(15);
+        lineOptions.color(Color.BLUE);
+        Polyline directionPolyline = mMap.addPolyline(lineOptions);
+        directionPolyline.setStartCap(new RoundCap());
+        directionPolyline.setEndCap(new RoundCap());
+        directionPolyline.setJointType(JointType.ROUND);
+        directionPolyline.setPattern(null);
+        //bound route
+        LatLngBounds bounds = builder.build();
+        mMap.addMarker(new MarkerOptions().position(searchPoints.get(0)).title(oriStr)).showInfoWindow();
+        mMap.addMarker(new MarkerOptions().position(searchPoints.get(searchPoints.size() - 1)).title(desStr));
+        for(CameraModel x : searchCameras){
+            Double lat = Double.parseDouble(x.getPosition().split(",")[0]);
+            Double longi = Double.parseDouble(x.getPosition().split(",")[1]);
+            MarkerOptions marker = null;
+            if(x.getObserverStatus() == 0) {
+                marker = new MarkerOptions().position(new LatLng(lat, longi)).title(x.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker_green));
+            }else if(x.getObserverStatus() == 1) {
+                marker = new MarkerOptions().position(new LatLng(lat, longi)).title(x.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker_red));
+            }else{
+                marker = new MarkerOptions().position(new LatLng(lat, longi)).title(x.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker_yellow));
+            }
+            mMap.addMarker(marker);
+        }
+        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        receiver = getReceiver();
+        LocalBroadcastManager.getInstance(MapsActivity.this).registerReceiver((receiver),
+                new IntentFilter("Camera")
+        );
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LocalBroadcastManager.getInstance(MapsActivity.this).unregisterReceiver((receiver));
+    }
+
+    private BroadcastReceiver getReceiver(){
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                try{
+                    int cameraId = intent.getIntExtra("CAMERA_ID", -1);
+                    int status = intent.getIntExtra("STATUS", -1);
+                    Log.d("BROADCAST","ON");
+                    Log.d("BROADCAST CAMERA",cameraId + "");
+                    Log.d("BROADCAST STATUS",status + "");
+                    for(CameraModel x : searchCameras){
+                        if(x.getId() == cameraId){
+                            x.setObserverStatus(status);
+                            drawMapFromBookmark();
+                            break;
+                        }
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        return receiver;
     }
 }

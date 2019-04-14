@@ -62,7 +62,7 @@ public class DetectionControllerImpl extends AbstractController implements Detec
             newCamera.setImageUrl(camera.getImageUrl());
 
             Camera temp = cameraService.updateCamera(newCamera);
-            androidPushNotificationsService.sendData(temp.getStreetByStreetId().getId(),temp.getId());
+            androidPushNotificationsService.sendData(temp.getId(), temp.getObservedStatus(), temp.getTime().toString(), temp.getImageUrl());
 
             detectResultData.put(detectionResult.getCameraId(), detectionResult);
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS);

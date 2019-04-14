@@ -12,6 +12,6 @@ public interface AndroidPushNotificationsService {
     @Async
     public CompletableFuture<String> sendNotification(HttpEntity<String> entity);
 
-    public void sendData(int streetId, int cameraId);
+    public void sendData(int cameraId, int status, String time, String img);
 
 }

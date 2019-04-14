@@ -2,7 +2,9 @@ package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.util
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -33,7 +35,23 @@ public class FCMClass extends FirebaseMessagingService {
         }
 
         if (remoteMessage.getData().size() > 0) {
-            Log.e(TAG, "Data: " + remoteMessage.getData());
+            try {
+                LocalBroadcastManager broadcaster = LocalBroadcastManager.getInstance(getBaseContext());
+                Intent intent = new Intent("Camera");
+                int camera = Integer.parseInt(remoteMessage.getData().get("camera"));
+                int status = Integer.parseInt(remoteMessage.getData().get("status"));
+                String time = remoteMessage.getData().get("time");
+                String imgURL = remoteMessage.getData().get("img");
+                intent.putExtra("CAMERA_ID", camera);
+                intent.putExtra("STATUS", status);
+                intent.putExtra("TIME", time);
+                intent.putExtra("IMG", imgURL);
+                broadcaster.sendBroadcast(intent);
+                Log.e(TAG, "Data: " + remoteMessage.getData());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
         }
     }
 }

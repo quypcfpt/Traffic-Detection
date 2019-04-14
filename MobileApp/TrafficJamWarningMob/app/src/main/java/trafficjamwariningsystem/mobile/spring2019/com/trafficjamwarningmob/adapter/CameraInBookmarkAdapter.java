@@ -2,6 +2,7 @@ package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.adap
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -9,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -48,9 +51,10 @@ public class CameraInBookmarkAdapter extends RecyclerView.Adapter<RecycleViewCam
                 Context context = view.getContext();
                 Toast.makeText(mContext, "" + models.getId(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(context, ImageActivity.class);
-                intent.putExtra("CAMERA_ID", models.getId() + "");
-                intent.putExtra("CAMERA_STATUS", models.getObserverStatus() + "");
-                intent.putExtra("CAMERA_NAME", models.getDescription() + "");
+                Bundle bundle = new Bundle();
+                String listCamJsonObj = new Gson().toJson(models);
+                bundle.putString("CAMINFO", listCamJsonObj);
+                intent.putExtras(bundle);
                 context.startActivity(intent);
             }
         });
@@ -62,5 +66,7 @@ public class CameraInBookmarkAdapter extends RecyclerView.Adapter<RecycleViewCam
         return dataSet.size();
     }
 
-
+    public List<CameraModel> getDataSet() {
+        return dataSet;
+    }
 }
