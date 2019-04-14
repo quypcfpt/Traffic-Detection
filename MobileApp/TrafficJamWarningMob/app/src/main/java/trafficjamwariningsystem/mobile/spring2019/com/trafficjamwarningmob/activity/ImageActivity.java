@@ -41,7 +41,8 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
     ImageView cameraStatus, imageRoad;
     ApiInterface apiInterface;
     BroadcastReceiver receiver;
-
+    private RecyclerView rv;
+    ImageAdapter imageAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +55,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
 //        imageRoad = (ImageView) findViewById(R.id.imageRoad);
         imageTime = (TextView) findViewById(R.id.imageTime);
         btnBack = (ImageButton) findViewById(R.id.btnBack);
-        RecyclerView rv = findViewById(R.id.rv);
+         rv = findViewById(R.id.rv);
         StaggeredGridLayoutManager sglm = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         rv.setLayoutManager(sglm);
         btnBack.setOnClickListener(this);
@@ -62,10 +63,14 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
         final String imagePath = "https://d1ix0byejyn2u7.cloudfront.net/drive/images/uploads/headers/ws_cropper/1_0x0_790x520_0x520_traffic_jams.jpg";
         Bundle bundle =getIntent().getExtras();
         String listCamJsonObj = bundle.getString("CAMINFO");
-        CameraModel camResult = new CameraModel();
+        loadImageActivity(listCamJsonObj);
+
+    }
+    private void loadImageActivity(String listCamJsonObj){
         if(listCamJsonObj !=null){
             Log.d("JSON",listCamJsonObj);
             try {
+                CameraModel camResult = new CameraModel();
                 camResult = parseJsonintoList(listCamJsonObj);
                 labelTextView.setText(camResult.getDescription());
                 cameraId.setText(camResult.getId() + "");
@@ -73,7 +78,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
                 txtStatus.setText(camResult.getObserverStatus() == 0 ? "Bình Thường" : camResult.getObserverStatus() ==1 ? "Kẹt" : "Đông");
 //                Picasso.get().load(camResult.getImgUrl()).fit().placeholder(R.mipmap.image).into(imageRoad);
                 List<String> imgList = parseStringToList(camResult.getImgUrl());
-                ImageAdapter imageAdapter = new ImageAdapter(this,imgList);
+                imageAdapter = new ImageAdapter(this,imgList);
                 rv.setAdapter(imageAdapter);
                 imageTime.setText(camResult.getTime() + "");
 
@@ -82,6 +87,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
             }
         }
     }
+
 
     @Override
     public void onClick(View v) {
@@ -106,7 +112,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
 
     private List<String> parseStringToList(String imgURL){
         List<String> imgList = new ArrayList<>();
-        String[] parts = imgURL.split(",");
+        String[] parts = imgURL.split(", ");
         for(int i = 0 ; i<6;i++){
             if(i<parts.length){
                 imgList.add(parts[i]);
@@ -127,12 +133,6 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
         );
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        LocalBroadcastManager.getInstance(ImageActivity.this).unregisterReceiver((receiver));
-    }
-
     private BroadcastReceiver getReceiver(){
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
@@ -142,11 +142,21 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
                     int status = intent.getIntExtra("STATUS", -1);
                     String time = intent.getStringExtra("TIME");
                     String img = intent.getStringExtra("IMG");
+
                     Log.d("BROADCAST","ON");
                     Log.d("BROADCAST CAMERA",cameraId + "");
                     Log.d("BROADCAST STATUS",status + "");
                     Log.d("BROADCAST TIME",time + "");
                     Log.d("BROADCAST IMG",img + "");
+
+                    cameraStatus.setImageResource(status == 0 ? R.mipmap.green : status ==1 ? R.mipmap.red : R.mipmap.yellow);
+                    txtStatus.setText(status == 0 ? "Bình Thường" : status ==1 ? "Kẹt" : "Đông");
+
+                    List<String> imgList = parseStringToList(img);
+                    imageAdapter.setImgList(imgList);
+                    imageAdapter.notifyDataSetChanged();
+                    
+                    imageTime.setText(time + "");
 
                 }catch (Exception e){
                     e.printStackTrace();
