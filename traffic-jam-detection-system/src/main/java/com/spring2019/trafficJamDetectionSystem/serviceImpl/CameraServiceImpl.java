@@ -68,8 +68,8 @@ public class CameraServiceImpl implements CameraService {
     }
 
     @Override
-    public void updateCamera(Camera camera) {
-        cameraRepository.save(camera);
+    public Camera updateCamera(Camera camera) {
+      return   cameraRepository.save(camera);
     }
 
     @Override
