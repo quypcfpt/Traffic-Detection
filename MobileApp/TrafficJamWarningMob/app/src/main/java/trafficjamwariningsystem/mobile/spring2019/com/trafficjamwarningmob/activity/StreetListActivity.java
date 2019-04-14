@@ -195,8 +195,11 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
                     }
                 }, 3000);
             } else {
+
                 Toast.makeText(getContext(), "Nothing to load more", Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.GONE);
+
+
             }
         }
     }
@@ -252,8 +255,11 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
                     if (streetModelList != null && !streetModelList.isEmpty()) {
                         adapter = new StreetAdapter(streetModelList, getContext());
                         recyclerView.setAdapter(adapter);
+                        txtError.setVisibility(View.GONE);
+                        view.setVisibility(View.VISIBLE);
+                        viewHeader.setVisibility(View.VISIBLE);
                     } else {
-                        txtError.setText(txtSearch + " cannot found .");
+                        txtError.setText("Đường "+txtSearch + " không thể tìm thấy  .");
                         txtError.setVisibility(View.VISIBLE);
                         view.setVisibility(View.GONE);
                         viewHeader.setVisibility(View.GONE);

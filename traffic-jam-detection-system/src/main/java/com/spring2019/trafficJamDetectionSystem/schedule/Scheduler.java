@@ -40,7 +40,7 @@ public class Scheduler {
     @Autowired
     AndroidPushNotificationsService androidPushNotificationsService;
 
-    @Scheduled(fixedDelay = 10 * 1000)
+    @Scheduled(fixedDelay = 1 * 1000)
     public void scheduleFixedDelayTask() {
 
         if (DetectionControllerImpl.detectResultData == null) {

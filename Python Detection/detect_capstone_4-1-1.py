@@ -155,6 +155,7 @@ class DetectMutilThread (threading.Thread):
             imgURLs = ''
             if (count%(10*fps) == 0) & (count != 0):
                 print("**********")
+                print("imglink : " ,self.video_url)
                 print('Processing...' + self.name + ' in frame ' + str(count))
                 cv2.imwrite(path, image)
                 new_filelink = client.upload(filepath=path, multipart=False)
@@ -419,6 +420,8 @@ class DetectMutilThread (threading.Thread):
 def main():       
     for keys,values in video_path.items():
         thread = DetectMutilThread(keys, values)
+        print("keys", keys)
+        print("values", values)
         thread.start()  
         
 if __name__ == '__main__':

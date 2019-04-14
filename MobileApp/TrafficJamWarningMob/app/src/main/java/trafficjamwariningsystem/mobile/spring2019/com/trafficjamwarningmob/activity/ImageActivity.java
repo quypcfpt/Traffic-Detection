@@ -155,7 +155,6 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
                     List<String> imgList = parseStringToList(img);
                     imageAdapter.setImgList(imgList);
                     imageAdapter.notifyDataSetChanged();
-                    
                     imageTime.setText(time + "");
 
                 }catch (Exception e){
