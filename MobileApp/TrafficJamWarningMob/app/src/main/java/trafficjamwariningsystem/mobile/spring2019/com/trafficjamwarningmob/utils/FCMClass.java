@@ -1,16 +1,22 @@
 package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.utils;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.Random;
+
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.R;
+import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.activity.CameraInBookmarkActivity;
 
 public class FCMClass extends FirebaseMessagingService {
 
@@ -20,6 +26,7 @@ public class FCMClass extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
         if (remoteMessage.getNotification() != null) {
+
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "channel_id")
                     .setContentTitle(remoteMessage.getNotification().getTitle())
                     .setContentText(remoteMessage.getNotification().getBody())
@@ -31,10 +38,12 @@ public class FCMClass extends FirebaseMessagingService {
             NotificationManager notificationManager =
                     (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-            notificationManager.notify(0, notificationBuilder.build());
-        }
+            notificationManager.notify(generateRandom(), notificationBuilder.build());
 
-        if (remoteMessage.getData().size() > 0) {
+            if (remoteMessage.getData().size() > 0) {
+
+            }
+        } else if (remoteMessage.getData().size() > 0) {
             try {
                 LocalBroadcastManager broadcaster = LocalBroadcastManager.getInstance(getBaseContext());
                 Intent intent = new Intent("Camera");
@@ -48,10 +57,15 @@ public class FCMClass extends FirebaseMessagingService {
                 intent.putExtra("IMG", imgURL);
                 broadcaster.sendBroadcast(intent);
                 Log.e(TAG, "Data: " + remoteMessage.getData());
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
         }
+    }
+
+    private int generateRandom() {
+        Random random = new Random();
+        return random.nextInt(9999 - 1000) + 1000;
     }
 }
