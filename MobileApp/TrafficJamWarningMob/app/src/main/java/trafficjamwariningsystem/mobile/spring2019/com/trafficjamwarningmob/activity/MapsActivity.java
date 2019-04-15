@@ -348,11 +348,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         }
                     }
                     if(!cameraList.isEmpty()){
-                        RequestParams params = getParams(newPostion.latitude+","+newPostion.longitude,cameraList.get(cameraList.size()-1).getPosition());
-                        getRoutePoints(params);
                         Log.d("Camera : " , cameraList.toString());
                         Collections.sort(cameraList);
                         Log.d("CameraSort : " , cameraList.toString());
+                        RequestParams params = getParams(newPostion.latitude+","+newPostion.longitude,cameraList.get(cameraList.size()-1).getPosition());
+                        getRoutePoints(params);
                         for (CameraModel x : cameraList) {
                             LatLng locationCamera = getCameraLocation(x.getPosition());
                             MarkerOptions marker = null;
@@ -437,12 +437,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
        //position change to QT road
         postion.add(new PositionModel(10.842553, 106.642668));
         postion.add(new PositionModel(10.841229, 106.644644));
-        postion.add(new PositionModel(10.840535, 106.645538));
-        postion.add(new PositionModel(10.839451, 106.646859));
-        postion.add(new PositionModel(10.838978, 106.648116));
-        postion.add(new PositionModel(10.838717, 106.649182));
-        postion.add(new PositionModel(10.838420, 106.650428));
-        postion.add(new PositionModel(10.838154, 106.651474));
+//        postion.add(new PositionModel(10.840535, 106.645538));
+//        postion.add(new PositionModel(10.839451, 106.646859));
+//        postion.add(new PositionModel(10.838978, 106.648116));
+//        postion.add(new PositionModel(10.838717, 106.649182));
+//        postion.add(new PositionModel(10.838420, 106.650428));
+//        postion.add(new PositionModel(10.838154, 106.651474));
 
     // position move backward
 //        postion.add(new PositionModel(10.838717, 106.649182));
@@ -453,12 +453,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        postion.add(new PositionModel(10.842553, 106.642668));
 
         //Test for anthor street
-//        postion.add(new PositionModel(10.843921, 106.639865));
-//        postion.add(new PositionModel(10.843005, 106.639326));
-//        postion.add(new PositionModel(10.841694, 106.638478));
-//        postion.add(new PositionModel(10.840671, 106.637792));
-//        postion.add(new PositionModel(10.838750, 106.636894));
-//        postion.add(new PositionModel(10.836207, 106.635722));
+        postion.add(new PositionModel(10.843921, 106.639865));
+        postion.add(new PositionModel(10.843005, 106.639326));
+        postion.add(new PositionModel(10.841694, 106.638478));
+        postion.add(new PositionModel(10.840671, 106.637792));
+        postion.add(new PositionModel(10.838750, 106.636894));
+        postion.add(new PositionModel(10.836207, 106.635722));
         //Test for anthor street backward
 //        postion.add(new PositionModel(10.836207, 106.635722));
 //        postion.add(new PositionModel(10.838750, 106.636894));

@@ -30,7 +30,7 @@ y=[]
 z=[]
 t=[]
 
-client = Client("AY9VEV5GRdSOkw8IWhupGz")
+client = Client("AfZuoeSTFG369uFdmkmJQz")
 sys.path.append("..")
 
 label_map = label_map_util.load_labelmap(PATH_TO_LABELS)
@@ -54,23 +54,10 @@ detection_classes = detection_graph.get_tensor_by_name('detection_classes:0')
 num_detections = detection_graph.get_tensor_by_name('num_detections:0')
 
 ## Get TOp 5 camera from server and get resource
-video_path = {}
-headers = {'Content-type': 'application/json'}
-url='http://localhost:8080/api/camera'
-params={'page':1,'size':2}
-r=requests.get(url, params=params, headers=headers)
 
-jsonValueResult=json.loads(r.text)
-resultCamera = jsonValueResult["data"]["cameraList"]
-print(jsonValueResult["data"]["cameraList"])
-for i in range(0,2):
-    video_path.update({resultCamera[i]["id"]:resultCamera[i]["resource"]})
 ##===========================
-for keys,values in video_path.items():
-    print("keys", keys)
-    print("values", values)
     
-#video_path = [CWD_PATH + "/video/street_720.MP4",CWD_PATH + "/video/IMG_0043.MOV"]
+video_path = ["Demo 3_1p_9_4_3.avi", "Demo 5.avi"]
 size_excel_path = open_workbook('FixSize.xls')
 size_values = []
 
@@ -84,9 +71,7 @@ class ReadFileExcel(object):
 #read excel
 valuesXYZ = []
 
-number_normal = []
-number_crowed = []
-number_busy = []
+
 
 wb = open_workbook('FinalDataSample1111.xlsx')
 for s in wb.sheets():
@@ -151,6 +136,9 @@ class DetectMutilThread (threading.Thread):
         fps = int(video.get(cv2.CAP_PROP_FPS))
         count = 0
         pathList=[]
+        number_normal = []
+        number_crowed = []
+        number_busy = []
         joinPath = ', '
         while True:
             frame, image = video.read()
@@ -161,7 +149,7 @@ class DetectMutilThread (threading.Thread):
                 print('Processing...' + self.name + ' in frame ' + str(count))
                 cv2.imwrite(path, image)
                 new_filelink = client.upload(filepath=path, multipart=False)
-                print("link : ", new_filelink.url)
+                print("link : " + self.name + new_filelink.url)
                 pathList.append(new_filelink.url)
                 height, width, channels = image.shape
                 image_expanded = np.expand_dims(image, axis=0)
@@ -367,10 +355,7 @@ class DetectMutilThread (threading.Thread):
                                                 number_normal.append(countNormal)
                                                 print(self.name + " status after 10s: Normal")
 
-##                cv2.imwrite(path, image)
-##                new_filelink = client.upload(filepath=path, multipart=False)
-##                print("link : ", new_filelink.url)
-##                pathList.append(new_filelink.url)
+
                         
                         
                         
@@ -380,10 +365,14 @@ class DetectMutilThread (threading.Thread):
                     print("********************")
                     print(len(pathList))
                     for i in range(0, len(pathList)):
-                        print("aaaaa" + str(pathList[i]))
+                        print("aaaaa " + self.name + str(pathList[i]))
                     
                     imgURLs = joinPath.join(pathList)
                     status = 0
+                    print("number_crowed : " + self.name + str(number_crowed))
+                    print("number_normal : " + self.name + str(number_normal))
+                    print("number_busy : " + self.name + str(number_busy))
+                    
                     if(len(number_crowed) > len(number_normal) and len(number_crowed) > len(number_busy)):
                             print(self.name + " result after 60s: Crowed")
                             status = 2
@@ -397,16 +386,7 @@ class DetectMutilThread (threading.Thread):
                     number_busy.clear()
                     number_crowed.clear()
                     pathList.clear()
-                    jsonData ={
-                        "CameraId":self.name,
-                        "statusId":status,
-                        "imageUrl":imgURLs
-                    }
-                    headers = {'Content-type': 'application/json'}
-                    url='http://localhost:8080/api/detection'
-                    params={'detectResultString':json.dumps(jsonData)}
-                    r=requests.post(url, params=params, headers=headers)
-                    print(r.status_code, r.reason, r.text)
+                    
             if not frame:  # error on video source or last frame finished
                 break
             
@@ -420,8 +400,8 @@ class DetectMutilThread (threading.Thread):
         print(window_name + " Exiting ")
         
 def main():       
-    for keys,values in video_path.items():
-        thread = DetectMutilThread(keys, values)
+    for items in video_path:
+        thread = DetectMutilThread(os.path.basename(items), items)
         thread.start()  
         
 if __name__ == '__main__':
