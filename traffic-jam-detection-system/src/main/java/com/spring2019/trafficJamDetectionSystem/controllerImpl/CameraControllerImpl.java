@@ -182,12 +182,11 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
             cameraEntity.setTime(oldCamera.getTime());
             cameraEntity.setResource(oldCamera.getResource());
             cameraEntity.setImageUrl(oldCamera.getImageUrl());
-            cameraService.updateCamera(cameraEntity);
 
             if (oldCamera.getIsActive()) {
-                if (cameraEntity.getPosition() != oldCamera.getPosition()) {
+                if (!cameraEntity.getPosition().equals(oldCamera.getPosition())) {
                     bookmarkService.deleteBookmarkByCamera(oldCamera);
-
+                    LOGGER.info("old position: "+ oldCamera.getPosition() +" new: " + cameraEntity.getPosition());
                     for (Bookmark bookmark : bookmarks) {
                         if (cameraService.checkCameraOnroute(bookmark, cameraEntity)) {
                             BookmarkCamera bookmarkCamera = new BookmarkCamera();
@@ -211,6 +210,9 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
                     }
                 }
             }
+
+            cameraService.updateCamera(cameraEntity);
+
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, true);
             LOGGER.info("Camera updated: " + cameraModelString);
         } catch (Exception e) {

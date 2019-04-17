@@ -206,6 +206,13 @@ $('#dataTable').on('click', '.btn', function () {
     var streetId = street.id;
 
     var active = data["isActive"];
+
+    if (street.isActive==true){
+        $('#edtActive-parent').show()
+    }else{
+        $('#edtActive-parent').hide()
+    }
+
     if (active == true) {
         $('#edtActive').prop("checked", true).change();
     } else {

@@ -3,6 +3,7 @@ package com.spring2019.trafficJamDetectionSystem.schedule;
 import com.spring2019.trafficJamDetectionSystem.common.CoreConstant;
 import com.spring2019.trafficJamDetectionSystem.controllerImpl.DetectionControllerImpl;
 import com.spring2019.trafficJamDetectionSystem.entity.Account;
+import com.spring2019.trafficJamDetectionSystem.entity.Camera;
 import com.spring2019.trafficJamDetectionSystem.entity.Street;
 import com.spring2019.trafficJamDetectionSystem.model.DetectionModel;
 import com.spring2019.trafficJamDetectionSystem.service.AndroidPushNotificationsService;
@@ -58,16 +59,16 @@ public class Scheduler {
                 DetectionModel newResult = DetectionControllerImpl.detectResultData.get(cameraId);
 
                 if (oldResult.getStatusId() != newResult.getStatusId()) {
-                    Street street = cameraService.getCameraById(cameraId).getStreetByStreetId();
-
+                    Camera camera = cameraService.getCameraById(cameraId);
+                    Street street = camera.getStreetByStreetId();
 
                     String msg = "";
                     switch (newResult.getStatusId()) {
                         case 0:
-                            msg = "Đường " + street.getName() + " quận " + street.getDistrict() + " đã thông thoáng";
+                            msg = "Khu vực " + camera.getDescription() + ",đường " + street.getName() + ",quận " + street.getDistrict() + " đã thông thoáng";
                             break;
                         case 1:
-                            msg = "Kẹt xe ở đường " + street.getName() + " quận " + street.getDistrict();
+                            msg = "Kẹt xe ở khu vực " + camera.getDescription() + ",đường " + street.getName() + ",quận " + street.getDistrict();
                             break;
                     }
 

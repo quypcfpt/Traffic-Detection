@@ -73,6 +73,6 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Override
     public void deleteBookmarkByCamera(Camera camera) {
-        bookmarkCameraRepository.deleteBookmarkCameraByCameraByCameraId(camera);
+        bookmarkCameraRepository.deleteBookmarkCamerasByCameraByCameraId(camera);
     }
 }

@@ -15,7 +15,7 @@ import java.util.List;
 public interface BookmarkCameraRepository extends JpaRepository<BookmarkCamera, Integer> {
 
     @Query(value="SELECT DISTINCT username FROM Bookmark_Camera JOIN Bookmark B " +
-            "ON Bookmark_Camera.bookmark_id = B.id JOIN Account A on B.account_id = A.id",nativeQuery = true)
+            "ON Bookmark_Camera.bookmark_id = B.id JOIN Account A on B.account_id = A.id WHERE camera_id=?1",nativeQuery = true)
     List<String> findUsernameByCamera(int cameraId);
 
 
@@ -25,7 +25,8 @@ public interface BookmarkCameraRepository extends JpaRepository<BookmarkCamera, 
     Integer deleteBookmarkCamerasByBookmarkByBookmarkId(Bookmark bookMarkId);
 
     @Transactional
-    void deleteBookmarkCameraByCameraByCameraId(Camera camera);
+  //  @Query(value = "DELETE FROM BookmarkCamera WHERE cameraByCameraId=camera",nativeQuery = true)
+    Integer deleteBookmarkCamerasByCameraByCameraId(Camera cameraId);
 
     List<BookmarkCamera> findBookmarkCamerasByBookmarkByBookmarkId(Bookmark bookmark);
 }
