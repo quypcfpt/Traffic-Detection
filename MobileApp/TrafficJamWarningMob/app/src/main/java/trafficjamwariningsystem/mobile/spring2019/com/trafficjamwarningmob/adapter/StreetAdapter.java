@@ -70,6 +70,7 @@ public class StreetAdapter extends RecyclerView.Adapter<RecycleViewHolder> {
         myViewHolder.txtName.setText(models.getName());
         myViewHolder.txtName.setEllipsize(TextUtils.TruncateAt.END);
         myViewHolder.txtName.setMaxLines(1);
+        myViewHolder.txtDistrict.setVisibility(View.VISIBLE);
         myViewHolder.txtDistrict.setText(models.getDistrict());
         myViewHolder.info.setVisibility(View.GONE);
         myViewHolder.setItemClickListener(new ItemClickListener() {

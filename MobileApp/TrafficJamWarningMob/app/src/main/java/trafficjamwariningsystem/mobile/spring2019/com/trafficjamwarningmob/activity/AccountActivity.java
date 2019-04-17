@@ -196,7 +196,7 @@ public class AccountActivity extends Fragment implements View.OnClickListener {
                     } else {
                         isLogin = false;
                         initialView(isLogin);
-                        txtSignInErr.setText("The UserName or Password is Invalid");
+                        txtSignInErr.setVisibility(View.VISIBLE);
                     }
                 }
 

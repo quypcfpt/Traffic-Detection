@@ -52,7 +52,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 acountModel.put("name", edtFullName.getText() + "");
                 if(edtUsername.getText().toString().trim().length()>32 || edtUsername.getText().toString().trim().length()<6){
                     txtError.setVisibility(View.VISIBLE);
-                    txtError.setText("The UserName must in 6-32 charaters");
+                    txtError.setText("The UserName must in 3-32 charaters");
                 }else if(!edtUsername.getText().toString().trim().matches("[a-zA-Z0-9]+")){
                     txtError.setVisibility(View.VISIBLE);
                     txtError.setText("The UserName does not contain specical character (!,@,#,$,%,^,&,*)");
