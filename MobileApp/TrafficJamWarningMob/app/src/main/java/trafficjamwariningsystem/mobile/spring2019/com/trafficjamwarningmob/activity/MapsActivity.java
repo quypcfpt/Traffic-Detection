@@ -300,7 +300,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         return  strAdd;
     }
-    private void getCamearaOnStreet(String streetName){
+    private void getCamearaOnStreet(final String streetName){
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Call<Response<List<CameraModel>>> responseCall = apiInterface.loadCamerasByStreetName(strAdd);
         responseCall.enqueue(new Callback<Response<List<CameraModel>>>() {
@@ -357,14 +357,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             LatLng locationCamera = getCameraLocation(x.getPosition());
                             MarkerOptions marker = null;
                             if (x.getObserverStatus() == 0) {
-                                marker = new MarkerOptions().position(new LatLng(locationCamera.latitude, locationCamera.longitude)).title(x.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker_green));
+                                marker = new MarkerOptions().position(new LatLng(locationCamera.latitude, locationCamera.longitude)).title(x.getDistance()+"").icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker_green));
                             } else if (x.getObserverStatus() == 1) {
-                                marker = new MarkerOptions().position(new LatLng(locationCamera.latitude, locationCamera.longitude)).title(x.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker_red));
+                                marker = new MarkerOptions().position(new LatLng(locationCamera.latitude, locationCamera.longitude)).title(x.getDistance()+"").icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker_red));
                             } else {
-                                marker = new MarkerOptions().position(new LatLng(locationCamera.latitude, locationCamera.longitude)).title(x.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker_yellow));
+                                marker = new MarkerOptions().position(new LatLng(locationCamera.latitude, locationCamera.longitude)).title(x.getDistance()+"").icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker_yellow));
                             }
                             mMap.addMarker(marker);
-
+                            mMap.addMarker(new MarkerOptions().position(newPostion).title("You're here")).showInfoWindow();
 
                         }
                     }
@@ -410,11 +410,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //                                }
 //                            }, 1000 / 2);
 //                        }
+                }else{
+                    Toast.makeText(MapsActivity.this, streetName + "  hiện tại chưa có camera . ", Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
             public void onFailure(Call<Response<List<CameraModel>>> call, Throwable t) {
-//                Log.e("ERROR",t.getMessage());
+                Toast.makeText(MapsActivity.this, " Không kết nối được server . Vui lòng kiểm tra lại đường truyền ", Toast.LENGTH_SHORT).show();
+                MapsActivity.this.finish();
             }
         });
     }
@@ -427,9 +430,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
     public void testGPS() {
         final List<PositionModel> postion = new ArrayList<>();
-//        postion.add(new PositionModel(10.852706, 106.629692));
-//        postion.add(new PositionModel(10.852358, 106.627646));
-//        postion.add(new PositionModel(10.852291, 106.626731));
+        postion.add(new PositionModel(10.852706, 106.629692));
+        postion.add(new PositionModel(10.852358, 106.627646));
+        postion.add(new PositionModel(10.852291, 106.626731));
         postion.add(new PositionModel(10.850984, 106.628128));
         postion.add(new PositionModel(10.850233, 106.631208));
         postion.add(new PositionModel(10.850004, 106.631572));
@@ -505,7 +508,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     //************
                     newPostion = new LatLng(postion.get(counter).getLatitude(), postion.get(counter).getLongtitude());
                     moveCamera(new LatLng(postion.get(counter).getLatitude(), postion.get(counter).getLongtitude()), ZOOMVALUE);
-                    mMap.addMarker(new MarkerOptions().position(newPostion).title("You're here")).showInfoWindow();
+                    mMap.addMarker(new MarkerOptions().position(newPostion)).showInfoWindow();
                     String streetName = getStreetNameAtLocation(newPostion);
                     //--- code here
                     //--get list camera with streetName

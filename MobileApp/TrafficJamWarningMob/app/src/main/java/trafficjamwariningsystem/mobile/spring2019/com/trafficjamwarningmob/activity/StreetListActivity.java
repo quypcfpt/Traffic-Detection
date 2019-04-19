@@ -40,14 +40,14 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
     private LinearLayoutManager mLayoutManager;
     private boolean isScrolling = false;
     private static List<StreetModel> streetModelList, streetModelListSearch;
-    private Button btnSearch;
+    private Button btnSearch , btnError;
     private EditText editText;
     int currentItems, scrollOutItems, totalItems;
     private ProgressBar progressBar;
     private String txtSearch;
     private RelativeLayout view;
+    private LinearLayout viewHeader ,errorView;
     private TextView txtError;
-    private LinearLayout viewHeader;
 
 
     @Override
@@ -64,11 +64,17 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
         btnSearch.setBackgroundResource(R.mipmap.search);
         view = (RelativeLayout) v.findViewById(R.id.listview);
         viewHeader = v.findViewById(R.id.viewHeader);
-        txtError = (TextView) v.findViewById(R.id.txtError);
+        txtError=(TextView)v.findViewById(R.id.txtError) ;
+        errorView=(LinearLayout)v.findViewById(R.id.errorExcption);
+        btnError=(Button)v.findViewById(R.id.retry);
+        btnError.setVisibility(View.GONE);
+        txtError.setVisibility(View.GONE);
+        errorView.setVisibility(View.GONE);
         editText.clearFocus();
         onFirstLoad();
         doLoadMore();
         btnSearch.setOnClickListener(this);
+        btnError.setOnClickListener(this);
         return v;
     }
 
@@ -89,11 +95,12 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
                 if (!streetModelList.isEmpty()) {
                     view.setVisibility(View.VISIBLE);
                     viewHeader.setVisibility(View.VISIBLE);
-                    txtError.setVisibility(View.GONE);
+                    errorView.setVisibility(View.GONE);
                     adapter = new StreetAdapter(streetModelList, getContext());
                     recyclerView.setAdapter(adapter);
                 } else {
-                    txtError.setVisibility(View.VISIBLE);
+                    errorView.setVisibility(View.VISIBLE);
+                    btnError.setVisibility(View.VISIBLE);
                     view.setVisibility(View.GONE);
                     viewHeader.setVisibility(View.GONE);
                 }
@@ -102,6 +109,11 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
             @Override
             public void onFailure(Call<Response<MultiStreetModel>> call, Throwable t) {
 //                Log.d("Failure", t.getMessage());
+                errorView.setVisibility(View.VISIBLE);
+                btnError.setVisibility(View.VISIBLE);
+                view.setVisibility(View.GONE);
+                viewHeader.setVisibility(View.GONE);
+                txtError.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -129,7 +141,6 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
                                 if (streetModelList != null) {
                                     view.setVisibility(View.VISIBLE);
                                     viewHeader.setVisibility(View.VISIBLE);
-                                    txtError.setVisibility(View.GONE);
                                     adapter = new StreetAdapter(streetModelList, getContext());
                                     mLayoutManager = new LinearLayoutManager(getContext());
                                     recyclerView.setLayoutManager(mLayoutManager);
@@ -138,7 +149,6 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
                                 } else {
                                     view.setVisibility(View.VISIBLE);
                                     viewHeader.setVisibility(View.VISIBLE);
-                                    txtError.setVisibility(View.GONE);
                                     Toast.makeText(getContext(), "Nothing to load more", Toast.LENGTH_SHORT).show();
                                     progressBar.setVisibility(View.GONE);
 
@@ -177,7 +187,6 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
                                 if (streetModelList != null) {
                                     view.setVisibility(View.VISIBLE);
                                     viewHeader.setVisibility(View.VISIBLE);
-                                    txtError.setVisibility(View.GONE);
                                     adapter = new StreetAdapter(streetModelList, getContext());
                                     recyclerView.setAdapter(adapter);
                                     mLayoutManager = new LinearLayoutManager(getContext());
@@ -279,6 +288,14 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        doSearch();
-    }
+        switch (v.getId()){
+            case R.id.searchBtn:
+                doSearch();
+                break;
+            case R.id.retry:
+                onFirstLoad();
+                break;
+        }
+
+        }
 }

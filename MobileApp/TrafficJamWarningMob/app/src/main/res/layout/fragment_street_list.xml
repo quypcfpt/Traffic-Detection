@@ -90,7 +90,11 @@
             android:indeterminate="false"
             android:visibility="gone" />
     </RelativeLayout>
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/errorExcption">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -101,4 +105,13 @@
         android:id="@+id/txtError"
         android:visibility="gone"
         android:text="Kiểm tra kết nối internet" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="Thử lại"
+        android:id="@+id/retry"/>
+</LinearLayout>
+
 </LinearLayout>
