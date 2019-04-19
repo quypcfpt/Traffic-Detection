@@ -42,7 +42,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return "Đường";
             case 1:
-                return "Giao Thông";
+                return "Tuyến";
             case 2:
                 return "Tài khoản";
         }

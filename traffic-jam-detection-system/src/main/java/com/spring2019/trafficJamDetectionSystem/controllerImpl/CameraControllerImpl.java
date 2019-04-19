@@ -183,23 +183,9 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
             cameraEntity.setResource(oldCamera.getResource());
             cameraEntity.setImageUrl(oldCamera.getImageUrl());
 
-            if (oldCamera.getIsActive()) {
-                if (!cameraEntity.getPosition().equals(oldCamera.getPosition())) {
-                    bookmarkService.deleteBookmarkByCamera(oldCamera);
-                    LOGGER.info("old position: "+ oldCamera.getPosition() +" new: " + cameraEntity.getPosition());
-                    for (Bookmark bookmark : bookmarks) {
-                        if (cameraService.checkCameraOnroute(bookmark, cameraEntity)) {
-                            BookmarkCamera bookmarkCamera = new BookmarkCamera();
-                            bookmarkCamera.setBookmarkByBookmarkId(bookmark);
-                            bookmarkCamera.setCameraByCameraId(cameraEntity);
-
-                            bookmarkService.saveBookmarkCamera(bookmarkCamera);
-                        }
-                    }
-                } else if (cameraModel.isActive() == false) {
-                    bookmarkService.deleteBookmarkByCamera(oldCamera);
-                }
-            } else {
+            if (!cameraEntity.getPosition().equals(oldCamera.getPosition())) {
+                bookmarkService.deleteBookmarkByCamera(oldCamera);
+                LOGGER.info("old position: " + oldCamera.getPosition() + " new: " + cameraEntity.getPosition());
                 for (Bookmark bookmark : bookmarks) {
                     if (cameraService.checkCameraOnroute(bookmark, cameraEntity)) {
                         BookmarkCamera bookmarkCamera = new BookmarkCamera();

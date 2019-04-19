@@ -136,10 +136,10 @@ public class BookmarkAdapter extends RecyclerView.Adapter<RecycleViewBookmarkHol
                 Response<String> message = response.body();
                 String data = message.getData();
                 if (data.equals("1")) {
-                    Toast.makeText(mContext, "Delete Success", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Xóa thành công", Toast.LENGTH_SHORT).show();
                     reloadData();
                 } else {
-                    Toast.makeText(mContext, "Delete Failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Lỗi, thử lại sau", Toast.LENGTH_SHORT).show();
                 }
 
             }
