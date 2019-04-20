@@ -9,6 +9,7 @@ public class CoreConstant {
     public static final String API_ACCOUNT="/api/account";
     public static final String API_ROLE="/api/role";
     public static final String API_BOOKMARK="/api/bookmark";
+    public static final String API_REPORT="/api/report";
 
     //API Response code
     public static final int STATUS_CODE_SERVER_ERROR = -1;

@@ -30,5 +30,5 @@ public interface BookmarkCameraRepository extends JpaRepository<BookmarkCamera, 
   //  @Query(value = "DELETE FROM BookmarkCamera WHERE cameraByCameraId=camera",nativeQuery = true)
     Integer deleteBookmarkCamerasByCameraByCameraId(Camera cameraId);
 
-    List<BookmarkCamera> findBookmarkCamerasByBookmarkByBookmarkIdAndCameraByCameraIdIsActive(Bookmark bookmark, boolean isActive);
+    List<BookmarkCamera> findBookmarkCamerasByBookmarkByBookmarkIdAndCameraByCameraIdIsActive(Bookmark bookmark, boolean isActive   );
 }
