@@ -2,6 +2,7 @@ package com.spring2019.trafficJamDetectionSystem.serviceImpl;
 
 import com.spring2019.trafficJamDetectionSystem.entity.Camera;
 import com.spring2019.trafficJamDetectionSystem.entity.Report;
+import com.spring2019.trafficJamDetectionSystem.model.DetectionModel;
 import com.spring2019.trafficJamDetectionSystem.repository.ReportRepostitory;
 import com.spring2019.trafficJamDetectionSystem.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +27,36 @@ public class ReportServiceImpl implements ReportService {
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 
-        Date date= new Date(formatter.parse(dateStr).getTime());
+        Date date = new Date(formatter.parse(dateStr).getTime());
 
         System.out.println(date.toString());
         return reportRepostitory.findByCameraByCameraIdAndDate(camera, date);
     }
 
     @Override
-    public Report saveReport(Report report) {
-        return reportRepostitory.save(report);
+    public Report saveReport(Camera camera, DetectionModel detectionModel) {
+
+        // Update last report end time
+        Report lastReport = reportRepostitory.findTopByCameraByCameraIdOrderByIdDesc(camera);
+        lastReport.setEndTime(detectionModel.getTime());
+        reportRepostitory.save(lastReport);
+
+        // Save new report
+        Report newReport = new Report();
+        newReport.setCameraByCameraId(camera);
+        newReport.setStatus(detectionModel.getStatusId());
+        newReport.setImageUrl(detectionModel.getImageUrl());
+        newReport.setStartTime(detectionModel.getTime());
+
+        Date date=new Date(detectionModel.getTime().getTime());
+        newReport.setDate(date);
+
+        return reportRepostitory.save(newReport);
+    }
+
+
+    @Override
+    public Report getLastReportByCamera(Camera camera) {
+        return reportRepostitory.findTopByCameraByCameraIdOrderByIdDesc(camera);
     }
 }

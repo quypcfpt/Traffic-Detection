@@ -38,7 +38,9 @@ public class ReportTransfromerImpl implements ReportTransformer {
         model.setCamera(cameraTransformer.entityToModel(entity.getCameraByCameraId()));
         model.setImgUrl(entity.getImageUrl());
         model.setStartTime(entity.getStartTime().toString());
-        model.setEndTime(entity.getEndTime().toString());
+        if (entity.getEndTime() != null) {
+            model.setEndTime(entity.getEndTime().toString());
+        }
         model.setStatus(entity.getStatus());
         model.setDate(entity.getDate());
         return model;

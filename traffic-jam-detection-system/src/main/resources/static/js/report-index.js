@@ -36,21 +36,21 @@ function loadDataTable(reportList) {
         columns: [
             {
                 data: null,
-                orderable: false,
+                orderable: true,
                 render: function (data, type, row) {
                     var status = (row || {}).status;
-                    if(status == 0){
+                    if (status == 0) {
                         return 'Bình thường';
-                    }else if(status == 1){
+                    } else if (status == 1) {
                         return 'Kẹt';
-                    }else{
+                    } else {
                         return 'Đông';
                     }
                 }
             },
             {
                 data: null,
-                orderable: false,
+                orderable: true,
                 render: function (data, type, row) {
                     var start = (row || {}).startTime;
                     start = start.split(" ")[1];
@@ -59,11 +59,14 @@ function loadDataTable(reportList) {
             },
             {
                 data: null,
-                orderable: false,
+                orderable: true,
                 render: function (data, type, row) {
                     var end = (row || {}).endTime;
-                    end = end.split(" ")[1];
-                    return end;
+                    if (end != null) {
+                        end = end.split(" ")[1];
+                        return end;
+                    }
+                   return "Null";
                 }
             },
             {
@@ -87,9 +90,9 @@ $('#dataTable').on('click', '.btn', function () {
     var image = data["imgUrl"];
     var imageList = image.split(", ");
     var ret = "";
-    for(var i = 0; i < imageList.length; i++){
+    for (var i = 0; i < imageList.length; i++) {
         ret += "<img style=\"width: 235px; height: 235px; margin: 15px\" src=\"" + imageList[i] + "\" class=\"rounded\" alt=\"...\">";
-        if(ret == 2){
+        if (ret == 2) {
             ret += "<br>";
         }
     }
@@ -106,7 +109,7 @@ $('#logout-btn').click(function (e) {
     window.location.href = "/portal/login";
 })
 
-function getCurDate(){
+function getCurDate() {
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth() + 1; //January is 0!
@@ -128,13 +131,13 @@ $(function () {
     $("#datepicker").datepicker({
         autoclose: true,
         todayHighlight: true,
-        onSelect: function() {
+        onSelect: function () {
             console.log($(this).datepicker('getDate'));
         }
     }).datepicker('update', new Date());
 });
 
 
-$("#datepicker").on("changeDate",function() {
+$("#datepicker").on("changeDate", function () {
     onLoadReportView($('#date-chooser').val());
 });
