@@ -124,7 +124,17 @@ function getCurDate(){
 // $(".form-control").onChange(function(){
 //     console.log($('.form-control').val());
 // })
+$(function () {
+    $("#datepicker").datepicker({
+        autoclose: true,
+        todayHighlight: true,
+        onSelect: function() {
+            console.log($(this).datepicker('getDate'));
+        }
+    }).datepicker('update', new Date());
+});
 
-$("#datepicker").change(function() {
-    onLoadReportView($('.form-control').val());
+
+$("#datepicker").on("changeDate",function() {
+    onLoadReportView($('#date-chooser').val());
 });

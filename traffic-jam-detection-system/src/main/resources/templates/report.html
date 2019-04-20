@@ -19,7 +19,8 @@
     <link href="/css/sb-admin-2.min.css" rel="stylesheet">
 
     <!-- Custom styles for this page -->
-    <link rel="stylesheet prefetch" href="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.css">
+    <link rel="stylesheet prefetch"
+          href="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.css">
     <link href="/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/css/bootstrap4-toggle.min.css"
           rel="stylesheet">
@@ -53,7 +54,9 @@
                 <hr class="sidebar-divider d-none d-md-block">
 
                 <label>Chọn ngày: </label>
-                <div id="datepicker" class="input-group date col-md-2" data-date-format="dd-mm-yyyy"> <input class="form-control" readonly="" type="text"/> <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                <div id="datepicker" class="input-group date col-md-2" data-date-format="dd-mm-yyyy">
+                    <input class="form-control" id="date-chooser" readonly="" type="text"/>
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                 </div>
 
 
@@ -119,41 +122,31 @@
         <!-- Logout Modal-->
         <div th:replace="logout :: logout">
         </div>
+    </div>
+</div>
 
+<!-- Bootstrap core JavaScript-->
+<script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-        <!-- Bootstrap core JavaScript-->
-        <script src="/vendor/jquery/jquery.min.js"></script>
-        <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Core plugin JavaScript-->
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
 
-        <!-- Core plugin JavaScript-->
-        <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+<!-- Custom scripts for all pages-->
+<script src="/js/sb-admin-2.min.js"></script>
 
-        <!-- Custom scripts for all pages-->
-        <script src="/js/sb-admin-2.min.js"></script>
+<!-- Page level plugins -->
+<script src="/vendor/datatables/jquery.dataTables.min.js"></script>
+<script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
-        <!-- Page level plugins -->
-        <script src="/vendor/datatables/jquery.dataTables.min.js"></script>
-        <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<!-- Page level custom scripts -->
+<script type="application/javascript" src="/js/report-index.js"></script>
+<!--<script src="/js/datePicker.js"></script>-->
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js"></script>
+<script type="application/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-growl/1.0.0/jquery.bootstrap-growl.min.js"></script>
 
-        <!-- Page level custom scripts -->
-        <script type="application/javascript" src="/js/report-index.js"></script>
-        <!--<script src="/js/datePicker.js"></script>-->
-        <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js"></script>
-        <script type="application/javascript"
-                src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-growl/1.0.0/jquery.bootstrap-growl.min.js"></script>
-
-        <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
-        <script type="text/javascript">
-            $(function () {
-                $("#datepicker").datepicker({
-                    autoclose: true,
-                    todayHighlight: true,
-                    onSelect: function() {
-                        console.log($(this).datepicker('getDate'));
-                    }
-                }).datepicker('update', new Date());
-            });
-        </script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
 </body>
 
 </html>
