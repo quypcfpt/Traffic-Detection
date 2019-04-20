@@ -306,7 +306,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         responseCall.enqueue(new Callback<Response<List<CameraModel>>>() {
             @Override
             public void onResponse(Call<Response<List<CameraModel>>> call, retrofit2.Response<Response<List<CameraModel>>> response) {
-                int busyStatusCount=0;
                 Response<List<CameraModel>> res = response.body();
 
                 final List<CameraModel> multiCameraModel = res.getData();
@@ -342,11 +341,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
 
                 if(!multiCameraModel.isEmpty()) {
-                    for (CameraModel camera : cameraList) {
-                        if (camera.getObserverStatus() == 1) {
-                            busyStatusCount += 1;
-                        }
-                    }
+
                     if(!cameraList.isEmpty()){
                         Log.d("Camera : " , cameraList.toString());
                         Collections.sort(cameraList);
@@ -368,48 +363,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         }
                     }
-//                        if (busyStatusCount > 0 && !strAdd.equals(oldStreet)) {
-//                            oldStreet = strAdd;
-//                            final int finalBusyStatusCount = busyStatusCount;
-//                            new Handler().postDelayed(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
-//                                    builder.setCancelable(false);
-//                                    builder.setTitle("Road Status");
-//                                    builder.setMessage("The Road " + strAdd + " has " + finalBusyStatusCount + " locations is busy .Click Show to get more infomation");
-//                                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//                                        @Override
-//                                        public void onClick(DialogInterface dialog, int which) {
-//                                            dialog.cancel();
-//                                        }
-//                                    });
-//                                    builder.setPositiveButton("Show", new DialogInterface.OnClickListener() {
-//                                        @Override
-//                                        public void onClick(DialogInterface dialog, int which) {
-//                                            Intent intent = new Intent(MapsActivity.this, ListCameraActivity.class);
-//                                            Bundle bundle = new Bundle();
-//                                            String listCamJsonObj = new Gson().toJson(cameraList);
-//                                            bundle.putString("LIST", listCamJsonObj);
-//                                            bundle.putString("STREET_NAME", cameraModels.get(0).getStreet().getName());
-//                                            bundle.putString("STREET_ID", cameraModels.get(0).getStreet().getId() + "");
-//                                            intent.putExtras(bundle);
-//                                            startActivity(intent);
-//                                        }
-//                                    });
-//                                    final AlertDialog alert = builder.create();
-//                                    alert.show();
-//                                    new Handler().postDelayed(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            if (alert.isShowing()) {
-//                                                alert.dismiss();
-//                                            }
-//                                        }
-//                                    }, 1000 * 3);//show message box
-//                                }
-//                            }, 1000 / 2);
-//                        }
+                        if (!strAdd.equals(oldStreet)) {
+                            oldStreet = strAdd;
+                            AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+                            builder.setCancelable(false);
+                            builder.setTitle("Road Status");
+                            builder.setMessage("You are enter to the new Road : " +strAdd);
+                            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                    }});
+                                builder.setPositiveButton("Show", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent(MapsActivity.this, ListCameraActivity.class);
+                                        Bundle bundle = new Bundle();
+                                        String listCamJsonObj = new Gson().toJson(cameraList);
+                                        bundle.putString("LIST", listCamJsonObj);
+                                        bundle.putString("STREET_NAME", cameraModels.get(0).getStreet().getName());
+                                        bundle.putString("STREET_ID", cameraModels.get(0).getStreet().getId() + "");
+                                        intent.putExtras(bundle);
+                                        startActivity(intent);
+                                    }
+                                });
+                                final AlertDialog alert = builder.create();
+                                alert.show();
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (alert.isShowing()) {
+                                            alert.dismiss();
+                                        }
+                                    }}, 1000 * 3);//show message box
+                        }
                 }else{
                     Toast.makeText(MapsActivity.this, streetName + "  hiện tại chưa có camera . ", Toast.LENGTH_SHORT).show();
                 }
@@ -649,11 +636,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Double longi = Double.parseDouble(x.getPosition().split(",")[1]);
             MarkerOptions marker = null;
             if(x.getObserverStatus() == 0) {
-                marker = new MarkerOptions().position(new LatLng(lat, longi)).title(x.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker_green));
+                marker = new MarkerOptions().position(new LatLng(lat, longi)).title(x.getDistance()+"").icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker_green));
             }else if(x.getObserverStatus() == 1) {
-                marker = new MarkerOptions().position(new LatLng(lat, longi)).title(x.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker_red));
+                marker = new MarkerOptions().position(new LatLng(lat, longi)).title(x.getDistance()+"").icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker_red));
             }else{
-                marker = new MarkerOptions().position(new LatLng(lat, longi)).title(x.getDescription()).icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker_yellow));
+                marker = new MarkerOptions().position(new LatLng(lat, longi)).title(x.getDistance()+"").icon(BitmapDescriptorFactory.fromResource(R.mipmap.camera_marker_yellow));
             }
             mMap.addMarker(marker);
         }

@@ -251,7 +251,7 @@ public class StreetListActivity extends Fragment implements View.OnClickListener
     private void doSearch() {
         txtSearch = editText.getText() + "";
         if (!txtSearch.equals("")) {
-            Call<Response<MultiStreetModel>> responseCall = apiInterface.getStreetsBySearchNameLike(txtSearch, "district", 1);
+            Call<Response<MultiStreetModel>> responseCall = apiInterface.getStreetsBySearchNameLike(txtSearch.trim(), "district", 1);
             responseCall.enqueue(new Callback<Response<MultiStreetModel>>() {
                 @Override
                 public void onResponse(Call<Response<MultiStreetModel>> call, retrofit2.Response<Response<MultiStreetModel>> response) {

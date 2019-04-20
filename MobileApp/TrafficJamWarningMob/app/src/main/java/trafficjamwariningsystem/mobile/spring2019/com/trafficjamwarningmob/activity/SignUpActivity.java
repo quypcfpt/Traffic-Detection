@@ -52,19 +52,19 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 acountModel.put("name", edtFullName.getText() + "");
                 if(edtUsername.getText().toString().trim().length()>32 || edtUsername.getText().toString().trim().length()<6){
                     txtError.setVisibility(View.VISIBLE);
-                    txtError.setText("The UserName must in 3-32 charaters");
+                    txtError.setText("Tên tài khoản phải từ 6-32 ký tự");
                 }else if(!edtUsername.getText().toString().trim().matches("[a-zA-Z0-9]+")){
                     txtError.setVisibility(View.VISIBLE);
-                    txtError.setText("The UserName does not contain specical character (!,@,#,$,%,^,&,*)");
+                    txtError.setText("Tên tài khoản không được chứa các ký tự đặc biệt như (!,@,#,$,%,^,&,*)");
                 }else if (edtPassword.getText().toString().trim().length()>16 || edtPassword.getText().toString().trim().length()<6){
                     txtError.setVisibility(View.VISIBLE);
-                    txtError.setText("The Passwrod must in 6-16 charaters");
+                    txtError.setText("Mật khẩu phải từ 6-16 ký tự");
                 }else if (!edtConfirmPassword.getText().toString().trim().equals(edtPassword.getText().toString().trim())){
                     txtError.setVisibility(View.VISIBLE);
-                    txtError.setText("The Confirm Password have to match Password");
+                    txtError.setText("Xác nhận mật khẩu phải trùng với mật khẩu");
                 }else if(edtFullName.getText().toString().trim().length()>32 || edtFullName.getText().toString().trim().length()<1){
                     txtError.setVisibility(View.VISIBLE);
-                    txtError.setText("The Full Name must in 1-32 charaters");
+                    txtError.setText("Họ và Tên phải từ 1-32 ký tự");
                 }else{
                     txtError.setVisibility(View.GONE);
                     Call<Response<String>> responseCall = apiInterface.createNewAccount(acountModel.toString());
@@ -75,16 +75,17 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             isSuccess = Boolean.parseBoolean(message.getData());
                             String ne;
                             if (isSuccess) {
+                                Toast.makeText(SignUpActivity.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
                                 SignUpActivity.this.finish();
                             } else {
                                 txtError.setVisibility(View.VISIBLE);
-                                txtError.setText("UserName is Existed");
+                                txtError.setText("Tên Tài Khoản đã tồn tại");
                             }
                         }
 
                         @Override
                         public void onFailure(Call<Response<String>> call, Throwable t) {
-
+                            Toast.makeText(SignUpActivity.this, "Xin kiểm tra lại kết nối Internet", Toast.LENGTH_LONG).show();
                         }
                     });
                 }

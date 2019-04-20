@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.JsonObject;
@@ -36,7 +37,7 @@ import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.model.Response;
 
 public class ImageActivity extends AppCompatActivity implements View.OnClickListener {
-    TextView cameraId, imageTime, labelTextView,txtStatus;
+    TextView cameraId, imageTime, labelTextView,txtStatus , txtStreet;
     ImageButton btnBack;
     ImageView cameraStatus, imageRoad;
     ApiInterface apiInterface;
@@ -53,6 +54,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
         labelTextView = (TextView) findViewById(R.id.labelTextView);
         cameraId = (TextView) findViewById(R.id.cameraId);
 //        imageRoad = (ImageView) findViewById(R.id.imageRoad);
+        txtStreet = (TextView) findViewById(R.id.streetname);
         imageTime = (TextView) findViewById(R.id.imageTime);
         btnBack = (ImageButton) findViewById(R.id.btnBack);
          rv = findViewById(R.id.rv);
@@ -80,6 +82,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
                 List<String> imgList = parseStringToList(camResult.getImgUrl());
                 imageAdapter = new ImageAdapter(this,imgList);
                 rv.setAdapter(imageAdapter);
+                txtStreet.setText(camResult.getStreet().getName());
                 imageTime.setText(camResult.getTime() + "");
 
             } catch (JSONException e) {

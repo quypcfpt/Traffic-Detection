@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -44,7 +45,7 @@ public class ListCameraActivity extends AppCompatActivity implements View.OnClic
     ApiInterface apiInterface;
     private static CameraAdapter adapter;
     private RecyclerView recyclerView;
-    private LinearLayout viewHeader;
+    private LinearLayout viewHeader , viewError;
     private LinearLayoutManager mLayoutManager;
     private static List<StreetModel> streetModelList;
     private int  id;
@@ -53,7 +54,8 @@ public class ListCameraActivity extends AppCompatActivity implements View.OnClic
     private ImageButton btnBack;
     private List<CameraModel> mlistCamera=new ArrayList<>();
     private BroadcastReceiver receiver;
-
+    private String label;
+    private Button btnRetry;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,16 +65,19 @@ public class ListCameraActivity extends AppCompatActivity implements View.OnClic
         mLayoutManager = new LinearLayoutManager(this);
         progressBar = (ProgressBar) findViewById(R.id.progress);
         btnBack = (ImageButton) findViewById(R.id.btnBack);
+        btnRetry=(Button)findViewById(R.id.retry);
         textErr = (TextView)findViewById(R.id.txtError);
+        viewError = (LinearLayout) findViewById(R.id.viewError);
         recyclerView.setLayoutManager(mLayoutManager);
         txtDistance=(TextView)findViewById(R.id.viewDistance);
-        txtDistance.setVisibility(View.GONE);
         viewHeader = (LinearLayout)findViewById(R.id.viewHeader);
+        txtDistance.setVisibility(View.GONE);
         viewHeader.setVisibility(View.VISIBLE);
+        viewError.setVisibility(View.GONE);
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
         Intent intent = getIntent();
         Bundle bundle =getIntent().getExtras();
-        String label = bundle.getString("STREET_NAME");
+        label = bundle.getString("STREET_NAME");
         labelTextView.setText(label);
         String street_id = bundle.getString("STREET_ID");
         String listCamJsonObj = bundle.getString("LIST");
@@ -87,6 +92,7 @@ public class ListCameraActivity extends AppCompatActivity implements View.OnClic
         id = Integer.parseInt(street_id);
         onLoadList();
         btnBack.setOnClickListener(this);
+        btnRetry.setOnClickListener(this);
     }
 
     private void onLoadList() {
@@ -117,8 +123,10 @@ public class ListCameraActivity extends AppCompatActivity implements View.OnClic
                             recyclerView.setVisibility(View.VISIBLE);
                             viewHeader.setVisibility(View.VISIBLE);
                             txtDistance.setVisibility(View.GONE);
+                             viewError.setVisibility(View.GONE);
                     } else {
-                        Toast.makeText(ListCameraActivity.this, "This Street doesn't have any camera. We will update soon.", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(ListCameraActivity.this, "This Street doesn't have any camera. We will update soon.", Toast.LENGTH_SHORT).show();
+                        textErr.setText("Đường " + label + "vẫn chưa có camera");
                         recyclerView.setVisibility(View.GONE);
                         progressBar.setVisibility(View.GONE);
                         textErr.setVisibility(View.VISIBLE);
@@ -127,7 +135,13 @@ public class ListCameraActivity extends AppCompatActivity implements View.OnClic
                 }
                 @Override
                 public void onFailure(Call<Response<MultiCameraModel>> call, Throwable t) {
-
+                    textErr.setText("Xin hãy kiểm tra lại đường truyền");
+                    txtDistance.setVisibility(View.GONE);
+                    viewHeader.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.GONE);
+                    textErr.setVisibility(View.VISIBLE);
+                    viewError.setVisibility(View.VISIBLE);
                 }
             });
         }
@@ -141,6 +155,9 @@ public class ListCameraActivity extends AppCompatActivity implements View.OnClic
         switch (v.getId()) {
             case R.id.btnBack:
                 ListCameraActivity.this.finish();
+                break;
+            case R.id.retry:
+                onLoadList();
                 break;
         }
     }
