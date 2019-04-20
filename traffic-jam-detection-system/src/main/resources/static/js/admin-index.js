@@ -184,6 +184,16 @@ function loadDataTable(cameraList) {
                     var ret;
                     var isActive = (row || {}).isActive;
                     var id = (row || {}).id;
+                    ret = ' <button class="btn btn-warning report">Báo cáo</button>'
+                    return ret;
+                }
+            },
+            {
+                data: null,
+                render: function (data, type, row) {
+                    var ret;
+                    var isActive = (row || {}).isActive;
+                    var id = (row || {}).id;
                     ret = ' <button class="btn btn-warning" data-toggle="modal" data-target="#edit-modal">Chỉnh sửa</button>'
                     return ret;
                 }
@@ -265,3 +275,11 @@ $('#logout-btn').click(function (e) {
     })
     window.location.href = "/portal/login";
 })
+
+$('#dataTable').on('click', '.report', function () {
+    var curRow = $(this).closest('tr');
+    var data = $('#dataTable').DataTable().row(curRow).data();
+    var id = data["id"];
+    window.location.href = "/portal/report/" + id;
+})
+

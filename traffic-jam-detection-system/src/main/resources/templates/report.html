@@ -53,7 +53,7 @@
                 <hr class="sidebar-divider d-none d-md-block">
 
                 <label>Chọn ngày: </label>
-                <div id="datepicker" class="input-group date col-md-2" data-date-format="dd-mm-yyyy"> <input class="form-control" readonly="" type="text"> <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                <div id="datepicker" class="input-group date col-md-2" data-date-format="dd-mm-yyyy"> <input class="form-control" readonly="" type="text"/> <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                 </div>
 
 
@@ -71,29 +71,11 @@
                                     <th>Trạng thái</th>
                                     <th>Bắt đầu</th>
                                     <th>Kết thúc</th>
+                                    <th>Thao tác</th>
                                 </tr>
                                 </thead>
                                 <tbody id="show-camera-report">
-                                <tr>
-                                    <td>Kẹt</td>
-                                    <td>16:00:00</td>
-                                    <td>16:10:00</td>
-                                </tr>
-                                <tr>
-                                    <td>Đông</td>
-                                    <td>16:10:00</td>
-                                    <td>16:40:00</td>
-                                </tr>
-                                <tr>
-                                    <td>Kẹt</td>
-                                    <td>16:40:00</td>
-                                    <td>17:20:00</td>
-                                </tr>
-                                <tr>
-                                    <td>Bình thường</td>
-                                    <td>17:20:00</td>
-                                    <td>18:10:00</td>
-                                </tr>
+
                                 </tbody>
                             </table>
                         </div>
@@ -108,7 +90,24 @@
 
             </div>
             <!-- End of Content Wrapper -->
-
+            <!-- Edit modal -->
+            <div id="edit-modal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog"
+                 aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Ảnh</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form id="view-image">
+                            <div id="image-list">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
         <!-- End of Page Wrapper -->
 
@@ -137,6 +136,7 @@
         <script src="/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
         <!-- Page level custom scripts -->
+        <script type="application/javascript" src="/js/report-index.js"></script>
         <!--<script src="/js/datePicker.js"></script>-->
         <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js"></script>
         <script type="application/javascript"
@@ -147,7 +147,10 @@
             $(function () {
                 $("#datepicker").datepicker({
                     autoclose: true,
-                    todayHighlight: true
+                    todayHighlight: true,
+                    onSelect: function() {
+                        console.log($(this).datepicker('getDate'));
+                    }
                 }).datepicker('update', new Date());
             });
         </script>

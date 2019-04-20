@@ -28,6 +28,6 @@ public interface AdminController {
     @GetMapping("/logout")
     public ModelAndView logout(HttpSession session);
 
-    @GetMapping("/report")
+    @GetMapping("/report/{id}")
     public ModelAndView report(HttpSession session);
 }
