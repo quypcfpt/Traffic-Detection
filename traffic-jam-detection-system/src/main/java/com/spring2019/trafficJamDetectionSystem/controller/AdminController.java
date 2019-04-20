@@ -27,4 +27,7 @@ public interface AdminController {
     // Return admin logout view
     @GetMapping("/logout")
     public ModelAndView logout(HttpSession session);
+
+    @GetMapping("/report")
+    public ModelAndView report(HttpSession session);
 }

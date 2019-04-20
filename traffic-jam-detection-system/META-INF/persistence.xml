@@ -11,6 +11,7 @@
         <class>com.spring2019.trafficJamDetectionSystem.entity.Role</class>
         <class>com.spring2019.trafficJamDetectionSystem.entity.CameraAccount</class>
         <class>com.spring2019.trafficJamDetectionSystem.entity.BookmarkCamera</class>
+        <class>com.spring2019.trafficJamDetectionSystem.entity.Report</class>
         <properties>
             <property name="toplink.jdbc.url" value="jdbc:sqlserver://localhost:1433;database=casptonetrafficjamdb"/>
             <property name="toplink.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>

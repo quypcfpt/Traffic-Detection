@@ -50,7 +50,7 @@ public class BookmarkServiceImpl implements BookmarkService {
         Camera camera = new Camera();
         camera.setId(cameraId);
 
-        accountList = bookmarkCameraRepository.findUsernameByCamera(cameraId);
+        accountList = bookmarkCameraRepository.findUsernameByCamera(cameraId, true);
 
         return accountList;
     }
@@ -68,7 +68,7 @@ public class BookmarkServiceImpl implements BookmarkService {
     public List<BookmarkCamera> getCameraInBookmark(int id){
         Bookmark bookmark = new Bookmark();
         bookmark.setId(id);
-        return bookmarkCameraRepository.findBookmarkCamerasByBookmarkByBookmarkId(bookmark);
+        return bookmarkCameraRepository.findBookmarkCamerasByBookmarkByBookmarkIdAndCameraByCameraIdIsActive(bookmark,true);
     }
 
     @Override

@@ -51,4 +51,14 @@ public class AdminControllerImpl extends AbstractController implements AdminCont
         LOGGER.info("Admin account logged out");
         return new ModelAndView("redirect:/portal/login");
     }
+
+    @Override
+    public ModelAndView report(HttpSession session) {
+        String username = (String) session.getAttribute("username");
+        if (username != null) {
+            return new ModelAndView("report");
+        } else {
+            return new ModelAndView("redirect:/portal/login");
+        }
+    }
 }
