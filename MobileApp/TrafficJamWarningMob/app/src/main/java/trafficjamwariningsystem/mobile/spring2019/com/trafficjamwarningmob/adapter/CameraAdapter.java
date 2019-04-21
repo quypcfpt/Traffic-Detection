@@ -95,6 +95,7 @@ public class CameraAdapter extends RecyclerView.Adapter<RecycleViewCameraHolder>
                 String listCamJsonObj = new Gson().toJson(models);
                 bundle.putString("CAMINFO", listCamJsonObj);
                 intent.putExtras(bundle);
+                intent.putExtra("STREET_NAME",models.getStreet().getName());
                 context.startActivity(intent);
             }
         });
