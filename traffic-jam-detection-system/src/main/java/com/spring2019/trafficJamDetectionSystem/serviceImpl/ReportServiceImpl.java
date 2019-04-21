@@ -12,6 +12,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -46,9 +47,9 @@ public class ReportServiceImpl implements ReportService {
         newReport.setCameraByCameraId(camera);
         newReport.setStatus(detectionModel.getStatusId());
         newReport.setImageUrl(detectionModel.getImageUrl());
-        newReport.setStartTime(detectionModel.getTime());
+        newReport.setStartTime(addOneSec(detectionModel.getTime()));
 
-        Date date=new Date(detectionModel.getTime().getTime());
+        Date date = new Date(detectionModel.getTime().getTime());
         newReport.setDate(date);
 
         return reportRepostitory.save(newReport);
@@ -58,5 +59,19 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public Report getLastReportByCamera(Camera camera) {
         return reportRepostitory.findTopByCameraByCameraIdOrderByIdDesc(camera);
+    }
+
+    @Override
+    public List<Report> getUnfinishedReport() {
+        return reportRepostitory.findByEndTimeIsNull();
+    }
+
+    private Timestamp addOneSec(Timestamp timestamp) {
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(timestamp.getTime());
+        cal.add(Calendar.SECOND, 1);
+
+        return new Timestamp(cal.getTime().getTime());
     }
 }

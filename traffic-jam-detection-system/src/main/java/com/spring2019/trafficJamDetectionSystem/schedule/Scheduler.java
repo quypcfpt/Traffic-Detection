@@ -21,6 +21,11 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.swing.text.StringContent;
 import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -52,22 +57,26 @@ public class Scheduler {
             detectionModelMap = new HashMap<>();
             detectionModelMap = (HashMap) DetectionControllerImpl.detectResultData.clone();
 
-            detectionModelMap.entrySet().forEach(entry -> {
-                DetectionModel detectionModel = entry.getValue();
+        } else if (detectionModelMap.isEmpty()) {
 
+            DetectionControllerImpl.detectResultData.entrySet().forEach(entry -> {
+                DetectionModel detectionModel = entry.getValue();
                 Camera camera = new Camera();
                 camera.setId(detectionModel.getCameraId());
 
                 Report lastReport = reportService.getLastReportByCamera(camera);
 
                 // Compare report in database, in case of server restart
-                if (lastReport!=null){
-                    if (lastReport.getStatus()!=detectionModel.getStatusId()){
-                        reportService.saveReport(camera,detectionModel);
+                if (lastReport != null) {
+                    if (lastReport.getStatus() != detectionModel.getStatusId()) {
+                        reportService.saveReport(camera, detectionModel);
                     }
                 }
             });
+
+            detectionModelMap = (HashMap) DetectionControllerImpl.detectResultData.clone();
         } else {
+
             detectionModelMap.entrySet().forEach(entry -> {
                 DetectionModel oldResult = entry.getValue();
                 int cameraId = oldResult.getCameraId();
@@ -79,7 +88,7 @@ public class Scheduler {
                     Street street = camera.getStreetByStreetId();
 
                     // Save new report
-                    reportService.saveReport(camera,newResult);
+                    reportService.saveReport(camera, newResult);
 
                     String msg = "";
                     switch (newResult.getStatusId()) {
@@ -104,6 +113,32 @@ public class Scheduler {
 
             detectionModelMap = (HashMap) DetectionControllerImpl.detectResultData.clone();
         }
+    }
+
+    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Saigon")
+    public void dailyReset() {
+        List<Report> reports = reportService.getUnfinishedReport();
+
+        for (Report report : reports) {
+            DetectionModel model = new DetectionModel();
+            model.setCameraId(report.getCameraByCameraId().getId());
+            model.setStatusId(report.getStatus());
+            model.setImageUrl(report.getImageUrl());
+
+            String strTime = "23:59:59";
+            DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss");
+            try {
+                Date d = dateFormat.parse(strTime);
+                model.setTime(new Timestamp(d.getTime()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+            reportService.saveReport(report.getCameraByCameraId(),model);
+        }
+        DetectionControllerImpl.detectResultData.clear();
+        detectionModelMap.clear();
     }
 
     private void sendNotification(String msg, String username) throws JSONException {

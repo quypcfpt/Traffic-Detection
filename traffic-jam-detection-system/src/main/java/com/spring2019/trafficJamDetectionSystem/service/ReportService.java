@@ -18,4 +18,6 @@ public interface ReportService {
     public Report saveReport(Camera camera, DetectionModel detectionModel);
 
     public Report getLastReportByCamera(Camera camera);
+
+    public List<Report> getUnfinishedReport();
 }
