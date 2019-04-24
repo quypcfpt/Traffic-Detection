@@ -131,7 +131,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ArrayList<LatLng> onRoutePoints;
     private Bundle bundle;
     private BroadcastReceiver receiver;
-
+    private Handler handler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -363,7 +363,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         }
                     }
-                        if (!strAdd.equals(oldStreet)) {
+                        if (!strAdd.equals(oldStreet) && MapsActivity.this!=null) {
                             oldStreet = strAdd;
                             AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
                             builder.setCancelable(false);
@@ -468,7 +468,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //            getCamearaOnStreet(streetName);
 //        }
 //        calculationByDistance(newPostion,lastPosition);
-        final Handler handler = new Handler();
+        handler = new Handler();
         handler.post(new Runnable() {
             int counter = 0;
             int delay = 1000*10;
@@ -542,6 +542,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onBackPressed() {
         super.onBackPressed();
         MapsActivity.this.finish();
+        handler.removeCallbacksAndMessages(null);
     }
         private LatLng getCameraLocation(String location){
             String[] parts = location.split(",");
