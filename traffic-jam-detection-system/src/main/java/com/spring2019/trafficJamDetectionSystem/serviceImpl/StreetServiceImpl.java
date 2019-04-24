@@ -24,7 +24,7 @@ public class StreetServiceImpl implements StreetService {
 
     @Override
     public Page<Street> getAllStreetAndIsActive(Pageable pageable) {
-        return streetRepository.findAllByIsActive(pageable, true);
+        return streetRepository.getValidStreet(true, true, pageable);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class StreetServiceImpl implements StreetService {
 
     @Override
     public Page<Street> getStreetBySearch(String txtSearch, Pageable pageable) {
-        return streetRepository.findByNameContainingIgnoreCaseAndIsActive(txtSearch,true,pageable);
+        return streetRepository.searchStreet(txtSearch,true,true,pageable);
     }
 
 

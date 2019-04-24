@@ -66,7 +66,7 @@ function loadDataTable(reportList) {
                         end = end.split(" ")[1];
                         return end;
                     }
-                   return "Null";
+                    return "Null";
                 }
             },
             {
@@ -135,9 +135,108 @@ $(function () {
             console.log($(this).datepicker('getDate'));
         }
     }).datepicker('update', new Date());
+
+    $("#datepicker-modal").datepicker({
+        autoclose: true,
+        todayHighlight: true,
+        onSelect: function () {
+            console.log($(this).datepicker('getDate'));
+        }
+    }).datepicker('update', new Date());
 });
 
 
 $("#datepicker").on("changeDate", function () {
     onLoadReportView($('#date-chooser').val());
 });
+
+
+// Bar Chart Example
+var ctx = document.getElementById("bar-chart");
+var myBarChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ["0h-2h", "2h-4h", "4h-6h", "6h-8h", "10h-12h", "12h-14h",
+            "14h-16h", "16h-18h", "18h-20h", "20h-22h", "22h-0h"],
+        datasets: [
+            {
+                label: "Bình Thường",
+                backgroundColor: "#4edf52",
+                hoverBackgroundColor: "#2cd949",
+                borderColor: "#4edf52",
+                data: [1, 1, 1, 1, 2, 0, 1, 0, 0, 1, 1],
+            },
+            {
+                label: "Đông",
+                backgroundColor: "#dfd54e",
+                hoverBackgroundColor: "#d9d32c",
+                borderColor: "#dfd54e",
+                data: [0, 0, 0, 1, 1, 2, 4, 3, 2, 1, 0],
+            },
+            {
+                label: "Kẹt",
+                backgroundColor: "#df4e4e",
+                hoverBackgroundColor: "#d92d2d",
+                borderColor: "#df4e4e",
+                data: [0, 0, 0, 2, 1, 3, 3, 2, 1, 0, 0],
+            }],
+    },
+    options: {
+        maintainAspectRatio: false,
+        layout: {
+            padding: {
+                left: 10,
+                right: 25,
+                top: 25,
+                bottom: 0
+            }
+        },
+        scales: {
+            xAxes: [{
+                time: {
+                    unit: 'time'
+                },
+                gridLines: {
+                    display: false,
+                    drawBorder: false
+                },
+                ticks: {
+                    maxTicksLimit: 6
+                },
+                maxBarThickness: 25,
+            }],
+            yAxes: [{
+                ticks: {
+                    min: 0,
+                    max: 10,
+                    maxTicksLimit: 5,
+                    padding: 10,
+                },
+                gridLines: {
+                    color: "rgb(234, 236, 244)",
+                    zeroLineColor: "rgb(234, 236, 244)",
+                    drawBorder: false,
+                    borderDash: [2],
+                    zeroLineBorderDash: [2]
+                }
+            }],
+        },
+        legend: {
+            display: false
+        },
+        tooltips: {
+            titleMarginBottom: 10,
+            titleFontColor: '#6e707e',
+            titleFontSize: 14,
+            backgroundColor: "rgb(255,255,255)",
+            bodyFontColor: "#858796",
+            borderColor: '#dddfeb',
+            borderWidth: 1,
+            xPadding: 15,
+            yPadding: 15,
+            displayColors: false,
+            caretPadding: 10,
+        },
+    }
+});
+
