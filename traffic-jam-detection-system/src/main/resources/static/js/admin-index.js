@@ -182,9 +182,10 @@ function loadDataTable(cameraList) {
                 data: null,
                 render: function (data, type, row) {
                     var ret;
-                    var isActive = (row || {}).isActive;
                     var id = (row || {}).id;
-                    ret = ' <button class="btn btn-warning" data-toggle="modal" data-target="#edit-modal">Chỉnh sửa</button>'
+                    ret = '<button class="btn btn-warning" data-toggle="modal" data-target="#edit-modal">Chỉnh sửa</button>'
+                        +'&nbsp'
+                        + '<button class="btn btn-success report">Báo cáo</button>'
                     return ret;
                 }
             }],
@@ -207,9 +208,9 @@ $('#dataTable').on('click', '.btn', function () {
 
     var active = data["isActive"];
 
-    if (street.isActive==true){
+    if (street.isActive == true) {
         $('#edtActive-parent').show()
-    }else{
+    } else {
         $('#edtActive-parent').hide()
     }
 
@@ -265,3 +266,11 @@ $('#logout-btn').click(function (e) {
     })
     window.location.href = "/portal/login";
 })
+
+$('#dataTable').on('click', '.report', function () {
+    var curRow = $(this).closest('tr');
+    var data = $('#dataTable').DataTable().row(curRow).data();
+    var id = data["id"];
+    window.location.href = "/portal/report/" + id;
+})
+

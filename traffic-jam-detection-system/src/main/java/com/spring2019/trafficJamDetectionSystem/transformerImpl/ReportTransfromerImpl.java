@@ -27,7 +27,7 @@ public class ReportTransfromerImpl implements ReportTransformer {
         report.setStartTime(Timestamp.valueOf(model.getStartTime()));
         report.setDate(model.getDate());
         report.setImageUrl(model.getImgUrl());
-
+        report.setStatus(model.getStatus());
         return report;
     }
 
@@ -38,7 +38,10 @@ public class ReportTransfromerImpl implements ReportTransformer {
         model.setCamera(cameraTransformer.entityToModel(entity.getCameraByCameraId()));
         model.setImgUrl(entity.getImageUrl());
         model.setStartTime(entity.getStartTime().toString());
-        model.setEndTime(entity.getEndTime().toString());
+        if (entity.getEndTime() != null) {
+            model.setEndTime(entity.getEndTime().toString());
+        }
+        model.setStatus(entity.getStatus());
         model.setDate(entity.getDate());
         return model;
     }

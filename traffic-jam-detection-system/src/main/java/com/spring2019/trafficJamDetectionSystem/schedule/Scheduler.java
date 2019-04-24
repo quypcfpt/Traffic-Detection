@@ -4,12 +4,11 @@ import com.spring2019.trafficJamDetectionSystem.common.CoreConstant;
 import com.spring2019.trafficJamDetectionSystem.controllerImpl.DetectionControllerImpl;
 import com.spring2019.trafficJamDetectionSystem.entity.Account;
 import com.spring2019.trafficJamDetectionSystem.entity.Camera;
+import com.spring2019.trafficJamDetectionSystem.entity.Report;
 import com.spring2019.trafficJamDetectionSystem.entity.Street;
 import com.spring2019.trafficJamDetectionSystem.model.DetectionModel;
-import com.spring2019.trafficJamDetectionSystem.service.AndroidPushNotificationsService;
-import com.spring2019.trafficJamDetectionSystem.service.BookmarkService;
-import com.spring2019.trafficJamDetectionSystem.service.CameraService;
-import com.spring2019.trafficJamDetectionSystem.service.StreetService;
+import com.spring2019.trafficJamDetectionSystem.model.ReportModel;
+import com.spring2019.trafficJamDetectionSystem.service.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -22,6 +21,11 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.swing.text.StringContent;
 import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -39,19 +43,40 @@ public class Scheduler {
     BookmarkService bookmarkService;
 
     @Autowired
+    ReportService reportService;
+
+    @Autowired
     AndroidPushNotificationsService androidPushNotificationsService;
 
-    @Scheduled(fixedDelay = 1 * 1000)
+    @Scheduled(fixedDelay = 10 * 1000)
     public void scheduleFixedDelayTask() {
 
         if (DetectionControllerImpl.detectResultData == null) {
 
         } else if (detectionModelMap == null) {
             detectionModelMap = new HashMap<>();
-
             detectionModelMap = (HashMap) DetectionControllerImpl.detectResultData.clone();
 
+        } else if (detectionModelMap.isEmpty()) {
+
+            DetectionControllerImpl.detectResultData.entrySet().forEach(entry -> {
+                DetectionModel detectionModel = entry.getValue();
+                Camera camera = new Camera();
+                camera.setId(detectionModel.getCameraId());
+
+                Report lastReport = reportService.getLastReportByCamera(camera);
+
+                // Compare report in database, in case of server restart
+                if (lastReport != null) {
+                    if (lastReport.getStatus() != detectionModel.getStatusId()) {
+                        reportService.saveReport(camera, detectionModel);
+                    }
+                }
+            });
+
+            detectionModelMap = (HashMap) DetectionControllerImpl.detectResultData.clone();
         } else {
+
             detectionModelMap.entrySet().forEach(entry -> {
                 DetectionModel oldResult = entry.getValue();
                 int cameraId = oldResult.getCameraId();
@@ -61,6 +86,9 @@ public class Scheduler {
                 if (oldResult.getStatusId() != newResult.getStatusId()) {
                     Camera camera = cameraService.getCameraById(cameraId);
                     Street street = camera.getStreetByStreetId();
+
+                    // Save new report
+                    reportService.saveReport(camera, newResult);
 
                     String msg = "";
                     switch (newResult.getStatusId()) {
@@ -87,6 +115,32 @@ public class Scheduler {
         }
     }
 
+    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Saigon")
+    public void dailyReset() {
+        List<Report> reports = reportService.getUnfinishedReport();
+
+        for (Report report : reports) {
+            DetectionModel model = new DetectionModel();
+            model.setCameraId(report.getCameraByCameraId().getId());
+            model.setStatusId(report.getStatus());
+            model.setImageUrl(report.getImageUrl());
+
+            String strTime = "23:59:59";
+            DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss");
+            try {
+                Date d = dateFormat.parse(strTime);
+                model.setTime(new Timestamp(d.getTime()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+            reportService.saveReport(report.getCameraByCameraId(),model);
+        }
+        DetectionControllerImpl.detectResultData.clear();
+        detectionModelMap.clear();
+    }
+
     private void sendNotification(String msg, String username) throws JSONException {
 
         JSONObject body = new JSONObject();
@@ -104,4 +158,5 @@ public class Scheduler {
         CompletableFuture<String> pushNotification = androidPushNotificationsService.sendNotification(request);
         CompletableFuture.allOf(pushNotification).join();
     }
+
 }

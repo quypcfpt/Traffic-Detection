@@ -44,6 +44,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
     BroadcastReceiver receiver;
     private RecyclerView rv;
     ImageAdapter imageAdapter;
+    String streetName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +66,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
         final String imagePath = "https://d1ix0byejyn2u7.cloudfront.net/drive/images/uploads/headers/ws_cropper/1_0x0_790x520_0x520_traffic_jams.jpg";
         Bundle bundle =getIntent().getExtras();
         String listCamJsonObj = bundle.getString("CAMINFO");
+        streetName=getIntent().getStringExtra("STREET_NAME");
         loadImageActivity(listCamJsonObj);
 
     }
@@ -82,7 +84,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
                 List<String> imgList = parseStringToList(camResult.getImgUrl());
                 imageAdapter = new ImageAdapter(this,imgList);
                 rv.setAdapter(imageAdapter);
-                txtStreet.setText(camResult.getStreet().getName());
+                txtStreet.setText(streetName);
                 imageTime.setText(camResult.getTime() + "");
 
             } catch (JSONException e) {

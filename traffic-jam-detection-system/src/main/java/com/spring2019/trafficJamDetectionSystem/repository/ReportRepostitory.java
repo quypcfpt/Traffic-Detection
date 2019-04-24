@@ -14,4 +14,8 @@ import java.util.List;
 public interface ReportRepostitory  extends JpaRepository<Report,Integer> {
 
     List<Report> findByCameraByCameraIdAndDate(Camera camera, Date date);
+
+    Report findTopByCameraByCameraIdOrderByIdDesc(Camera camera);
+
+    List<Report> findByEndTimeIsNull();
 }
