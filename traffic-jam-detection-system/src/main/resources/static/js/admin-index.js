@@ -84,14 +84,14 @@ $('#add-camera-form').submit(function (e) {
         success: function (res) {
             $('#create-modal').modal('toggle');
             showCameraTable();
-            $.bootstrapGrowl('Create Success.', {
+            $.bootstrapGrowl('Thêm thành công!.', {
                 type: 'success',
                 delay: 2000,
             });
         },
         error: function (res) {
             $('#edit-modal').modal('toggle');
-            $.bootstrapGrowl('You Got Error', {
+            $.bootstrapGrowl('Lỗi!', {
                 type: 'danger',
                 delay: 2000,
             });
@@ -128,14 +128,14 @@ $('#edt-camera-form').submit(function (e) {
         success: function (res) {
             $('#edit-modal').modal('toggle');
             showCameraTable();
-            $.bootstrapGrowl('Edit Success.', {
+            $.bootstrapGrowl('Chỉnh sửa thành công!', {
                 type: 'success',
                 delay: 2000,
             });
         },
         error: function (res) {
             $('#edit-modal').modal('toggle');
-            $.bootstrapGrowl('You Got Error', {
+            $.bootstrapGrowl('Lỗi!', {
                 type: 'danger',
                 delay: 2000,
             });
