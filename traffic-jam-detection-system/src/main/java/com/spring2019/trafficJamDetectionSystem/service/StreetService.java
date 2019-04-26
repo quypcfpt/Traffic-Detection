@@ -13,6 +13,8 @@ public interface StreetService {
 
     List<Street> getAllStreet();
 
+    List<Street> getActiveStreet();
+
     Page<Street> getAllStreetAndIsActive(Pageable pageable);
 
     void createStreet(Street street);

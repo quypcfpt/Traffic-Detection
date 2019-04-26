@@ -7,8 +7,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface StreetRepository extends JpaRepository<Street, Integer> {
+
+    List<Street> findAllByIsActive(boolean isActive);
 
     Page<Street> findAllByIsActive(Pageable pageable, boolean isActive);
 

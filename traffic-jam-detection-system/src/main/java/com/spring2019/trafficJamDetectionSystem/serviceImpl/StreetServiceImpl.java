@@ -23,6 +23,11 @@ public class StreetServiceImpl implements StreetService {
     }
 
     @Override
+    public List<Street> getActiveStreet() {
+        return streetRepository.findAllByIsActive(true);
+    }
+
+    @Override
     public Page<Street> getAllStreetAndIsActive(Pageable pageable) {
         return streetRepository.getValidStreet(true, true, pageable);
     }

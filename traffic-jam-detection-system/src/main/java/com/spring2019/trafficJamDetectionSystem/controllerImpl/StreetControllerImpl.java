@@ -77,8 +77,8 @@ public class StreetControllerImpl extends AbstractController implements StreetCo
                 data.setCurrentPage(page);
                 data.setTotalPage(streets.getTotalPages());
                 data.setTotalRecord(streets.getTotalElements());
-            }else{
-                List<Street> streets=streetService.getAllStreet();
+            } else {
+                List<Street> streets = streetService.getAllStreet();
                 for (Street street : streets) {
                     streetList.add(streetTransformer.entityToModel(street));
                 }
@@ -86,7 +86,7 @@ public class StreetControllerImpl extends AbstractController implements StreetCo
             data.setStreetList(streetList);
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
             LOGGER.info("End load streets  ");
-        }catch (Exception e){
+        } catch (Exception e) {
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
             LOGGER.error(e.getMessage());
         }
@@ -94,7 +94,7 @@ public class StreetControllerImpl extends AbstractController implements StreetCo
     }
 
     @Override
-    public String loadStreetBySearch(String search,Integer page, Integer size, String sort, String sortBy) {
+    public String loadStreetBySearch(String search, Integer page, Integer size, String sort, String sortBy) {
         Sort sortable = null;
         if (sort.equals("ASC")) {
             sortable = Sort.by(sortBy).ascending();
@@ -110,7 +110,7 @@ public class StreetControllerImpl extends AbstractController implements StreetCo
             MultiStreetModel data = new MultiStreetModel();
 
             List<StreetModel> streetList = new ArrayList<>();
-            Page<Street> streets = streetService.getStreetBySearch(search,pageable);
+            Page<Street> streets = streetService.getStreetBySearch(search, pageable);
             if (streets.getSize() == 0) {
                 LOGGER.info("Empty result!");
             }
@@ -125,7 +125,7 @@ public class StreetControllerImpl extends AbstractController implements StreetCo
 
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
             LOGGER.info("End load streets in district ");
-        }catch (Exception e){
+        } catch (Exception e) {
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
             LOGGER.error(e.getMessage());
         }
@@ -144,7 +144,30 @@ public class StreetControllerImpl extends AbstractController implements StreetCo
             streetService.createStreet(streetEntity);
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, true);
             LOGGER.info("End create street");
-        }catch (Exception e){
+        } catch (Exception e) {
+            response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
+            LOGGER.error(e.getMessage());
+        }
+        return gson.toJson(response);
+    }
+
+    @Override
+    public String loadAllStreetActive() {
+        Response<MultiStreetModel> response = new Response<>(CoreConstant.STATUS_CODE_FAIL, CoreConstant.MESSAGE_FAIL);
+
+        try {
+            MultiStreetModel data = new MultiStreetModel();
+
+            List<StreetModel> streetList = new ArrayList<>();
+            List<Street> streets = streetService.getActiveStreet();
+            for (Street street : streets) {
+                streetList.add(streetTransformer.entityToModel(street));
+            }
+
+            data.setStreetList(streetList);
+            response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, data);
+            LOGGER.info("End load streets  ");
+        } catch (Exception e) {
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
             LOGGER.error(e.getMessage());
         }
@@ -161,8 +184,8 @@ public class StreetControllerImpl extends AbstractController implements StreetCo
             StreetModel streetModel = gson.fromJson(streetModelString, StreetModel.class);
             Street streetEntity = streetTransformer.modelToEntity(streetModel);
             streetService.updateStreet(streetEntity);
-            if(!streetModel.getIsActive()){
-                ArrayList<Camera> cameras = (ArrayList)cameraService.getCamerasByStreetAndIsActive(streetModel.getId());
+            if (!streetModel.getIsActive()) {
+                ArrayList<Camera> cameras = (ArrayList) cameraService.getCamerasByStreetAndIsActive(streetModel.getId());
                 for (Camera camera : cameras) {
                     camera.setIsActive(false);
                     bookmarkService.deleteBookmarkByCamera(camera);
@@ -172,7 +195,7 @@ public class StreetControllerImpl extends AbstractController implements StreetCo
             }
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, streetModel);
             LOGGER.info("Street updated: " + streetModelString);
-        }catch (Exception e){
+        } catch (Exception e) {
             response.setResponse(CoreConstant.STATUS_CODE_SERVER_ERROR, CoreConstant.MESSAGE_SERVER_ERROR);
             LOGGER.error(e.getMessage());
         }

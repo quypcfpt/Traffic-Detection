@@ -19,9 +19,13 @@ function drawChart() {
             var result = JSON.parse(res);
             $("#dataTable").find("tr:gt(0)").remove();
 
-            var reportList = result.data;
+            document.getElementById('my-chart').innerText="";
 
-            if (reportList != null) {
+            var reportList = result.data;
+            var container = document.getElementById('my-chart');
+            var chart = new google.visualization.Timeline(container);
+
+            if (reportList.length>1) {
                 var title = reportList[0].camera.description
                     + ", đường " + reportList[0].camera.street.name
                     + ", quận " + reportList[0].camera.street.district;
@@ -33,8 +37,7 @@ function drawChart() {
                 var location = reportList[0].camera.description + ", đường " + reportList[0].camera.street.name + ", quận " + reportList[0].camera.street.district;
                 var date = reportList[0].date;
 
-                var container = document.getElementById('my-chart');
-                var chart = new google.visualization.Timeline(container);
+
                 var dataTable = new google.visualization.DataTable();
                 dataTable.addColumn({type: 'string', id: 'Status'});
                 dataTable.addColumn({type: 'date', id: 'Start'});

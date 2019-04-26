@@ -31,8 +31,7 @@ function showCameraTable() {
 $('#add-camera-btn').click(function () {
 
     if ($('#txtStreet')[0].length == 0) {
-        var url = host + "/api/street"
-            + "?page=0";
+        var url = host + "/api/street/active"
 
         $.ajax({
             url: url,
@@ -226,33 +225,9 @@ $('#dataTable').on('click', '.btn', function () {
     $('#edtLatitude').val(spit[0]);
     $('#edtOrder').val(order);
 
-
-    if ($('#edtStreet')[0].length == 0) {
-        var url = host + "/api/street"
-            + "?page=0";
-
-        $.ajax({
-            url: url,
-            datatype: 'json',
-            type: 'GET',
-            success: function (res) {
-                var result = JSON.parse(res);
-
-                var streetList = result.data.streetList;
-
-                if (streetList != null) {
-                    for (i = 0; i < streetList.length; i++) {
-                        $('#edtStreet').append("<option value='" + streetList[i].id + "'>"
-                            + streetList[i].name + "-" + streetList[i].district
-                            + "</option>");
-                    }
-                    $('#edtStreet').val(streetId);
-                }
-            }, error: function (e) {
-                alert("Error: " + e.message);
-            }
-        })
-    }
+    $('#edtStreet').append("<option value='" + street.id + "'>"
+        + street.name + "-" + street.district
+        + "</option>");
     $('#edtStreet').val(streetId);
 
 })
