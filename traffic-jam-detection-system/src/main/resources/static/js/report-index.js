@@ -31,10 +31,10 @@ function drawChart() {
                     + ", quận " + reportList[0].camera.street.district;
 
                 $('#camera-title').text(title);
+
                 loadDataTable(reportList);
                 var data = buildData(reportList);
 
-                var location = reportList[0].camera.description + ", đường " + reportList[0].camera.street.name + ", quận " + reportList[0].camera.street.district;
                 var date = reportList[0].date;
 
 
@@ -44,13 +44,12 @@ function drawChart() {
                 dataTable.addColumn({type: 'date', id: 'End'});
                 dataTable.addRows(data);
 
-                var title = 'Biểu đồ mô tả tình trạng giao thông tại ' + location + ' ngày ' + $('#date-chooser').val()
+                var chartTitle = 'Biểu đồ mô tả tình trạng giao thông ngày ' + $('#date-chooser').val()
                 var options = {
                     timeline: {colorByRowLabel: true},
-                    title: title,
-
+                    title: chartTitle,
                 };
-
+                $('#chart-title').text(chartTitle);
                 chart.draw(dataTable, options);
             }
         }, error: function (e) {
@@ -115,7 +114,7 @@ function loadDataTable(reportList) {
                 data: null,
                 orderable: true,
                 render: function (data, type, row) {
-                    var start = (row || {}).startTime;
+                    var start = (row || {}).startTime.toString().substr(0,5);
                     return start;
                 }
             },
@@ -125,7 +124,7 @@ function loadDataTable(reportList) {
                 render: function (data, type, row) {
                     var end = (row || {}).endTime;
                     if (end != null) {
-                        return end;
+                        return end.substr(0,5);
                     }
                     return "Null";
                 }
