@@ -1,6 +1,14 @@
 var host = "http://" + location.hostname + ":" + location.port;
 
-function onLoadReportView(date) {
+loadData();
+
+function loadData() {
+    google.charts.load("current", {packages: ["timeline"]}, {language: ["vi"]});
+    google.charts.setOnLoadCallback(drawChart);
+}
+
+function drawChart() {
+    var date = $('#date-chooser').val();
     var url = window.location.href.replace("portal", "api") + "/" + date;
 
     $.ajax({
@@ -11,19 +19,73 @@ function onLoadReportView(date) {
             var result = JSON.parse(res);
             $("#dataTable").find("tr:gt(0)").remove();
 
+            document.getElementById('my-chart').innerText="";
+
             var reportList = result.data;
+            var container = document.getElementById('my-chart');
+            var chart = new google.visualization.Timeline(container);
 
-            if (reportList != null) {
-                loadDataTable(reportList)
+            if (reportList.length>1) {
+                var title = reportList[0].camera.description
+                    + ", đường " + reportList[0].camera.street.name
+                    + ", quận " + reportList[0].camera.street.district;
+
+                $('#camera-title').text(title);
+
+                loadDataTable(reportList);
+                var data = buildData(reportList);
+
+                var date = reportList[0].date;
+
+
+                var dataTable = new google.visualization.DataTable();
+                dataTable.addColumn({type: 'string', id: 'Status'});
+                dataTable.addColumn({type: 'date', id: 'Start'});
+                dataTable.addColumn({type: 'date', id: 'End'});
+                dataTable.addRows(data);
+
+                var chartTitle = 'Biểu đồ mô tả tình trạng giao thông ngày ' + $('#date-chooser').val()
+                var options = {
+                    timeline: {colorByRowLabel: true},
+                    title: chartTitle,
+                };
+                $('#chart-title').text(chartTitle);
+                chart.draw(dataTable, options);
             }
-
         }, error: function (e) {
             alert("Error: " + e.message);
         }
     })
 }
 
-$(onLoadReportView(getCurDate()));
+function buildData(reportList) {
+    var dataList = [];
+
+    for (i = 0; i < reportList.length; i++) {
+
+        if (reportList[i].endTime != null) {
+            var status;
+            switch (reportList[i].status) {
+                case 0:
+                    status = 'Bình Thường'
+                    break;
+                case 1:
+                    status = 'Kẹt'
+                    break;
+                case 2:
+                    status = 'Đông'
+                    break;
+            }
+            var start = new Date(reportList[i].date + " " + reportList[i].startTime);
+            var end = new Date(reportList[i].date + " " + reportList[i].endTime);
+
+            var row = [status, start, end];
+            dataList.push(row);
+        }
+    }
+    console.log(dataList)
+    return dataList;
+}
 
 function loadDataTable(reportList) {
     console.log("load");
@@ -52,8 +114,7 @@ function loadDataTable(reportList) {
                 data: null,
                 orderable: true,
                 render: function (data, type, row) {
-                    var start = (row || {}).startTime;
-                    start = start.split(" ")[1];
+                    var start = (row || {}).startTime.toString().substr(0,5);
                     return start;
                 }
             },
@@ -63,8 +124,7 @@ function loadDataTable(reportList) {
                 render: function (data, type, row) {
                     var end = (row || {}).endTime;
                     if (end != null) {
-                        end = end.split(" ")[1];
-                        return end;
+                        return end.substr(0,5);
                     }
                     return "Null";
                 }
@@ -76,7 +136,7 @@ function loadDataTable(reportList) {
                     var ret;
                     var isActive = (row || {}).imgUrl;
                     var id = (row || {}).id;
-                    ret = ' <button class="btn btn-warning" data-toggle="modal" data-target="#edit-modal">Xem ảnh</button>'
+                    ret = ' <button class="btn btn-warning" data-toggle="modal" data-target="#img-modal">Xem ảnh</button>'
                     return ret;
                 }
             }],
@@ -124,9 +184,6 @@ function getCurDate() {
     return dd + '-' + mm + '-' + yyyy;
 }
 
-// $(".form-control").onChange(function(){
-//     console.log($('.form-control').val());
-// })
 $(function () {
     $("#datepicker").datepicker({
         autoclose: true,
@@ -135,108 +192,15 @@ $(function () {
             console.log($(this).datepicker('getDate'));
         }
     }).datepicker('update', new Date());
-
-    $("#datepicker-modal").datepicker({
-        autoclose: true,
-        todayHighlight: true,
-        onSelect: function () {
-            console.log($(this).datepicker('getDate'));
-        }
-    }).datepicker('update', new Date());
 });
 
 
-$("#datepicker").on("changeDate", function () {
-    onLoadReportView($('#date-chooser').val());
-});
+$('#chart-btn').click(function () {
+    loadData();
+})
 
 
-// Bar Chart Example
-var ctx = document.getElementById("bar-chart");
-var myBarChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: ["0h-2h", "2h-4h", "4h-6h", "6h-8h", "10h-12h", "12h-14h",
-            "14h-16h", "16h-18h", "18h-20h", "20h-22h", "22h-0h"],
-        datasets: [
-            {
-                label: "Bình Thường",
-                backgroundColor: "#4edf52",
-                hoverBackgroundColor: "#2cd949",
-                borderColor: "#4edf52",
-                data: [1, 1, 1, 1, 2, 0, 1, 0, 0, 1, 1],
-            },
-            {
-                label: "Đông",
-                backgroundColor: "#dfd54e",
-                hoverBackgroundColor: "#d9d32c",
-                borderColor: "#dfd54e",
-                data: [0, 0, 0, 1, 1, 2, 4, 3, 2, 1, 0],
-            },
-            {
-                label: "Kẹt",
-                backgroundColor: "#df4e4e",
-                hoverBackgroundColor: "#d92d2d",
-                borderColor: "#df4e4e",
-                data: [0, 0, 0, 2, 1, 3, 3, 2, 1, 0, 0],
-            }],
-    },
-    options: {
-        maintainAspectRatio: false,
-        layout: {
-            padding: {
-                left: 10,
-                right: 25,
-                top: 25,
-                bottom: 0
-            }
-        },
-        scales: {
-            xAxes: [{
-                time: {
-                    unit: 'time'
-                },
-                gridLines: {
-                    display: false,
-                    drawBorder: false
-                },
-                ticks: {
-                    maxTicksLimit: 6
-                },
-                maxBarThickness: 25,
-            }],
-            yAxes: [{
-                ticks: {
-                    min: 0,
-                    max: 10,
-                    maxTicksLimit: 5,
-                    padding: 10,
-                },
-                gridLines: {
-                    color: "rgb(234, 236, 244)",
-                    zeroLineColor: "rgb(234, 236, 244)",
-                    drawBorder: false,
-                    borderDash: [2],
-                    zeroLineBorderDash: [2]
-                }
-            }],
-        },
-        legend: {
-            display: false
-        },
-        tooltips: {
-            titleMarginBottom: 10,
-            titleFontColor: '#6e707e',
-            titleFontSize: 14,
-            backgroundColor: "rgb(255,255,255)",
-            bodyFontColor: "#858796",
-            borderColor: '#dddfeb',
-            borderWidth: 1,
-            xPadding: 15,
-            yPadding: 15,
-            displayColors: false,
-            caretPadding: 10,
-        },
-    }
-});
+
+
+
 

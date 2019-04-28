@@ -47,7 +47,7 @@ $('#add-street-form').submit(function (e) {
         processData: false,
         success: function (res) {
             $('#create-modal').modal('toggle');
-            $.bootstrapGrowl('Add Success.',{
+            $.bootstrapGrowl('Thêm thành công!',{
                 type: 'success',
                 delay: 2000,
             });
@@ -58,7 +58,7 @@ $('#add-street-form').submit(function (e) {
         },
         error: function (res) {
             $('#create-modal').modal('toggle');
-            $.bootstrapGrowl('You Got Error',{
+            $.bootstrapGrowl('Lỗi!',{
                 type: 'danger',
                 delay: 2000,
             });
@@ -89,7 +89,7 @@ $('#edt-street-form').submit(function (e) {
         processData: false,
         success: function (res) {
             $('#edit-modal').modal('toggle');
-            $.bootstrapGrowl('Edit Success.',{
+            $.bootstrapGrowl('Chỉnh sửa thành công!.',{
                 type: 'success',
                 delay: 2000,
             });
@@ -97,7 +97,7 @@ $('#edt-street-form').submit(function (e) {
         },
         error: function (res) {
             $('#edit-modal').modal('toggle');
-            $.bootstrapGrowl('You Got Error',{
+            $.bootstrapGrowl('Lỗi',{
                 type: 'danger',
                 delay: 2000,
             });
