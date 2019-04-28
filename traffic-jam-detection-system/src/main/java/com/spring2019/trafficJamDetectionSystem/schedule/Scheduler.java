@@ -98,6 +98,9 @@ public class Scheduler {
                         case 1:
                             msg = "Kẹt xe ở khu vực " + camera.getDescription() + ",đường " + street.getName() + ",quận " + street.getDistrict();
                             break;
+                        case 2:
+                            msg = "Đông xe ở khu vực " + camera.getDescription() + ",đường " + street.getName() + ",quận " + street.getDistrict();
+                            break;
                     }
 
                     List<String> accountList = bookmarkService.getAccountByCameraId(cameraId);
