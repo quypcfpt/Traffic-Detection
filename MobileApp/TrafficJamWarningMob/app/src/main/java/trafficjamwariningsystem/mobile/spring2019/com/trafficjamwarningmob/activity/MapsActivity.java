@@ -417,16 +417,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
     public void testGPS() {
         final List<PositionModel> postion = new ArrayList<>();
-        postion.add(new PositionModel(10.852706, 106.629692));
-        postion.add(new PositionModel(10.852358, 106.627646));
-        postion.add(new PositionModel(10.852291, 106.626731));
-        postion.add(new PositionModel(10.850984, 106.628128));
-        postion.add(new PositionModel(10.850233, 106.631208));
-        postion.add(new PositionModel(10.850004, 106.631572));
-        postion.add(new PositionModel(10.849502, 106.632250));
-       //position change to QT road
-        postion.add(new PositionModel(10.842553, 106.642668));
-        postion.add(new PositionModel(10.841229, 106.644644));
+        postion.add(new PositionModel(10.852692, 106.629711));
+        postion.add(new PositionModel(10.850129, 106.626876));
+        postion.add(new PositionModel(10.851061, 106.627622));
+        postion.add(new PositionModel(10.850585, 106.630127));
+        postion.add(new PositionModel(10.849402, 106.632366));
+        postion.add(new PositionModel(10.848804, 106.633211));
+        postion.add(new PositionModel(10.848335, 106.633866));
+        postion.add(new PositionModel(10.847397, 106.635221));
+        postion.add(new PositionModel(10.846014, 106.637221));
+        postion.add(new PositionModel(10.845603, 106.637981));
+        postion.add(new PositionModel(10.845392, 106.638399));
+        postion.add(new PositionModel(10.844823, 106.639362));
+        postion.add(new PositionModel(10.844070, 106.639941));
+        postion.add(new PositionModel(10.843512, 106.639643));
+        postion.add(new PositionModel(10.842479, 106.638976));
+        postion.add(new PositionModel(10.842258, 106.638828));
+        postion.add(new PositionModel(10.840706, 106.637795));
+        postion.add(new PositionModel(10.838412, 106.636752));
+
+        //--------------------
+//        postion.add(new PositionModel(10.852706, 106.629692));
+//        postion.add(new PositionModel(10.852358, 106.627646));
+//        postion.add(new PositionModel(10.852291, 106.626731));
+//        postion.add(new PositionModel(10.850984, 106.628128));
+//        postion.add(new PositionModel(10.850233, 106.631208));
+//        postion.add(new PositionModel(10.850004, 106.631572));
+//        postion.add(new PositionModel(10.849502, 106.632250));
+//       //position change to QT road
+//        postion.add(new PositionModel(10.842553, 106.642668));
+//        postion.add(new PositionModel(10.841229, 106.644644));
 //        postion.add(new PositionModel(10.840535, 106.645538));
 //        postion.add(new PositionModel(10.839451, 106.646859));
 //        postion.add(new PositionModel(10.838978, 106.648116));
@@ -443,12 +463,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        postion.add(new PositionModel(10.842553, 106.642668));
 
         //Test for anthor street
-        postion.add(new PositionModel(10.843921, 106.639865));
-        postion.add(new PositionModel(10.843005, 106.639326));
-        postion.add(new PositionModel(10.841694, 106.638478));
-        postion.add(new PositionModel(10.840671, 106.637792));
-        postion.add(new PositionModel(10.838750, 106.636894));
-        postion.add(new PositionModel(10.836207, 106.635722));
+//        postion.add(new PositionModel(10.843921, 106.639865));
+//        postion.add(new PositionModel(10.843005, 106.639326));
+//        postion.add(new PositionModel(10.841694, 106.638478));
+//        postion.add(new PositionModel(10.840671, 106.637792));
+//        postion.add(new PositionModel(10.838750, 106.636894));
+//        postion.add(new PositionModel(10.836207, 106.635722));
         //Test for anthor street backward
 //        postion.add(new PositionModel(10.836207, 106.635722));
 //        postion.add(new PositionModel(10.838750, 106.636894));
@@ -471,7 +491,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         handler = new Handler();
         handler.post(new Runnable() {
             int counter = 0;
-            int delay = 1000*10;
+            int delay = 1000*7;
             @Override
             public void run() {
                 boolean wasPlacedInQue = false;

@@ -74,7 +74,7 @@ public class CameraAdapter extends RecyclerView.Adapter<RecycleViewCameraHolder>
         myViewHolder.txtName.setText(models.getDescription());
         if(models.getDistance()!= null){
             myViewHolder.txtName.setEllipsize(TextUtils.TruncateAt.END);
-            myViewHolder.txtName.setMaxWidth(250);
+            myViewHolder.txtName.setMaxWidth(200);
             myViewHolder.txtName.setMaxLines(1);
             myViewHolder.txtDistance.setVisibility(View.VISIBLE);
             myViewHolder.txtDistance.setText(models.getDistance()+"");
