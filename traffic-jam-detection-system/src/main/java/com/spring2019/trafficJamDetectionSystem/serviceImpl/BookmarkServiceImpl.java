@@ -78,6 +78,6 @@ public class BookmarkServiceImpl implements BookmarkService {
 
     @Override
     public List<Bookmark> getBookmarksNotHaveCamera(int cameraId) {
-        return bookmarkRepository.getBookmarksNotHaveCamera(cameraId,true);
+        return bookmarkRepository.getBookmarksNotHaveCamera(cameraId);
     }
 }

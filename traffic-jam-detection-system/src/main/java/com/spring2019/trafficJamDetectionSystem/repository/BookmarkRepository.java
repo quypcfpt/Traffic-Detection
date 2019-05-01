@@ -21,6 +21,6 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Integer> {
             "JOIN Bookmark B ON Bookmark_Camera.bookmark_id = B.id " +
             "JOIN Account A on B.account_id = A.id " +
             "JOIN Camera C ON Bookmark_Camera.camera_id = C.id " +
-            "WHERE camera_id =?1 and isActive =?2", nativeQuery = true)
-    List<Bookmark> getBookmarksNotHaveCamera(int cameraId, boolean isActive);
+            "WHERE camera_id =?1", nativeQuery = true)
+    List<Bookmark> getBookmarksNotHaveCamera(int cameraId);
 }
