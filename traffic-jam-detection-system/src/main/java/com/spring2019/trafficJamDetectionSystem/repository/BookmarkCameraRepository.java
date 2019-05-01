@@ -18,6 +18,7 @@ public interface BookmarkCameraRepository extends JpaRepository<BookmarkCamera, 
             "ON Bookmark_Camera.bookmark_id = B.id JOIN Account A on B.account_id = A.id " +
             "JOIN Camera C ON Bookmark_Camera.camera_id = C.id " +
             "WHERE camera_id=?1 and isActive =?2",nativeQuery = true)
+
     List<String> findUsernameByCamera(int cameraId, boolean isActive);
 
 

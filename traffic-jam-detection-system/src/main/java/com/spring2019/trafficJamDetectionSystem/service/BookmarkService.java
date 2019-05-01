@@ -27,4 +27,6 @@ public interface BookmarkService {
     public List<BookmarkCamera> getCameraInBookmark(int id);
 
     public void deleteBookmarkByCamera(Camera camera);
+
+    public List<Bookmark> getBookmarksNotHaveCamera(int cameraId);
 }

@@ -75,4 +75,9 @@ public class BookmarkServiceImpl implements BookmarkService {
     public void deleteBookmarkByCamera(Camera camera) {
         bookmarkCameraRepository.deleteBookmarkCamerasByCameraByCameraId(camera);
     }
+
+    @Override
+    public List<Bookmark> getBookmarksNotHaveCamera(int cameraId) {
+        return bookmarkRepository.getBookmarksNotHaveCamera(cameraId,true);
+    }
 }
