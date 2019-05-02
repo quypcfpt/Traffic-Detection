@@ -242,7 +242,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         if (task.isSuccessful()) {
                             testGPS();
                         } else {
-                            Toast.makeText(MapsActivity.this, "unable to get location", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MapsActivity.this, "Unable to get location", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -296,7 +296,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        Toast.makeText(this, "Located your position", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Located your position", Toast.LENGTH_SHORT).show();
 
         return  strAdd;
     }
@@ -533,7 +533,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //                    handler.postDelayed(this, delay);
                 }
 
-                Toast.makeText(MapsActivity.this, "Count " + counter, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MapsActivity.this, "Count " + counter, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -603,7 +603,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     }
                     if(points.isEmpty()){
-                        Toast.makeText(MapsActivity.this, "Cannot get RoutePoints", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(MapsActivity.this, "Cannot get RoutePoints", Toast.LENGTH_SHORT).show();
                     } else {
                         PolylineOptions lineOptions = new PolylineOptions();
                         LatLngBounds.Builder builder = new LatLngBounds.Builder();
