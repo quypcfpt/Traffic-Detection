@@ -30,7 +30,7 @@ y=[]
 z=[]
 t=[]
 
-client = Client("AwCnfiZESWaA14iEjm189z")
+client = Client("A2hDBjxwmRNiyNSgYhPc0z")
 sys.path.append("..")
 
 label_map = label_map_util.load_labelmap(PATH_TO_LABELS)

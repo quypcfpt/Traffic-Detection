@@ -30,7 +30,7 @@ y=[]
 z=[]
 t=[]
 
-client = Client("AfZuoeSTFG369uFdmkmJQz")
+client = Client("A2hDBjxwmRNiyNSgYhPc0z")
 sys.path.append("..")
 
 label_map = label_map_util.load_labelmap(PATH_TO_LABELS)
@@ -54,26 +54,55 @@ detection_classes = detection_graph.get_tensor_by_name('detection_classes:0')
 num_detections = detection_graph.get_tensor_by_name('num_detections:0')
 
 ## Get TOp 5 camera from server and get resource
+video_path = {}
+headers = {'Content-type': 'application/json'}
+url='http://localhost:8080/api/camera'
+params={'page':1,'size':1}
+r=requests.get(url, params=params, headers=headers)
 
+jsonValueResult=json.loads(r.text)
+resultCamera = jsonValueResult["data"]["cameraList"]
+print(jsonValueResult["data"]["cameraList"])
+for i in range(0,1):
+    video_path.update({resultCamera[i]["id"]:resultCamera[i]["resource"]})
 ##===========================
+for keys,values in video_path.items():
+    print("keys", keys)
+    print("values", values)
     
-video_path = ["Demo 3_1p_9_4_3.avi", "Demo 5.avi"]
+#video_path = [CWD_PATH + "/video/street_720.MP4",CWD_PATH + "/video/IMG_0043.MOV"]
 size_excel_path = open_workbook('FixSize.xls')
 size_values = []
 
-class ReadFileExcel(object):
-        def __init__(self, motor, car, bus, truck, road):
+class ReadObjectConfig(object):
+        def __init__(self, motor, car, bus, truck, road, k):
                 self.motor = motor
                 self.car = car
                 self.bus = bus
                 self.truck = truck
                 self.road = road
+                self.k = k
+
+class ReadValueConfig(object):
+        def __init__(self, xValue1Line1, xValue2Line1, yValue1Line1, yValue2Line1, xValue1Line2, xValue2Line2, yValue1Line2, yValue2Line2, xValue1Line3, xValue2Line3, yValue1Lane3, yValue2Lane3):
+                self.xValue1Line1 = xValue1Line1
+                self.xValue2Line1 = xValue2Line1
+                self.yValue1Line1 = yValue1Line1
+                self.yValue2Line1 = yValue2Line1
+                self.xValue1Line2 = xValue1Line2
+                self.xValue2Line2 = xValue2Line2
+                self.yValue1Line2 = yValue1Line2
+                self.yValue2Line2 = yValue2Line2
+                self.xValue1Line3 = xValue1Line3
+                self.xValue2Line3 = xValue2Line3
+                self.yValue1Lane3 = yValue1Lane3
+                self.yValue2Lane3 = yValue2Lane3
 #read excel
 valuesXYZ = []
 
 
 
-wb = open_workbook('FinalDataSample1111.xlsx')
+wb = open_workbook('FinalDataSample.xlsx')
 for s in wb.sheets():
   for row in range(2,s.nrows):
     if(s.cell(row,1).value!=''):
@@ -149,7 +178,7 @@ class DetectMutilThread (threading.Thread):
                 print('Processing...' + self.name + ' in frame ' + str(count))
                 cv2.imwrite(path, image)
                 new_filelink = client.upload(filepath=path, multipart=False)
-                print("link : " + self.name + new_filelink.url)
+                print("link : ", new_filelink.url)
                 pathList.append(new_filelink.url)
                 height, width, channels = image.shape
                 image_expanded = np.expand_dims(image, axis=0)
@@ -207,42 +236,44 @@ class DetectMutilThread (threading.Thread):
                     truckLabel="truck"
                     busLabel="bus"
                     
-                    if(yValue >=30 and yValue <=270 and xValue >= 50 and xValue <= 1200):
-                                if(typeVehicle.strip() == motorLabel):
-                                        motorCountLine1+=1
-                                elif(typeVehicle.strip() == carLabel):
-                                        carCountLine1+=1
-                                elif(typeVehicle.strip() == truckLabel):
-                                        truckCountLine1+=1
-                                else:
-                                        busCountLine1+=1
-                                        
-                    if(yValue >=290 and yValue <=470 and xValue >= 50 and xValue <= 1270):
-                                if(typeVehicle.strip() == motorLabel):
-                                        motorCountLine2+=1
-                                elif(typeVehicle.strip() == carLabel):
-                                        carCountLine2+=1
-                                elif(typeVehicle.strip() == truckLabel):
-                                        truckCountLine2+=1
-                                else:
-                                        busCountLine2+=1
-                                        
-                    if(yValue >=490 and yValue <=680 and xValue >= 50 and xValue <= 1300):
-                                if(typeVehicle.strip() == motorLabel):
-                                        motorCountLine3+=1
-                                elif(typeVehicle.strip() == carLabel):
-                                        carCountLine3+=1
-                                elif(typeVehicle.strip() == truckLabel):
-                                        truckCountLine3+=1
-                                else:
-                                        busCountLine3+=1 
+                    for f in xy_values:
+                            if(yValue >= float(f.yValue1Line1) and yValue <= float(f.yValue2Line1) and xValue >= float(f.xValue1Line1) and xValue <= float(f.xValue2Line1)):
+                                        if(typeVehicle.strip() == motorLabel):
+                                                motorCountLine1+=1
+                                        elif(typeVehicle.strip() == carLabel):
+                                                carCountLine1+=1
+                                        elif(typeVehicle.strip() == truckLabel):
+                                                truckCountLine1+=1
+                                        else:
+                                                busCountLine1+=1
+                                                
+                            if(yValue >= float(f.yValue1Line2) and yValue <= float(f.yValue2Line2) and xValue >= float(f.xValue1Line2) and xValue <= float(f.xValue2Line2)):
+                                        if(typeVehicle.strip() == motorLabel):
+                                                motorCountLine2+=1
+                                        elif(typeVehicle.strip() == carLabel):
+                                                carCountLine2+=1
+                                        elif(typeVehicle.strip() == truckLabel):
+                                                truckCountLine2+=1
+                                        else:
+                                                busCountLine2+=1
+                                                
+                            if(yValue >= float(f.yValue1Lane3) and yValue <= float(f.yValue2Lane3) and xValue >= float(f.xValue1Line3) and xValue <= float(f.xValue2Line3)):
+                                        if(typeVehicle.strip() == motorLabel):
+                                                motorCountLine3+=1
+                                        elif(typeVehicle.strip() == carLabel):
+                                                carCountLine3+=1
+                                        elif(typeVehicle.strip() == truckLabel):
+                                                truckCountLine3+=1
+                                        else:
+                                                busCountLine3+=1 
 
 
                                                  
 
-                image[30:270, 50:1200, 2]=255
-                image[290:470, 50:1270, 2]=255
-                image[490:680, 50:1300, 2]=255
+                            image[int(float(f.yValue1Line1)):int(float(f.yValue2Line1)), int(float(f.xValue1Line1)):int(float(f.xValue2Line1)), 2]=255
+                            image[int(float(f.yValue1Line2)):int(float(f.yValue2Line2)), int(float(f.xValue1Line2)):int(float(f.xValue2Line2)), 2]=255
+                            image[int(float(f.yValue1Lane3)):int(float(f.yValue2Lane3)), int(float(f.xValue1Line3)):int(float(f.xValue2Line3)), 2]=255
+	
 
                 for e in size_values:
                         delta = []
@@ -281,7 +312,7 @@ class DetectMutilThread (threading.Thread):
                           p=(distList[i], arr4[i])
                           my_objects.append(p)
                         my_objects.sort(key = sortFirst)
-                        for i in range(0,181):
+                        for i in range(0,int(float(e.k))):
                                 if(str(my_objects[i][1]) == 'crowed'):
                                         countCrowed+=1
                                 elif(str(my_objects[i][1]) == 'normal'):
@@ -355,7 +386,10 @@ class DetectMutilThread (threading.Thread):
                                                 number_normal.append(countNormal)
                                                 print(self.name + " status after 10s: Normal")
 
-
+##                cv2.imwrite(path, image)
+##                new_filelink = client.upload(filepath=path, multipart=False)
+##                print("link : ", new_filelink.url)
+##                pathList.append(new_filelink.url)
                         
                         
                         
@@ -365,28 +399,39 @@ class DetectMutilThread (threading.Thread):
                     print("********************")
                     print(len(pathList))
                     for i in range(0, len(pathList)):
-                        print("aaaaa " + self.name + str(pathList[i]))
+                        print("aaaaa" + str(pathList[i]))
                     
                     imgURLs = joinPath.join(pathList)
                     status = 0
-                    print("number_crowed : " + self.name + str(number_crowed))
-                    print("number_normal : " + self.name + str(number_normal))
-                    print("number_busy : " + self.name + str(number_busy))
-                    
                     if(len(number_crowed) > len(number_normal) and len(number_crowed) > len(number_busy)):
                             print(self.name + " result after 60s: Crowed")
                             status = 2
                     elif(len(number_busy) > len(number_crowed) and len(number_busy) > len(number_normal)):
                             print(self.name + " result after 60s: Busy")
                             status = 1
+                   
                     else:
-                            print(self.name + " result after 60s: Normal")
-                            status = 0
+                            if(len(number_normal) > len(number_crowed) and len(number_normal) > len(number_busy)):
+                                    print(self.name + " result after 60s: Normal")
+                                    status = 0
+                            else:  
+                                    print(self.name + " result after 60s: Crowed")
+                                    status = 2
+                            
                     number_normal.clear()
                     number_busy.clear()
                     number_crowed.clear()
                     pathList.clear()
-                    
+                    jsonData ={
+                        "CameraId":self.name,
+                        "statusId":status,
+                        "imageUrl":imgURLs
+                    }
+                    headers = {'Content-type': 'application/json'}
+                    url='http://localhost:8080/api/detection'
+                    params={'detectResultString':json.dumps(jsonData)}
+                    r=requests.post(url, params=params, headers=headers)
+                    print(r.status_code, r.reason, r.text)
             if not frame:  # error on video source or last frame finished
                 break
             
@@ -400,8 +445,8 @@ class DetectMutilThread (threading.Thread):
         print(window_name + " Exiting ")
         
 def main():       
-    for items in video_path:
-        thread = DetectMutilThread(os.path.basename(items), items)
+    for keys,values in video_path.items():
+        thread = DetectMutilThread(keys, values)
         thread.start()  
         
 if __name__ == '__main__':
