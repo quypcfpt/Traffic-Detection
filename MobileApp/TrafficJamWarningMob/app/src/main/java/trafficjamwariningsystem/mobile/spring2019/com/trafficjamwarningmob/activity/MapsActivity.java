@@ -367,14 +367,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             oldStreet = strAdd;
                             AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
                             builder.setCancelable(false);
-                            builder.setTitle("Road Status");
-                            builder.setMessage("You are enter to the new Road : " +strAdd);
-                            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            builder.setTitle("Thông báo");
+                            builder.setMessage("Bạn vừa mơi đi đên đường  : " +strAdd);
+                            builder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();
                                     }});
-                                builder.setPositiveButton("Show", new DialogInterface.OnClickListener() {
+                                builder.setPositiveButton("Xem", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         Intent intent = new Intent(MapsActivity.this, ListCameraActivity.class);
@@ -531,7 +531,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //                    handler.postDelayed(this, delay);
                 }
 
-                Toast.makeText(MapsActivity.this, "Count " + counter, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MapsActivity.this, "Count " + counter, Toast.LENGTH_SHORT).show();
             }
         });
 
