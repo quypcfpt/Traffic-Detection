@@ -19,13 +19,13 @@ function drawChart() {
             var result = JSON.parse(res);
             $("#dataTable").find("tr:gt(0)").remove();
 
-            document.getElementById('my-chart').innerText="";
+            document.getElementById('my-chart').innerText = "";
 
             var reportList = result.data;
             var container = document.getElementById('my-chart');
             var chart = new google.visualization.Timeline(container);
 
-            if (reportList.length>1) {
+            if (reportList.length > 0) {
                 var title = reportList[0].camera.description
                     + ", đường " + reportList[0].camera.street.name
                     + ", quận " + reportList[0].camera.street.district;
@@ -39,20 +39,23 @@ function drawChart() {
 
 
                 var dataTable = new google.visualization.DataTable();
-                dataTable.addColumn({type: 'string', id: 'Status'});
+                dataTable.addColumn({type: 'string', id: 'status'});
                 dataTable.addColumn({type: 'date', id: 'Start'});
-                dataTable.addColumn({type: 'date', id: 'End'});
+                dataTable.addColumn({type: 'date', id: 'End'})
                 dataTable.addRows(data);
 
-                var chartTitle = 'Biểu đồ mô tả tình trạng giao thông ngày ' + $('#date-chooser').val()
+                var colors=getColor(reportList)
+
                 var options = {
-                    timeline: {colorByRowLabel: true},
-                    title: chartTitle,
+                    colors: colors,
                 };
+                var chartTitle = 'Biểu đồ mô tả tình trạng giao thông ngày ' + $('#date-chooser').val()
+
                 $('#chart-title').text(chartTitle);
                 chart.draw(dataTable, options);
             }
-        }, error: function (e) {
+        }
+        , error: function (e) {
             alert("Error: " + e.message);
         }
     })
@@ -80,6 +83,7 @@ function buildData(reportList) {
             var end = new Date(reportList[i].date + " " + reportList[i].endTime);
 
             var row = [status, start, end];
+            console.log(row.toString())
             dataList.push(row);
         }
     }
@@ -114,7 +118,7 @@ function loadDataTable(reportList) {
                 data: null,
                 orderable: true,
                 render: function (data, type, row) {
-                    var start = (row || {}).startTime.toString().substr(0,5);
+                    var start = (row || {}).startTime.toString().substr(0, 5);
                     return start;
                 }
             },
@@ -124,7 +128,7 @@ function loadDataTable(reportList) {
                 render: function (data, type, row) {
                     var end = (row || {}).endTime;
                     if (end != null) {
-                        return end.substr(0,5);
+                        return end.substr(0, 5);
                     }
                     return "Null";
                 }
@@ -199,6 +203,33 @@ $('#chart-btn').click(function () {
     loadData();
 })
 
+function getColor(list) {
+    var count = []
+    var color = []
+    var x = true;
+    for (var i = 0; i < list.length; i++) {
+        x = true;
+        for (var j = 0; j < count.length; j++) {
+            if (list[i].status == count[j]) {
+                x = false;
+                break;
+            }
+        }
+        if (x) {
+            if (list[i].status == 0) {
+                count.push(0);
+                color.push("#008000");
+            } else if (list[i].status == 1) {
+                count.push(1);
+                color.push("#e81226");
+            } else if (list[i].status == 2) {
+                count.push(2);
+                color.push("#e9ec0c");
+            }
+        }
+    }
+    return color;
+}
 
 
 

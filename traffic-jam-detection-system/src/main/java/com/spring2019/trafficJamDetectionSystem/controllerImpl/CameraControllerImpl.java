@@ -174,8 +174,6 @@ public class CameraControllerImpl extends AbstractController implements CameraCo
             CameraModel cameraModel = gson.fromJson(cameraModelString, CameraModel.class);
             Camera cameraEntity = cameraTransformer.modelToEntity(cameraModel);
 
-            List<Bookmark> bookmarks = bookmarkService.getAllBookmarks();
-
             Camera oldCamera = cameraService.getCameraById(cameraModel.getId());
 
             cameraEntity.setObservedStatus(oldCamera.getObservedStatus());

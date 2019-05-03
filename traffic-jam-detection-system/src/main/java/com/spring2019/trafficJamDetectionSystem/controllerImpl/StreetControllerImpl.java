@@ -188,9 +188,7 @@ public class StreetControllerImpl extends AbstractController implements StreetCo
                 ArrayList<Camera> cameras = (ArrayList) cameraService.getCamerasByStreetAndIsActive(streetModel.getId());
                 for (Camera camera : cameras) {
                     camera.setIsActive(false);
-                    bookmarkService.deleteBookmarkByCamera(camera);
                     cameraService.updateCamera(camera);
-
                 }
             }
             response.setResponse(CoreConstant.STATUS_CODE_SUCCESS, CoreConstant.MESSAGE_SUCCESS, streetModel);

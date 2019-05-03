@@ -39,8 +39,11 @@ public class ReportServiceImpl implements ReportService {
 
         // Update last report end time
         Report lastReport = reportRepostitory.findTopByCameraByCameraIdOrderByIdDesc(camera);
-        lastReport.setEndTime(detectionModel.getTime());
-        reportRepostitory.save(lastReport);
+        if (lastReport!=null){
+            lastReport.setEndTime(detectionModel.getTime());
+            reportRepostitory.save(lastReport);
+        }
+
 
         // Save new report
         Report newReport = new Report();

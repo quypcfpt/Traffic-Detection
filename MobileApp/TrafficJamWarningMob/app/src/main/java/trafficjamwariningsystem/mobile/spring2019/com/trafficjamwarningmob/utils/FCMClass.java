@@ -2,11 +2,9 @@ package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.util
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -16,7 +14,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.Random;
 
 import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.R;
-import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.activity.CameraInBookmarkActivity;
+import trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.activity.ImageActivity;
 
 public class FCMClass extends FirebaseMessagingService {
 
@@ -25,25 +23,32 @@ public class FCMClass extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        if (remoteMessage.getNotification() != null) {
+        String topic = remoteMessage.getFrom();
 
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "channel_id")
-                    .setContentTitle(remoteMessage.getNotification().getTitle())
-                    .setContentText(remoteMessage.getNotification().getBody())
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                    .setStyle(new NotificationCompat.BigTextStyle())
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setAutoCancel(true);
 
-            NotificationManager notificationManager =
-                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (!topic.equals("TJWS")) {
 
-            notificationManager.notify(generateRandom(), notificationBuilder.build());
+            Intent intent = new Intent(this, ImageActivity.class);
+            intent.putExtra("CAMINFO",remoteMessage.getData().get("CAMJSON"));
+            intent.putExtra("STREET_NAME",remoteMessage.getData().get("STREET_NAME"));
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
-            if (remoteMessage.getData().size() > 0) {
+            if (remoteMessage.getNotification() != null) {
+                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "channel_id")
+                        .setContentTitle(remoteMessage.getNotification().getTitle())
+                        .setContentText(remoteMessage.getNotification().getBody())
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        .setStyle(new NotificationCompat.BigTextStyle())
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setAutoCancel(true)
+                        .setContentIntent(pendingIntent);
 
+                NotificationManager notificationManager =
+                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+                notificationManager.notify(generateRandom(), notificationBuilder.build());
             }
-        } else if (remoteMessage.getData().size() > 0) {
+        } else {
             try {
                 LocalBroadcastManager broadcaster = LocalBroadcastManager.getInstance(getBaseContext());
                 Intent intent = new Intent("Camera");

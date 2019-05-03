@@ -1,14 +1,17 @@
 package com.spring2019.trafficJamDetectionSystem.schedule;
 
+import com.google.gson.Gson;
 import com.spring2019.trafficJamDetectionSystem.common.CoreConstant;
 import com.spring2019.trafficJamDetectionSystem.controllerImpl.DetectionControllerImpl;
 import com.spring2019.trafficJamDetectionSystem.entity.Account;
 import com.spring2019.trafficJamDetectionSystem.entity.Camera;
 import com.spring2019.trafficJamDetectionSystem.entity.Report;
 import com.spring2019.trafficJamDetectionSystem.entity.Street;
+import com.spring2019.trafficJamDetectionSystem.model.CameraModel;
 import com.spring2019.trafficJamDetectionSystem.model.DetectionModel;
 import com.spring2019.trafficJamDetectionSystem.model.ReportModel;
 import com.spring2019.trafficJamDetectionSystem.service.*;
+import com.spring2019.trafficJamDetectionSystem.transformer.CameraTransformer;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -47,6 +50,9 @@ public class Scheduler {
 
     @Autowired
     AndroidPushNotificationsService androidPushNotificationsService;
+
+    @Autowired
+    CameraTransformer cameraTransformer;
 
     @Scheduled(fixedDelay = 10 * 1000)
     public void scheduleFixedDelayTask() {
@@ -102,12 +108,15 @@ public class Scheduler {
                             msg = "Đông xe ở khu vực " + camera.getDescription() + ",đường " + street.getName() + ",quận " + street.getDistrict();
                             break;
                     }
+                    CameraModel cameraModel = cameraTransformer.entityToModel(camera);
+                    Gson gson = new Gson();
+                    String camJson = gson.toJson(cameraModel);
 
                     List<String> accountList = bookmarkService.getAccountByCameraId(cameraId);
                     LOGGER.info("list size: " + accountList.size());
                     if (accountList.size() > 0) {
                         for (String account : accountList) {
-                            sendNotification(msg, account);
+                            sendNotification(msg, account, camJson, street.getName());
                             LOGGER.info("Notification to user " + account + ": " + msg);
                         }
                     }
@@ -138,13 +147,13 @@ public class Scheduler {
             }
 
 
-            reportService.saveReport(report.getCameraByCameraId(),model);
+            reportService.saveReport(report.getCameraByCameraId(), model);
         }
         DetectionControllerImpl.detectResultData.clear();
         detectionModelMap.clear();
     }
 
-    private void sendNotification(String msg, String username) throws JSONException {
+    private void sendNotification(String msg, String username, String cameraJson, String streetName) throws JSONException {
 
         JSONObject body = new JSONObject();
         body.put("to", "/topics/" + username);
@@ -154,7 +163,12 @@ public class Scheduler {
         notification.put("title", "Traffic Notification");
         notification.put("body", msg);
 
+        JSONObject data = new JSONObject();
+        data.put("CAMJSON", cameraJson);
+        data.put("STREET_NAME",streetName);
+
         body.put("notification", notification);
+        body.put("data",data);
 
         HttpEntity<String> request = new HttpEntity<>(body.toString());
 
