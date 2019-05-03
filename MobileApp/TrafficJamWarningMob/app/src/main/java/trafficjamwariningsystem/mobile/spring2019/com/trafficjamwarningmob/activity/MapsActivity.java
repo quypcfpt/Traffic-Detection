@@ -418,11 +418,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void testGPS() {
         final List<PositionModel> postion = new ArrayList<>();
         postion.add(new PositionModel(10.852692, 106.629711));
+        postion.add(new PositionModel(10.851392, 106.629574));
         postion.add(new PositionModel(10.850129, 106.626876));
-        postion.add(new PositionModel(10.851061, 106.627622));
-        postion.add(new PositionModel(10.850585, 106.630127));
         postion.add(new PositionModel(10.849402, 106.632366));
-        postion.add(new PositionModel(10.848804, 106.633211));
         postion.add(new PositionModel(10.848335, 106.633866));
         postion.add(new PositionModel(10.847397, 106.635221));
         postion.add(new PositionModel(10.846014, 106.637221));
@@ -533,7 +531,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //                    handler.postDelayed(this, delay);
                 }
 
-//                Toast.makeText(MapsActivity.this, "Count " + counter, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MapsActivity.this, "Count " + counter, Toast.LENGTH_SHORT).show();
             }
         });
 

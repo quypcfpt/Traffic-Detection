@@ -14,40 +14,46 @@
     android:layout_marginBottom="5dp"
     android:background="@color/colorSecondaryLight"
     android:padding="10dp">
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_marginRight="50dp"
         android:layout_height="wrap_content"
         android:id="@+id/name"
+        android:maxWidth="450dp"
         android:text="MarshallowAAAAA"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@android:color/black"
         android:textStyle="bold" />
+    <TextView
+        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/distance"
+        android:text="API:"
+        android:textColor="@android:color/darker_gray"
+        android:textStyle="bold" />
 
-    <ImageView
-        android:id="@+id/item_info"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:src="@android:drawable/ic_dialog_info" />
+</LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true">
-        <TextView
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/distance"
-            android:text="API:"
-            android:textColor="@android:color/darker_gray"
-            android:textStyle="bold" />
-      </LinearLayout>
+        android:layout_alignParentEnd="true">
+        <ImageView
+            android:id="@+id/item_info"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+
+            android:src="@android:drawable/ic_dialog_info" />
+    </LinearLayout>
+
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

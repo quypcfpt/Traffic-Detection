@@ -57,12 +57,13 @@ public class CameraModel implements Serializable , Comparable<CameraModel> {
         this.time = time;
         this.distance = distance;
     }
-    public CameraModel(int id, String description, String position,int observerStatus, float distance) {
+    public CameraModel(int id, String description, String position,int observerStatus, float distance,StreetModel street) {
         this.id = id;
         this.description = description;
         this.position = position;
         this.observerStatus = observerStatus;
         this.distance = distance;
+        this.street = street;
     }
     public CameraModel(int id, String description, String position,int observerStatus, String imgUrl, String time) {
         this.id = id;
