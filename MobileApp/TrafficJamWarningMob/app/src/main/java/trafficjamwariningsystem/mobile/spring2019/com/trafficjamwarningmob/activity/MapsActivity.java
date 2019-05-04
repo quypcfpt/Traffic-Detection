@@ -367,14 +367,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             oldStreet = strAdd;
                             AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
                             builder.setCancelable(false);
-                            builder.setTitle("Road Status");
-                            builder.setMessage("You are enter to the new Road : " +strAdd);
-                            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            builder.setTitle("Thông báo");
+                            builder.setMessage("Bạn vừa mơi đi đên đường  : " +strAdd);
+                            builder.setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();
                                     }});
-                                builder.setPositiveButton("Show", new DialogInterface.OnClickListener() {
+                                builder.setPositiveButton("Xem", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         Intent intent = new Intent(MapsActivity.this, ListCameraActivity.class);
@@ -418,11 +418,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void testGPS() {
         final List<PositionModel> postion = new ArrayList<>();
         postion.add(new PositionModel(10.852692, 106.629711));
+        postion.add(new PositionModel(10.851392, 106.629574));
         postion.add(new PositionModel(10.850129, 106.626876));
-        postion.add(new PositionModel(10.851061, 106.627622));
-        postion.add(new PositionModel(10.850585, 106.630127));
         postion.add(new PositionModel(10.849402, 106.632366));
-        postion.add(new PositionModel(10.848804, 106.633211));
         postion.add(new PositionModel(10.848335, 106.633866));
         postion.add(new PositionModel(10.847397, 106.635221));
         postion.add(new PositionModel(10.846014, 106.637221));

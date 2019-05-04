@@ -29,6 +29,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -185,7 +186,12 @@ public class ListCameraActivity extends AppCompatActivity implements View.OnClic
             String position = cam.getString("position");
             int observerStatus = cam.getInt("observerStatus");
             float distance = Float.parseFloat(cam.getString("distance"));
-            resultList.add(new CameraModel(id,description,position,observerStatus,distance));
+            StreetModel street =  new StreetModel();
+            street.setId(cam.getJSONObject("street").getInt("id"));
+            street.setCity(cam.getJSONObject("street").getString("city"));
+            street.setDistrict(cam.getJSONObject("street").getString("district"));
+            street.setName(cam.getJSONObject("street").getString("name"));
+            resultList.add(new CameraModel(id,description,position,observerStatus,distance,street));
         }
         return resultList;
     }

@@ -74,16 +74,15 @@ public class CameraAdapter extends RecyclerView.Adapter<RecycleViewCameraHolder>
         myViewHolder.txtName.setText(models.getDescription());
         if(models.getDistance()!= null){
             myViewHolder.txtName.setEllipsize(TextUtils.TruncateAt.END);
-            myViewHolder.txtName.setMaxWidth(200);
             myViewHolder.txtName.setMaxLines(1);
+            myViewHolder.txtName.setMaxWidth(300);
             myViewHolder.txtDistance.setVisibility(View.VISIBLE);
             myViewHolder.txtDistance.setText(models.getDistance()+"");
         }else{
+            myViewHolder.txtName.setEllipsize(TextUtils.TruncateAt.END);
+            myViewHolder.txtName.setMaxLines(1);
             myViewHolder.txtDistance.setVisibility(View.GONE);
         }
-        myViewHolder.txtName.setEllipsize(TextUtils.TruncateAt.END);
-        myViewHolder.txtName.setMaxLines(1);
-        myViewHolder.txtDistrict.setVisibility(View.GONE);
         myViewHolder.info.setImageResource(models.getObserverStatus() == 0 ? R.mipmap.green : models.getObserverStatus()==1 ? R.mipmap.red : R.mipmap.yellow );
         myViewHolder.setItemClickListener(new ItemClickListener() {
             @Override
