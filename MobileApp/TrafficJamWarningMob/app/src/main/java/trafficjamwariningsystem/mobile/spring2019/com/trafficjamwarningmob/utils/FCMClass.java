@@ -2,9 +2,12 @@ package trafficjamwariningsystem.mobile.spring2019.com.trafficjamwarningmob.util
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -26,28 +29,30 @@ public class FCMClass extends FirebaseMessagingService {
         String topic = remoteMessage.getFrom();
 
 
-        if (!topic.equals("/topics/TJWS")) {
+        if (remoteMessage.getNotification() != null) {
 
             Intent intent = new Intent(this, ImageActivity.class);
-            intent.putExtra("CAMINFO",remoteMessage.getData().get("CAMJSON"));
-            intent.putExtra("STREET_NAME",remoteMessage.getData().get("STREET_NAME"));
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+            stackBuilder.addNextIntentWithParentStack(intent);
 
-            if (remoteMessage.getNotification() != null) {
-                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "channel_id")
-                        .setContentTitle(remoteMessage.getNotification().getTitle())
-                        .setContentText(remoteMessage.getNotification().getBody())
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                        .setStyle(new NotificationCompat.BigTextStyle())
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setAutoCancel(true)
-                        .setContentIntent(pendingIntent);
+            Bundle bundle = new Bundle();
+            bundle.putString("CAMINFO", remoteMessage.getData().get("CAMJSON"));
+            intent.putExtras(bundle);
+            intent.putExtra("STREET_NAME", remoteMessage.getData().get("STREET_NAME"));
 
-                NotificationManager notificationManager =
-                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "channel_id")
+                    .setContentTitle(remoteMessage.getNotification().getTitle())
+                    .setContentText(remoteMessage.getNotification().getBody())
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setStyle(new NotificationCompat.BigTextStyle())
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setAutoCancel(true)
+                    .setContentIntent(pendingIntent);
 
-                notificationManager.notify(generateRandom(), notificationBuilder.build());
-            }
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            notificationManager.notify(generateRandom(), notificationBuilder.build());
+
         } else {
             try {
                 LocalBroadcastManager broadcaster = LocalBroadcastManager.getInstance(getBaseContext());

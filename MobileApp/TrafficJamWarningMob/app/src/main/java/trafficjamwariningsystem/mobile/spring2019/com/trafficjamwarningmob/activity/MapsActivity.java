@@ -560,7 +560,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onBackPressed() {
         super.onBackPressed();
         MapsActivity.this.finish();
-        handler.removeCallbacksAndMessages(null);
+        if(bundle == null) {
+            handler.removeCallbacksAndMessages(null);
+        }
     }
         private LatLng getCameraLocation(String location){
             String[] parts = location.split(",");
