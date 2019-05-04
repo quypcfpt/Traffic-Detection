@@ -26,7 +26,7 @@ public class FCMClass extends FirebaseMessagingService {
         String topic = remoteMessage.getFrom();
 
 
-        if (!topic.equals("TJWS")) {
+        if (!topic.equals("/topics/TJWS")) {
 
             Intent intent = new Intent(this, ImageActivity.class);
             intent.putExtra("CAMINFO",remoteMessage.getData().get("CAMJSON"));
