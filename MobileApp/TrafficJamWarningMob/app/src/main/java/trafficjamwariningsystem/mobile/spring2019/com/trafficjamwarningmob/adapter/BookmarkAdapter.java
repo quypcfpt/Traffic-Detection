@@ -84,7 +84,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<RecycleViewBookmarkHol
     public void onBindViewHolder(@NonNull final RecycleViewBookmarkHolder viewHolder, int position) {
         final BookmarkModel models = dataSet.get(position);
         viewHolder.txtName.setEllipsize(TextUtils.TruncateAt.END);
-        viewHolder.txtName.setMaxWidth(350);
+        viewHolder.txtName.setMaxWidth(600);
         viewHolder.txtName.setTextSize(15);
         viewHolder.txtName.setMaxLines(2);
         viewHolder.txtName.setText(models.getOrigin() + "-" + models.getDestination());
